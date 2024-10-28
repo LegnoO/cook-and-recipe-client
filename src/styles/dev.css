@@ -1,0 +1,16 @@
+.dev {
+  outline: 1px solid red !important;
+}
+
+html.dev * {
+  outline: 1px solid red !important;
+}
+
+html.dev *::before {
+  outline: 1px solid blue !important;
+}
+
+html.dev,
+*::after {
+  outline: 1px solid yellow !important;
+}

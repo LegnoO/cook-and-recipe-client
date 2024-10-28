@@ -1,0 +1,56 @@
+:root {
+  --navbar-height: 92px;
+  --navbar-z-index: 40;
+  --modal-zIndex: 1300;
+  --background-body-color: #fffdfa;
+
+  /* Transition */
+  --cubic-bezier-transition: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Colors */
+  --white: 0 0% 100%;
+  --black: 0 0% 0%;
+
+  --gray-25: 0 0% 99%;
+  --gray-50: 0 0% 98%;
+  --gray-100: 0 0% 96%;
+  --gray-200: 210 5% 92%;
+  --gray-300: 216 6% 85%;
+  --gray-400: 222 6% 66%;
+  --gray-500: 220 6% 47%;
+  --gray-600: 220 8% 35%;
+  --gray-700: 221 11% 29%;
+  --gray-800: 220 20% 18%;
+  --gray-900: 220 24% 12%;
+  --gray-950: 218 29% 5%;
+
+  --primary: var(--gray-900);
+  --primary-foreground: var(--white);
+  --secondary: var(--gray-600);
+  --secondary-hover: var(--gray-700);
+  --secondary-foreground: var(--gray-200);
+  --placeholder: var(--gray-500);
+  --disabled: var(--gray-500);
+  --divider: var(--gray-300);
+  --muted: var(--gray-700);
+  --muted-foreground: var(--gray-200);
+  --fg-primary: var(--gray-900);
+  --bg-primary: var(--white);
+  --bg-primary-hover: var(--gray-50);
+}
+
+/* .dark {
+  
+  --gray-25: 0 0% 99%;
+  --gray-50: 0 0% 98%;
+  --gray-100: 0 0% 96%;
+  --gray-200: 210 5% 92%;
+  --gray-300: 216 6% 85%;
+  --gray-400: 222 6% 66%;
+  --gray-500: 220 6% 47%;
+  --gray-600: 220 8% 35%;
+  --gray-700: 221 11% 29%;
+  --gray-800: 220 20% 18%;
+  --gray-900: 220 24% 12%;
+  --gray-950: 218 29% 5%;
+} */

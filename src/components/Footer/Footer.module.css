@@ -1,0 +1,8 @@
+.wrapper {
+  padding-block: 80px;
+  background-image: url("https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg");
+}
+
+.wrapperInner {
+  @apply container;
+}

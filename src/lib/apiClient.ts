@@ -8,6 +8,9 @@ import { refreshUser } from "@/services/authService";
 import { DATABASE_URL } from "@/config/environment";
 import { STATUS_CODES } from "@/config/status-codes";
 
+// ** Utils
+import { getCookieValue } from "./utils/cookies";
+
 const BASE_URL = DATABASE_URL;
 
 const AxiosInstance = axios.create({
@@ -20,7 +23,8 @@ const AxiosInstance = axios.create({
 
 AxiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken: string = localStorage.getItem("access-token")!;
+    const accessToken = getCookieValue("access_token")!;
+
 
     if (accessToken && config.headers && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -39,7 +43,6 @@ AxiosInstance.interceptors.response.use(
   },
   async (error: AxiosError) => {
     const responseUrl = error.response?.config?.url;
-    // console.log("🚀 ~ responseUrl:", responseUrl);
     const urls = [
       "/auth/refresh",
       "/users/owned/info",

@@ -1,5 +1,8 @@
 "use client";
 
+// ** Next Imports
+import { useRouter, usePathname } from "next/navigation";
+
 // ** React Imports
 import {
   createContext,
@@ -14,7 +17,7 @@ import {
 import LoadingScreen from "@/components/LoadingScreen";
 
 // ** Services
-import { getUserInfo, login } from "@/services/authService";
+import { getUserInfo, login, logout } from "@/services/authService";
 
 // ** Types
 interface AuthContext {
@@ -28,6 +31,8 @@ interface AuthContext {
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -37,16 +42,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     rememberMe,
   }: LoginCredentials) {
     try {
-      const accessToken = await login({ email, password, rememberMe });
-      localStorage.setItem("access-token", accessToken);
+      await login({ email, password, rememberMe });
     } catch (error) {
       throw error;
     }
   }
 
   async function handleLogout() {
-    localStorage.removeItem("access-token");
-    setUser(null);
+    try {
+      await logout();
+      setUser(null);
+      if (pathname !== "/") router.push("/");
+    } catch (error) {
+      throw error;
+    }
   }
 
   useEffect(() => {
@@ -63,6 +72,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     checkUserInfo();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (authLoading) {

@@ -4,6 +4,10 @@ import { Playfair_Display } from "next/font/google";
 
 // ** Context
 import { AuthProvider } from "@/context/AuthProvider";
+import ReactQueryProvider from "@/context/ReactQueryProvider";
+
+// ** Library Imports
+import NextTopLoader from "nextjs-toploader";
 
 const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
@@ -27,7 +31,10 @@ export default function RootLayout({
   return (
     <html className="" lang="en">
       <body className={`${playfair.variable} antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+        <NextTopLoader height={3} color="hsl(var(--primary))" showSpinner={false} />
+        <ReactQueryProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

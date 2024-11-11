@@ -23,11 +23,23 @@ export function formatAddress(
   },
   maxLength: number = 100,
 ) {
-  let formattedAddress = `${address.number}, ${address.street}, ${address.ward}, ${address.district}, ${address.city}`;
+  const formattedAddress = `${address.number}, ${address.street}, ${address.ward}, ${address.district}, ${address.city}`;
 
   if (formattedAddress.length > maxLength) {
     return formattedAddress.slice(0, maxLength - 3) + "...";
   }
 
   return formattedAddress;
+}
+
+export function createSearchParams(filter: Object) {
+  const params = new URLSearchParams();
+
+  Object.entries(filter).forEach(([key, value]) => {
+    if (value) {
+      params.append(key, String(value));
+    }
+  });
+
+  return params;
 }

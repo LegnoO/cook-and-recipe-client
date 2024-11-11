@@ -6,11 +6,11 @@ type ChefLevel = "Beginner" | "Home cook" | "Professional" | "Master chef";
 type ChefStatus = "active" | "disabled" | "pending" | "rejected" | "banned";
 
 type ChefInfo = {
-  startedDate: Date;
+  startedDate: string;
   description: string;
   level: ChefLevel;
   status: ChefStatus;
-  approvalDate: Date;
+  approvalDate: string;
 };
 
 type Gender = "Male" | "Female" | "Other";
@@ -18,7 +18,7 @@ type User = {
   id: string;
   fullName: string;
   email: string;
-  dateOfBirth: Date | null;
+  dateOfBirth: string | null;
   avatar: string;
   permission: IRoutePermission[];
 };
@@ -27,6 +27,14 @@ type UserProfile = Omit<User, "permission"> & {
   gender: Gender;
   phone: string;
   chefInfo: ChefInfo;
+  dateOfBirth: string | null;
+  address: {
+    number: string;
+    street: string;
+    ward: string;
+    district: string;
+    city: string;
+  };
 };
 
 type AuthTokens = string;

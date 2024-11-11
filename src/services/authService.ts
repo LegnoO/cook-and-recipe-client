@@ -1,4 +1,5 @@
-// ** Utils
+// ** Lib
+import { setCookie } from "@/lib/utils/cookies";
 import AxiosInstance from "@/lib/apiClient";
 import fetcher from "@/lib/apiServer";
 
@@ -10,6 +11,17 @@ export async function login({ email, password, rememberMe }: LoginCredentials) {
       password,
       rememberMe,
     }),
+  });
+  if (!response.ok) {
+    const errorData = await response.text();
+    throw errorData;
+  }
+  return response.json();
+}
+
+export async function logout() {
+  const response = await fetch("/api/logout", {
+    method: "POST",
   });
   if (!response.ok) {
     const errorData = await response.text();
@@ -33,7 +45,7 @@ export async function refreshUser(rememberMe: boolean) {
     rememberMe,
   });
   const newToken = response.data;
-  localStorage.setItem("access-token", newToken);
+  setCookie("access-token", newToken, { secure: true, path: "/" });
 
   return response.data;
 }

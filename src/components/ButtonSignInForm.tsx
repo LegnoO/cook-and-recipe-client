@@ -7,9 +7,9 @@ import Link from "next/link";
 import { useState } from "react";
 
 // ** Components
-import { Checkbox } from "@/components/ui/Checkbox";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -18,7 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/Form";
-import { Logo } from "./ui/Icons";
 import {
   Dialog,
   DialogTrigger,
@@ -26,9 +25,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "./ui/Dialog";
+} from "./ui/dialog";
 
 // ** Library Imports
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Eye, EyeOff } from "lucide-react";
@@ -37,30 +37,46 @@ import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 
 // ** Utils
-import { LoginFormSchema, LoginFormData } from "@/schemas/LoginFormSchema";
+
 import { typography } from "./Primitives";
 
 // ** Services
 import { getUserInfo } from "@/services/authService";
 import { useAuthContext } from "@/context/AuthProvider";
 
-const ButtonLoginForm = () => {
+// ** Schema
+const formSchema = z.object({
+  email: z
+    .string()
+    .email("Invalid email address")
+    .min(5, "Email must be at least 5 characters long")
+    .max(100, "Email must be at most 100 characters long"),
+  password: z
+    .string()
+    .min(3, "Password must be at least 3 characters long")
+    .max(255, "Password must be at most 255 characters long"),
+  rememberMe: z.boolean(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+const ButtonSignInForm = () => {
   const { login, setUser } = useAuthContext();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
   const [error, setError] = useState("");
-  const form = useForm<LoginFormData>({
+  const form = useForm<FormValues>({
     defaultValues: {
       email: "legno@gmail.com",
       password: "admin",
       rememberMe: true,
     },
-    resolver: zodResolver(LoginFormSchema),
+    resolver: zodResolver(formSchema),
   });
 
-  async function onSubmit(dataSubmit: LoginFormData) {
+  async function onSubmit(dataSubmit: FormValues) {
     try {
       setLoading(true);
       setError("");
@@ -81,24 +97,12 @@ const ButtonLoginForm = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="primary">Sign in</Button>
+        <Button>Sign in</Button>
       </DialogTrigger>
       <DialogContent className="w-[calc(100%-2.5rem)] rounded-lg sm:max-w-[425px]">
-        <DialogHeader className="text-center">
-          <DialogTitle
-            className={typography({
-              display: "xs",
-              className: "w-full text-center font-medium",
-            })}>
-            Login
-          </DialogTitle>
-          <DialogDescription
-            className={typography({
-              text: "md",
-              className: "text-center text-tertiary",
-            })}>
-            Hi, welcome back
-          </DialogDescription>
+        <DialogHeader>
+          <DialogTitle className="text-xl">Sign In</DialogTitle>
+          <DialogDescription>Sign in to access your account</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4">
           <Form {...form}>
@@ -115,7 +119,7 @@ const ButtonLoginForm = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your email" {...field} />
+                      <Input placeholder="m@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -139,7 +143,7 @@ const ButtonLoginForm = () => {
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          className="border-none absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                           onClick={togglePasswordVisibility}
                           aria-label={
                             showPassword ? "Hide password" : "Show password"
@@ -188,7 +192,10 @@ const ButtonLoginForm = () => {
                   Forgot Password?
                 </Link>
               </div>
-              <Button disabled={isLoading} className="w-full" type="submit">
+              <Button
+                disabled={isLoading}
+                className="w-full"
+                type="submit">
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -202,7 +209,7 @@ const ButtonLoginForm = () => {
                   href="#"
                   className={typography({
                     text: "sm",
-                    className: "font-medium leading-none",
+                    className: "font-medium leading-none underline",
                   })}>
                   Create an account
                 </Link>
@@ -214,4 +221,4 @@ const ButtonLoginForm = () => {
     </Dialog>
   );
 };
-export default ButtonLoginForm;
+export default ButtonSignInForm;

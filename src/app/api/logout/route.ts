@@ -1,28 +1,20 @@
 // ** Next Imports
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // ** Lib
 import fetcher from "@/lib/apiServer";
 import { ServerError } from "@/lib/ServerError";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   const cookieStore = cookies();
-  const requestBody = await request.json();
-  try {
-    const response = await fetcher(`/auth/public/login`, {
-      method: "POST",
-      body: JSON.stringify(requestBody),
-    });
-    const data = await response.text();
 
-    cookieStore.set({
-      name: "access_token",
-      value: data,
-      httpOnly: false,
-      secure: true,
-      path: "/",
+  try {
+    const response = await fetcher(`/auth/logout`, {
+      method: "POST",
     });
+    cookieStore.delete("access_token");
+    const data = await response.text();
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {

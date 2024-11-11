@@ -4,7 +4,7 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 // ** Helpers
-import { isSSR } from "@/lib/utils/helpers/isSSR";
+import { isSSR } from "@/lib/utils/helpers";
 
 const useLocalStorage = <T>(
   key: string,
@@ -28,7 +28,7 @@ const useLocalStorage = <T>(
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
-  }, [value, setValue]);
+  }, [key, value, setValue]);
 
   return [value, setValue];
 };

@@ -18,10 +18,41 @@ const config: Config = {
       },
     },
     extend: {
+      backgroundPosition: {
+        'center-top': 'center top', 
+      },
+      spacing: {
+        "4.5": "1.125rem",
+      },
+      transitionProperty: {
+        height: "height",
+        outline: "outline",
+      },
+      transitionDuration: {
+        350: "350ms",
+        400: "400ms",
+      },
+      rotate: {
+        "4": "4deg",
+      },
+      transitionTimingFunction: {
+        smooth: "cubic-bezier(0.4, 0, 0.2, 1)",
+      },
+      zIndex: {
+        modal: "60",
+        navbar: "50",
+      },
+      height: {
+        18: "4.5rem",
+        22: "5.5rem",
+      },
+      boxShadow: {
+        "light-circle": "0px 0px 10px 0px rgba(0, 0, 0, 0.11)",
+      },
       colors: {
         background: {
-          DEFAULT: "hsl(var(--bg-primary))",
-          hover: "hsl(var(--bg-primary-hover))",
+          DEFAULT: "hsl(var(--background))",
+          body: "hsl(var(--background-body))",
         },
         divider: "hsl(var(--divider))",
         foreground: "hsl(var(--fg-primary))",
@@ -34,6 +65,10 @@ const config: Config = {
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
+        },
+        brand: {
+          DEFAULT: "hsl(var(--brand))",
+          foreground: "hsl(var(--brand-foreground))",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -61,8 +96,8 @@ const config: Config = {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
+        border: "hsl(var(--border) / 0.12)",
+        input: "hsl(var(--input) / 0.22)",
         ring: "hsl(var(--ring))",
         chart: {
           "1": "hsl(var(--chart-1))",
@@ -80,9 +115,13 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      backgroundImage: { 
-        "first-slider": "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg')"
-       },
+      backgroundImage: {
+        "first-slider":
+          "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg')",
+
+        footer:
+          "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg')",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

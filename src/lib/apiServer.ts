@@ -36,13 +36,13 @@ export default async function fetcher(
 
     if (!response.ok) {
       if (response.status === 401) {
-        // redirect("/");
+        redirect("/");
       }
       if (response.status === 404) {
         // redirect("/404");
       }
       const errorData = await response.json();
-      
+
       throw new ServerError(errorData.message, response.status);
     }
 

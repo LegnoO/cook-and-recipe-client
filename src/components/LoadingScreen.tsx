@@ -1,6 +1,6 @@
 import Image from "next/image";
 // ** Components
-import { Logo } from "@/components/ui/Icons";
+import { Logo } from "@/components/ui/icons";
 
 // ** Images
 import WaveAnimationGif from "@/assets/wave.gif";

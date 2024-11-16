@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
+    
     if (error instanceof ServerError) {
       return new NextResponse(error.message, { status: error.status });
     }

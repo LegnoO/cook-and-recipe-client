@@ -1,7 +1,9 @@
+// ** Components
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 // ** Icons
 import { Clock, Users } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 const RecipeCard = () => {
   return (
@@ -9,16 +11,15 @@ const RecipeCard = () => {
       <img
         //  src={recipe.image}
         //  alt={recipe.title}
-        className="h-40 w-full object-cover"
+        className="cursor-pointer h-40 w-full object-cover"
         src={
           "https://pivoo.themepreview.xyz/home-three/wp-content/uploads/sites/4/2024/04/raspberry-2023404_1920.jpg"
         }
         alt={"recipe"}
       />
-      <CardContent className="p-4">
+      <CardContent className="cursor-pointer p-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">title</h3>
-          <Badge>Khó</Badge>
         </div>
 
         <div className="mt-2">
@@ -35,6 +36,9 @@ const RecipeCard = () => {
           </p>
         </div>
       </CardContent>
+      <CardFooter className="p-4 pt-0">
+        <Badge variant="ghost">Khó</Badge>
+      </CardFooter>
     </Card>
   );
 };

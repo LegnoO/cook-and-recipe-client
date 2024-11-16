@@ -7,6 +7,13 @@ import Link from "next/link";
 import { useState } from "react";
 
 // ** Components
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,7 +67,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const ButtonSignInForm = () => {
+const LoginForm = () => {
   const { login, setUser } = useAuthContext();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
@@ -95,15 +102,12 @@ const ButtonSignInForm = () => {
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>Sign in</Button>
-      </DialogTrigger>
-      <DialogContent className="w-[calc(100%-2.5rem)] rounded-lg sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle className="text-xl">Sign In</DialogTitle>
-          <DialogDescription>Sign in to access your account</DialogDescription>
-        </DialogHeader>
+    <Card className="w-full rounded-lg border-none shadow-md">
+      <CardHeader>
+        <CardTitle className="text-xl">Login</CardTitle>
+        <CardDescription>Login to access your account</CardDescription>
+      </CardHeader>
+      <CardContent>
         <div className="grid gap-4">
           <Form {...form}>
             <form
@@ -143,7 +147,7 @@ const ButtonSignInForm = () => {
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="border-none absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          className="absolute right-0 top-0 h-full border-none px-3 py-2 hover:bg-transparent"
                           onClick={togglePasswordVisibility}
                           aria-label={
                             showPassword ? "Hide password" : "Show password"
@@ -192,12 +196,9 @@ const ButtonSignInForm = () => {
                   Forgot Password?
                 </Link>
               </div>
-              <Button
-                disabled={isLoading}
-                className="w-full"
-                type="submit">
+              <Button disabled={isLoading} className="w-full" type="submit">
                 {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   "Log in"
                 )}
@@ -217,8 +218,8 @@ const ButtonSignInForm = () => {
             </form>
           </Form>
         </div>
-      </DialogContent>
-    </Dialog>
+      </CardContent>
+    </Card>
   );
 };
-export default ButtonSignInForm;
+export default LoginForm;

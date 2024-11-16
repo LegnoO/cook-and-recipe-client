@@ -2,7 +2,6 @@
 
 // ** Next Imports
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 // ** React Imports
 import { Fragment, useState, useEffect } from "react";
@@ -24,15 +23,17 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuItem,
-} from "@/components/ui/DropdownMenu";
-import ButtonSignUpForm from "@/components/ButtonSignUpForm";
-import ButtonSignInForm from "@/components/ButtonSignInForm";
+} from "@/components/ui/dropdown-menu";
+import ButtonSignUpForm from "@/components/RegisterForm";
+import ButtonSignInForm from "@/components/LoginForm";
+
+// ** Library Imports
+import { useRouter } from "nextjs-toploader/app";
 
 // ** Context
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Library Imports
-import clsx from "clsx";
 import { useMediaQuery } from "usehooks-ts";
 import { Loader2 } from "lucide-react";
 import { LogOut, Settings, User } from "lucide-react";
@@ -40,7 +41,8 @@ import { LogOut, Settings, User } from "lucide-react";
 // ** Store
 import { idStore } from "@/store/idStore";
 
-// ** Utils
+// ** Lib
+import { cn } from "@/lib/utils";
 import { getCharInitials } from "@/lib/utils/helpers";
 
 const Navbar = () => {
@@ -91,11 +93,9 @@ const Navbar = () => {
 
   return (
     <header
-      className={clsx(
-        "sticky top-0 z-navbar h-22 bg-background shadow backdrop-blur transition-height duration-350 ease-smooth supports-[backdrop-filter]:bg-background/60",
-        {
-          "h-18": scrolled,
-        },
+      className={cn(
+        "sticky top-0 z-navbar bg-background shadow backdrop-blur transition-height duration-350 ease-smooth supports-[backdrop-filter]:bg-background/60",
+        scrolled ? "h-18" : "h-22",
       )}>
       <nav className="container flex h-full items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
@@ -179,8 +179,16 @@ const Navbar = () => {
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-4">
-              <ButtonSignUpForm />
-              <ButtonSignInForm />
+              <Button variant="ghost">
+                <Link href="/register" scroll={false}>
+                  Sign Up
+                </Link>
+              </Button>
+              <Button>
+                <Link href="/login" scroll={false}>
+                  Sign In
+                </Link>
+              </Button>
             </div>
           )}
           <div
@@ -195,11 +203,9 @@ const Navbar = () => {
         </div>
       </nav>
       <div
-        className={clsx(
+        className={cn(
           "invisible m-0 max-h-0 overflow-hidden rounded-xl border border-border transition-all duration-350 ease-smooth",
-          {
-            "visible mt-6 max-h-96 p-3": ids.includes(idMap.navExpand),
-          },
+          ids.includes(idMap.navExpand) && "visible mt-6 max-h-96 p-3",
         )}>
         <ul className={"flex flex-col gap-3 rounded-md"}>
           {menu_items.map((item, index) => {

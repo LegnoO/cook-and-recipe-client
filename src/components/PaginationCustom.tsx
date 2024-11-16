@@ -1,3 +1,5 @@
+'use client'
+
 import {} from "react";
 
 // ** Components
@@ -11,8 +13,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-// ** Library Imports
-import clsx from "clsx";
+// ** Lib
+import { cn } from "@/lib/utils";
 
 type Props = {
   totalPages: number;
@@ -42,7 +44,7 @@ const PaginationCustom = ({ totalPages, currentPage, onPageChange }: Props) => {
       items.push(
         <PaginationItem key={1}>
           <PaginationLink
-            className={clsx({ "cursor-pointer": currentPage !== 1 })}
+            className={cn(currentPage !== 1 && "cursor-pointer")}
             onClick={() => onPageChange(1)}
             isActive={currentPage === 1}>
             1
@@ -85,7 +87,7 @@ const PaginationCustom = ({ totalPages, currentPage, onPageChange }: Props) => {
       items.push(
         <PaginationItem key={totalPages}>
           <PaginationLink
-            className={clsx({ "cursor-pointer": currentPage !== totalPages })}
+            className={cn(currentPage !== totalPages && "cursor-pointer")}
             onClick={() => onPageChange(totalPages)}
             isActive={currentPage === totalPages}>
             {totalPages}

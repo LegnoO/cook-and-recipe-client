@@ -1,7 +1,7 @@
 "use client";
 
 // ** Next Imports
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 // ** React Imports
 import {
@@ -15,6 +15,9 @@ import {
 
 // ** Components
 import LoadingScreen from "@/components/LoadingScreen";
+
+// ** Library Imports
+import { useRouter } from "nextjs-toploader/app";
 
 // ** Services
 import { getUserInfo, login, logout } from "@/services/authService";
@@ -76,10 +79,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (authLoading) {
-    return <LoadingScreen />;
-  }
-
   return (
     <AuthContext.Provider
       value={{
@@ -89,6 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login: handleLogin,
         logout: handleLogout,
       }}>
+      {authLoading && <LoadingScreen />}
       {children}
     </AuthContext.Provider>
   );

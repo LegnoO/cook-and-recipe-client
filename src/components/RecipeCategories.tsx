@@ -42,7 +42,7 @@ export default function RecipeCategories() {
           <h2 className="mb-12 text-center text-4xl font-bold tracking-wider">
             Recipe Categories
           </h2>
-          <div className="grid-5-res gap-16">
+          <div className="grid-cols-5-res gap-16">
             {fake_data.map((data, index) => (
               <div key={index} className="flex flex-col items-center gap-4">
                 <Image

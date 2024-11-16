@@ -49,7 +49,7 @@ export default function Recipes() {
       <div className="container">
         <div className="flex flex-col gap-2">
           <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-4xl font-bold tracking-wider">
+            <h2 className="text-3xl font-bold tracking-wider">
               Popular Recipes
             </h2>
             <Button>
@@ -57,11 +57,11 @@ export default function Recipes() {
               <MoveUpRight />
             </Button>
           </div>
-          <div className="grid-4-res gap-6">
+          <div className="grid-cols-4-res gap-6">
             {fake_data.map((data, index) => (
               <div
                 key={index}
-                className="flex flex-col h-[550px] gap-2.5 rounded-lg bg-background px-4 pb-8 pt-4 transition-shadow shadow-sm hover:shadow-lg">
+                className="flex h-[500px] flex-col gap-2.5 rounded-lg border border-divider bg-background px-4 pb-8 pt-4 shadow-sm transition-shadow hover:shadow-lg">
                 <div className="relative">
                   <Image
                     src={data.image}

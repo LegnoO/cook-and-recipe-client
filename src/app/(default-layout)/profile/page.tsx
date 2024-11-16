@@ -28,17 +28,20 @@ import Repeat from "@/components/Repeat";
 import { getUserProfile } from "@/services/authService";
 import { formatAddress, getCharInitials } from "@/lib/utils";
 import SearchInput from "@/components/SearchInput";
-import RecipeCollection from "@/app/(default-layout)/profile/_components/RecipeCollection";
+import RecipeCollection from "./UserRecipeCollection";
 import ButtonEditProfile from "@/components/ButtonEditProfile";
 
 export default async function Profile() {
   const response = await getUserProfile();
   const userProfile: UserProfile = await response.json();
-  console.log("============ ", userProfile);
+  console.log("🚀 ~ Profile ~ userProfile:", userProfile);
+
+
+
   return (
     <div className="container my-[35px] space-y-8 p-4">
       <div className="grid gap-8 md:grid-cols-3">
-        <Card className="border-none shadow-md md:col-span-1 pt-4">
+        <Card className="border-none pt-4 shadow-md md:col-span-1">
           <CardHeader>
             <div className="flex flex-col items-center space-y-4">
               <div className="relative">

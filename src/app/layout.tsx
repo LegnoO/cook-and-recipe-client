@@ -31,7 +31,11 @@ export default function RootLayout({
   return (
     <html className="" lang="en">
       <body className={`${playfair.variable} antialiased`}>
-        <NextTopLoader height={3} color="hsl(var(--primary))" showSpinner={false} />
+        <NextTopLoader
+          height={3}
+          color="hsl(var(--primary))"
+          showSpinner={false}
+        />
         <ReactQueryProvider>
           <AuthProvider>{children}</AuthProvider>
         </ReactQueryProvider>

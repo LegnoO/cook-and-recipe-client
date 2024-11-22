@@ -37,7 +37,6 @@ async function fakeApiCall() {
 }
 
 export default async function ListRecipePage({ searchParams }: Props) {
-  console.log("🚀 ~ ListRecipePage ~ searchParams:", searchParams);
   const data = await fakeApiCall();
   return (
     <main className="bg-background py-12">

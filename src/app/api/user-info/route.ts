@@ -4,12 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 // ** Config
 import { externalAPI } from "@/config/endpoints";
 
-// ** Lib
-import { parseSetCookie } from "@/lib/utils/cookies";
-
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const headers = new Headers();
-  const body = JSON.stringify(await request.json());
   headers.set("Content-Type", "application/json");
   const authorization = request.headers.get("Authorization");
 
@@ -17,36 +13,27 @@ export async function POST(request: NextRequest) {
     headers.set("Authorization", authorization);
   }
 
-  const apiResponse = await fetch(`${externalAPI}/auth/public/login`, {
+  const apiResponse = await fetch(`${externalAPI}/users/owned/info`, {
     method: request.method,
-    body,
     headers,
   });
-
-  const cookiesResponse = apiResponse.headers.getSetCookie();
 
   if (!apiResponse.ok) {
     const error = await apiResponse.json();
 
     return NextResponse.json(error.message, {
-      status: error.statusCode,
+      status: apiResponse.status,
     });
   }
 
-  const accessToken = await apiResponse.text();
+  const userInfo = await apiResponse.json();
 
   const response = NextResponse.json(
-    { message: "Logout successfully" },
+    { message: "Get user info successfully", data: userInfo },
     {
       status: apiResponse.status,
     },
   );
-
-  cookiesResponse.forEach((cookie) => {
-    if (cookie) response.cookies.set(parseSetCookie(cookie));
-  });
-
-  // response.cookies.delete('accessToken')
 
   return response;
 }

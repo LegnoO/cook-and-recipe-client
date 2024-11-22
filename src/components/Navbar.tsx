@@ -56,6 +56,7 @@ const Navbar = () => {
   const { ids, addId, toggleId, removeId } = idStore();
   const { user, logout } = useAuthContext();
 
+
   const [scrolled, setScrolled] = useState(false);
 
   function handleOpenLogin() {
@@ -71,7 +72,6 @@ const Navbar = () => {
   }
 
   function navigateTo(url: string) {
-    console.log("push ", url);
     router.push(url);
   }
 

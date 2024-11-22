@@ -1,4 +1,6 @@
 export function getCharInitials(name: string) {
+  if (!name) return "";
+
   const splitName = name.split(" ");
   if (splitName.length === 1) {
     return splitName[0].charAt(0);

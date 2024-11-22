@@ -1,7 +1,7 @@
 "use client";
 
 // ** Next Imports
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 // ** React Imports
 import {
@@ -20,42 +20,40 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { useRouter } from "nextjs-toploader/app";
 
 // ** Services
-import { getUserInfo, login, logout } from "@/services/authService";
+import { getUserInfo, logout, refreshUser } from "@/services/authService";
+
+// ** Lib
+import { getCookieValue } from "@/lib/utils/cookies";
+import { isSSR } from "@/lib/utils";
+import axios from "axios";
 
 // ** Types
 interface AuthContext {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
   authLoading: boolean;
-  login: ({ email, password, rememberMe }: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const clearAuth = searchParams.get("session");
 
-  async function handleLogin({
-    email,
-    password,
-    rememberMe,
-  }: LoginCredentials) {
-    try {
-      await login({ email, password, rememberMe });
-    } catch (error) {
-      throw error;
-    }
+  function redirectToHome() {
+    if (pathname !== "/") router.push("/");
   }
 
   async function handleLogout() {
     try {
       await logout();
       setUser(null);
-      if (pathname !== "/") router.push("/");
+      redirectToHome();
     } catch (error) {
       throw error;
     }
@@ -66,8 +64,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const userData = await getUserInfo();
         setUser(userData);
-      } catch (error) {
-        console.error("Failed to refresh:", error);
+        redirectToHome();
+      } catch {
         if (user) setUser(null);
       } finally {
         setAuthLoading(false);
@@ -79,13 +77,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (clearAuth) {
+      if (user) setUser(null);
+      router.replace("/");
+    }
+  }, [clearAuth]);
+
   return (
     <AuthContext.Provider
       value={{
         user,
         setUser,
         authLoading,
-        login: handleLogin,
         logout: handleLogout,
       }}>
       {authLoading && <LoadingScreen />}

@@ -73,7 +73,7 @@ const RegisterForm = () => {
   });
 
   async function onSubmit(dataSubmit: FormValues) {
-    console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
+    // console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
     // try {
     //   setLoading(true);
     //   setError("");

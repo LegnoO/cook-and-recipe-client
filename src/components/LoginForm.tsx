@@ -39,6 +39,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { useRouter } from "nextjs-toploader/app";
 
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
@@ -48,7 +49,7 @@ import { useToast } from "@/hooks/useToast";
 import { typography } from "./Primitives";
 
 // ** Services
-import { getUserInfo } from "@/services/authService";
+import { login, logout, getUserInfo } from "@/services/authService";
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Schema
@@ -68,7 +69,8 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const LoginForm = () => {
-  const { login, setUser } = useAuthContext();
+  const router = useRouter();
+  const { setUser } = useAuthContext();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -86,12 +88,15 @@ const LoginForm = () => {
   async function onSubmit(dataSubmit: FormValues) {
     try {
       setLoading(true);
-      setError("");
+      if (error) setError("");
+
       await login(dataSubmit);
       const userInfo = await getUserInfo();
       setUser(userInfo);
+
+      router.back();
     } catch (error) {
-      setError((prev) => (typeof error === "string" ? error : prev));
+      if (error instanceof Error) setError(error.message);
     } finally {
       setLoading(false);
     }

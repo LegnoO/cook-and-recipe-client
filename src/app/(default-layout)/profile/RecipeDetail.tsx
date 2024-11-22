@@ -38,7 +38,9 @@ const RecipeDetail = ({ children }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="w-[calc(100%-2.5rem)] rounded-lg sm:max-w-[425px]">
+      <DialogContent
+        aria-describedby={undefined}
+        className="w-[calc(100%-2.5rem)] rounded-lg sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-xl">Sign In</DialogTitle>
           <DialogDescription>Sign in to access your account</DialogDescription>

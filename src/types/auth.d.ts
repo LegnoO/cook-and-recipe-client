@@ -14,19 +14,11 @@ type ChefInfo = {
 };
 
 type Gender = "Male" | "Female" | "Other";
+
 type User = {
   id: string;
   fullName: string;
   email: string;
-  dateOfBirth: string | null;
-  avatar: string;
-  permission: IRoutePermission[];
-};
-
-type UserProfile = Omit<User, "permission"> & {
-  gender: Gender;
-  phone: string;
-  chefInfo: ChefInfo;
   dateOfBirth: string | null;
   address: {
     number: string;
@@ -35,6 +27,16 @@ type UserProfile = Omit<User, "permission"> & {
     district: string;
     city: string;
   };
+  avatar: string;
+  phone: string;
+  status: boolean;
+  chefId: string;
+};
+
+type UserProfile = Omit<User, "id"> & {
+  gender: Gender;
+  createdDate: string;
+  chefInfo: ChefInfo;
 };
 
 type AuthTokens = string;

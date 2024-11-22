@@ -91,7 +91,6 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const ButtonEditProfile = ({ userProfile }: Props) => {
-  console.log("🚀 ~ ButtonEditProfile ~ userProfile:", userProfile);
   const { login, setUser } = useAuthContext();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
@@ -151,7 +150,7 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
     });
   }, [userProfile]);
 
-  console.log("🚀 ~ ButtonEditProfile ~ form:", form.getValues());
+  // console.log("🚀 ~ ButtonEditProfile ~ form:", form.getValues());
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -159,7 +158,7 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
           Edit Profile
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-[calc(100dvh-30px)] rounded-lg sm:max-w-[425px]">
+      <DialogContent aria-describedby={undefined} className="h-[calc(100dvh-30px)] rounded-lg sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
         </DialogHeader>

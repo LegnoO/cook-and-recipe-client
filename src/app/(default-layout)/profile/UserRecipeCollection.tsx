@@ -136,9 +136,9 @@ const UserRecipeCollection = () => {
     sortBy: "name",
     sortOrder: "asc",
   };
-  
+
   const [chefRecipe, setChefRecipe] = useState<Recipe[] | null>(null);
-  console.log("🚀 ~ RecipeCollection ~ chefRecipe:", chefRecipe);
+
   const [queryOptions, setQueryOptions] =
     useState<QueryOptions<{ name: string }>>(defaultQueryOptions);
 
@@ -184,7 +184,7 @@ const UserRecipeCollection = () => {
   }, [recipe]);
 
   return (
-    <Card className="border-none shadow-md md:col-span-2">
+    <Card className="flex h-full flex-col items-stretch border-none shadow-md">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-2">
@@ -194,7 +194,8 @@ const UserRecipeCollection = () => {
             </p>
           </div>
           <Button>
-            <Plus className="h-4 w-4" />Create Recipe
+            <Plus className="h-4 w-4" />
+            Create Recipe
           </Button>
         </div>
         <div className="flex w-full gap-4 pt-3">
@@ -229,7 +230,12 @@ const UserRecipeCollection = () => {
           </Select>
         </div>
       </CardHeader>
-      <CardContent className="h-full px-6 pb-6">
+      <CardContent className="flex flex-1 flex-col justify-between px-6 pb-6">
+        {false && (
+          <p className="mt-4 text-center text-muted-foreground">
+            Không tìm thấy công thức nào phù hợp.
+          </p>
+        )}
         <div className="grid gap-4 sm:grid-cols-2">
           {fake_data.map((recipe, index) => (
             <Fragment key={index}>
@@ -237,18 +243,12 @@ const UserRecipeCollection = () => {
             </Fragment>
           ))}
         </div>
-        {false && (
-          <p className="mt-4 text-center text-muted-foreground">
-            Không tìm thấy công thức nào phù hợp.
-          </p>
-        )}
-        <div className="mt-6">
-          <PaginationCustom
-            totalPages={queryOptions.total}
-            currentPage={queryOptions.index}
-            onPageChange={onPageChange}
-          />
-        </div>
+
+        <PaginationCustom
+          totalPages={queryOptions.total}
+          currentPage={queryOptions.index}
+          onPageChange={onPageChange}
+        />
       </CardContent>
     </Card>
   );

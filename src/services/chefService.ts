@@ -1,5 +1,5 @@
 // ** Lib
-import AxiosInstance from "@/lib/apiClient";
+import AxiosInstance from "@/lib/apiClient-old";
 import { createSearchParams } from "@/lib/utils";
 
 export async function getRecipeOwned<T>(queryOptions: QueryOptions<T>) {

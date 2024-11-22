@@ -11,13 +11,9 @@ export async function POST(request: NextRequest) {
   const headers = new Headers();
   const body = JSON.stringify(await request.json());
   headers.set("Content-Type", "application/json");
-  const authorization = request.headers.get("Authorization");
+  headers.set("Cookie", request.cookies.toString());
 
-  if (authorization) {
-    headers.set("Authorization", authorization);
-  }
-
-  const apiResponse = await fetch(`${externalAPI}/auth/public/login`, {
+  const apiResponse = await fetch(`${externalAPI}/auth/refresh`, {
     method: request.method,
     body,
     headers,
@@ -36,7 +32,7 @@ export async function POST(request: NextRequest) {
   const accessToken = await apiResponse.text();
 
   const response = NextResponse.json(
-    { message: "Login successfully" },
+    { message: "Refresh successfully" },
     {
       status: apiResponse.status,
     },

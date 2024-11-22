@@ -24,7 +24,7 @@ const Modal = ({ children }: Props) => {
   return (
     <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
       <DialogOverlay>
-        <DialogContent className="p-0 w-[calc(100%-2.5rem)] rounded-lg sm:max-w-[425px]">
+        <DialogContent aria-describedby={undefined} className="p-0 w-[calc(100%-2.5rem)] rounded-lg sm:max-w-[425px]">
           {children}
         </DialogContent>
       </DialogOverlay>

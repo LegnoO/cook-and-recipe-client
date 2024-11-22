@@ -57,7 +57,7 @@ export default function RecipeCard({ data }: Props) {
           </Card>
         ))}
       </div>
-      <div className="mt-6">
+      <div className="mt-10">
         <PaginationCustom
           totalPages={50}
           currentPage={1}

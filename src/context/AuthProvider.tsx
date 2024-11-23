@@ -20,12 +20,12 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { useRouter } from "nextjs-toploader/app";
 
 // ** Services
-import { getUserInfo, logout, refreshUser } from "@/services/authService";
+import { getUserInfo, logout } from "@/services/authService";
 
 // ** Lib
-import { getCookieValue } from "@/lib/utils/cookies";
+import { deleteCookie, getCookieValue } from "@/lib/utils/cookies";
 import { isSSR } from "@/lib/utils";
-import axios from "axios";
+import { internalAPI } from "@/config/endpoints";
 
 // ** Types
 interface AuthContext {
@@ -53,6 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await logout();
       setUser(null);
+      deleteCookie("accessToken");
       redirectToHome();
     } catch (error) {
       throw error;
@@ -64,8 +65,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const userData = await getUserInfo();
         setUser(userData);
-        redirectToHome();
       } catch {
+        redirectToHome();
         if (user) setUser(null);
       } finally {
         setAuthLoading(false);
@@ -80,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (clearAuth) {
       if (user) setUser(null);
-      router.replace("/");
+      redirectToHome();
     }
   }, [clearAuth]);
 

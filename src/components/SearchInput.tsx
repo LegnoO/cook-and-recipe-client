@@ -7,19 +7,29 @@ import { ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
 
 // ** Icons
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 
 // ** Types
 type Props = {
   placeholder?: string;
   onSearch?: (event: ChangeEvent<HTMLInputElement>) => void;
   name?: string;
+  isLoading?: boolean;
 };
 
-const SearchInput = ({ name, placeholder = "Search...", onSearch }: Props) => {
+const SearchInput = ({
+  isLoading,
+  name,
+  placeholder = "Search...",
+  onSearch,
+}: Props) => {
   return (
     <div className="relative w-full">
-      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      {isLoading ? (
+        <Loader2 className="animate-spin absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      ) : (
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      )}
       <Input
         name={name}
         type="search"

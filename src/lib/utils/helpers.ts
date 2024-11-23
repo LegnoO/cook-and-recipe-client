@@ -45,3 +45,17 @@ export function createSearchParams(filter: Object) {
 
   return params;
 }
+
+export function getItemLocalStorage<T>(key: string): T | null {
+  if (isSSR) {
+    return null;
+  }
+
+  return localStorage.getItem(key)
+    ? JSON.parse(localStorage.getItem(key)!)
+    : null;
+}
+
+export function secondsToMinutes(seconds: number) {
+  return Math.floor(seconds / 60);
+}

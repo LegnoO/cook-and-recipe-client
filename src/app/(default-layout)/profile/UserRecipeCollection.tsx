@@ -130,7 +130,7 @@ const UserRecipeCollection = () => {
 
   const defaultQueryOptions: QueryOptions<{ name: string }> = {
     index: 1,
-    size: 1,
+    size: 10,
     total: 1,
     name: "",
     sortBy: "name",
@@ -183,6 +183,10 @@ const UserRecipeCollection = () => {
     }
   }, [recipe]);
 
+  if (!chefRecipe) {
+    return null;
+  }
+
   return (
     <Card className="flex h-full flex-col items-stretch border-none shadow-md">
       <CardHeader>
@@ -190,7 +194,7 @@ const UserRecipeCollection = () => {
           <div className="flex flex-col gap-2">
             <CardTitle>My recipes</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Các món ăn bạn đã chia sẻ {fake_data.length}
+              Dishes you have shared: {fake_data.length}
             </p>
           </div>
           <Button>
@@ -202,7 +206,9 @@ const UserRecipeCollection = () => {
           <SearchInput
             onSearch={onSearchRecipe}
             placeholder="Search recipes..."
+            isLoading={isLoading}
           />
+
           <Select
             value={`${queryOptions.sortBy}-${queryOptions.sortOrder}`}
             onValueChange={handleSort}>
@@ -231,15 +237,15 @@ const UserRecipeCollection = () => {
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col justify-between px-6 pb-6">
-        {false && (
+        {chefRecipe.length === 0 && (
           <p className="mt-4 text-center text-muted-foreground">
-            Không tìm thấy công thức nào phù hợp.
+            No matching recipes found.
           </p>
         )}
         <div className="grid gap-4 sm:grid-cols-2">
-          {fake_data.map((recipe, index) => (
+          {chefRecipe.map((recipe, index) => (
             <Fragment key={index}>
-              <RecipeCard />
+              <RecipeCard recipe={recipe} />
             </Fragment>
           ))}
         </div>

@@ -1,74 +1,33 @@
-type CookieOptions = {
-  expires: Date;
-  maxAge: string;
-  path: string;
-  domain: string;
-  secure: boolean;
-  sameSite: string;
-};
+// ** Lib
+import { isSSR } from "./helpers";
 
 type ParsedCookie = {
   name: string;
   value: string;
   domain?: string | undefined;
-  expires?: Date | undefined;
   httpOnly?: boolean | undefined;
   maxAge?: number | undefined;
-  path?: string | undefined;
   priority?: "low" | "medium" | "high" | undefined;
+  expires?: number | Date | undefined;
   sameSite?: true | false | "lax" | "strict" | "none" | undefined;
   secure?: boolean | undefined;
+  path?: string | undefined;
 };
 
+type SetCookie = Omit<
+  ParsedCookie,
+  "domain" | "httpOnly" | "name" | "value" | "priority" | "maxAge"
+>;
+
 export function getCookieValue(name: string) {
+  if (isSSR) {
+    return "";
+  }
+
   const cookies = document.cookie.split("; ");
   const cookie = cookies.find((c) => c.startsWith(`${name}=`));
   return cookie ? cookie.split("=")[1] : null;
 }
-
-export function setCookie(
-  name: string,
-  value: string,
-  options: Partial<CookieOptions> = {},
-) {
-  let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
-
-  if (options.expires) {
-    cookieString += `; expires=${options.expires.toUTCString()}`;
-  }
-
-  if (options.maxAge) {
-    cookieString += `; max-age=${options.maxAge}`;
-  }
-
-  if (options.path) {
-    cookieString += `; path=${options.path}`;
-  }
-
-  if (options.domain) {
-    cookieString += `; domain=${options.domain}`;
-  }
-
-  if (options.secure) {
-    cookieString += `; secure`;
-  }
-
-  if (options.sameSite) {
-    cookieString += `; samesite=${options.sameSite}`;
-  }
-  if (options.sameSite) {
-    cookieString += `; samesite=${options.sameSite}`;
-  }
-
-  document.cookie = cookieString;
-}
-
-export function deleteCookie(name: string, path = "/", domain?: string) {
-  document.cookie =
-    `${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path};` +
-    (domain ? ` domain=${domain};` : "");
-}
-
 
 export function parseSetCookie(cookieString: string): ParsedCookie {
   const parts = cookieString.split(";").map((part) => part.trim());
@@ -102,4 +61,43 @@ export function parseSetCookie(cookieString: string): ParsedCookie {
   });
 
   return parsedCookie;
+}
+
+export function setCookie(
+  name: string,
+  value: string,
+  options: SetCookie = {},
+) {
+  let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+
+  if (options.expires) {
+    if (typeof options.expires === "number") {
+      const date = new Date();
+      date.setTime(date.getTime() + options.expires * 1000);
+      cookieString += `; expires=${date.toUTCString()}`;
+    } else if (options.expires instanceof Date) {
+      cookieString += `; expires=${options.expires.toUTCString()}`;
+    }
+  }
+
+  if (options.path) {
+    cookieString += `; path=${options.path}`;
+  }
+
+  if (options.secure) {
+    cookieString += `; secure`;
+  }
+
+  if (options.sameSite) {
+    cookieString += `; samesite=${options.sameSite}`;
+  }
+
+  document.cookie = cookieString;
+}
+
+export function deleteCookie(name: string, options?: { path?: string }) {
+  let cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+  if (options?.path) cookie += `path=${options?.path};`;
+
+  document.cookie = cookie;
 }

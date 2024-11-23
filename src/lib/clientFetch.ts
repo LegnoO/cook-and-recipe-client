@@ -1,30 +1,39 @@
 // ** Config
-import { internalAPI } from "@/config/endpoints";
+import { externalAPI } from "@/config/endpoints";
 import { refreshUser } from "@/services/authService";
 
+// ** Lib
+import { getCookieValue } from "@/lib/utils/cookies";
+
 // ** Types
+type Headers = Record<string, string>;
 type CustomRequestInit = RequestInit & {
-  headers?: Record<string, string>;
+  headers?: Headers;
 };
 
-export default async function fetcher(
+export default async function clientFetch(
   endpoint: string | URL,
   options: CustomRequestInit = {},
 ): Promise<Response> {
-  const fullUrl = `${internalAPI}${endpoint}`;
+  const fullUrl = `${externalAPI}${endpoint}`;
+
+  options.headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || undefined),
+  };
 
   async function performFetch(): Promise<Response> {
-    const response = await fetch(fullUrl, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      ...options,
-    });
+    const accessToken = getCookieValue("accessToken");
+
+    if (accessToken)
+      options.headers!["Authorization"] = `Bearer ${accessToken}`;
+
+    const response = await fetch(fullUrl, options);
 
     if (!response.ok) {
       if (
         response.status === 401 &&
-        !fullUrl.includes("/user-info") &&
+        !fullUrl.includes("/users/owned/info") &&
         !fullUrl.includes("/refresh") &&
         !fullUrl.includes("/login")
       ) {
@@ -37,7 +46,8 @@ export default async function fetcher(
       }
 
       const errorMessage = await response.json();
-      throw new Error(errorMessage);
+      console.log("🚀 ~ performFetch ~ errorMessage:", errorMessage);
+      throw new Error(errorMessage.message);
     }
 
     return response;

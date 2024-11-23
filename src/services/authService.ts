@@ -1,8 +1,9 @@
 // ** Lib
-import fetcher from "@/lib/fetcher";
+import clientFetch from "@/lib/clientFetch";
+
 
 export async function login({ email, password, rememberMe }: LoginCredentials) {
-  const response = await fetcher(`/login`, {
+  const response = await clientFetch(`/auth/public/login`, {
     method: "POST",
     body: JSON.stringify({
       email,
@@ -12,36 +13,32 @@ export async function login({ email, password, rememberMe }: LoginCredentials) {
     credentials: "include",
   });
 
-  await response.json();
+  return await response.text();
 }
 
 export async function logout() {
-  const response = await fetcher(`/logout`, {
+  const response = await clientFetch(`/auth/logout`, {
     method: "POST",
+    credentials: "include",
   });
 
-  return response.json();
+  await response.text();
 }
 
 export async function getUserInfo() {
-  const response = await fetcher(`/user-info`, {
-    method: "GET",
-  });
+  const response = await clientFetch("/users/owned/info", { method: "GET" });
 
   const userInfo = await response.json();
-  return userInfo.data;
-}
 
-// export async function getUserProfile() {
-//   return fetcher("/users/owned/profile");
-// }
+  return userInfo;
+}
 
 export async function refreshUser() {
   const rememberMe: boolean = localStorage.getItem("rememberMe")
     ? JSON.parse(localStorage.getItem("rememberMe")!)
     : false;
 
-  const response = await fetcher(`/refresh`, {
+  const response = await clientFetch(`/refresh`, {
     method: "POST",
     body: JSON.stringify({
       rememberMe,

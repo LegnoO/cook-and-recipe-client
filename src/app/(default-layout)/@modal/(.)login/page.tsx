@@ -1,5 +1,5 @@
 // ** Components
-import LoginForm from "@/components/LoginForm";
+import LoginForm from "@/app/(default-layout)/login/LoginForm";
 import Modal from "@/components/Modal";
 
 export default function LoginModal() {

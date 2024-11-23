@@ -25,14 +25,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/Form";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "./ui/dialog";
 
 // ** Library Imports
 import { z } from "zod";
@@ -46,11 +38,15 @@ import { useToast } from "@/hooks/useToast";
 
 // ** Utils
 
-import { typography } from "./Primitives";
+import { typography } from "../../../components/Primitives";
 
 // ** Services
-import { login, logout, getUserInfo } from "@/services/authService";
+import { login, getUserInfo } from "@/services/authService";
 import { useAuthContext } from "@/context/AuthProvider";
+
+// ** Lib
+import { setCookie } from "@/lib/utils/cookies";
+import { getItemLocalStorage } from "@/lib/utils";
 
 // ** Schema
 const formSchema = z.object({
@@ -76,24 +72,29 @@ const LoginForm = () => {
   const [isLoading, setLoading] = useState(false);
 
   const [error, setError] = useState("");
+
   const form = useForm<FormValues>({
     defaultValues: {
       email: "legno@gmail.com",
       password: "admin",
-      rememberMe: true,
+      rememberMe: getItemLocalStorage<boolean>("rememberMe") || false,
     },
     resolver: zodResolver(formSchema),
   });
 
   async function onSubmit(dataSubmit: FormValues) {
-    try {
-      setLoading(true);
-      if (error) setError("");
+    setLoading(true);
+    if (error) setError("");
 
-      await login(dataSubmit);
+    try {
+      const accessToken = await login(dataSubmit);
+      setCookie("accessToken", accessToken, {
+        path: "/",
+        secure: true,
+        sameSite: "none",
+      });
       const userInfo = await getUserInfo();
       setUser(userInfo);
-
       router.back();
     } catch (error) {
       if (error instanceof Error) setError(error.message);

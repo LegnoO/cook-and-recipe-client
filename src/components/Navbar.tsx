@@ -11,12 +11,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo, Menu, Close } from "@/components/ui/icons";
 import { typography } from "@/components/Primitives";
 import { Button } from "@/components/ui/button";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -25,7 +19,6 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import ButtonSignUpForm from "@/components/RegisterForm";
-import ButtonSignInForm from "@/components/LoginForm";
 
 // ** Library Imports
 import { useRouter } from "nextjs-toploader/app";
@@ -55,7 +48,6 @@ const Navbar = () => {
   const menu_items = ["Home", "Recipes", "Chef", "Contact", "About us"];
   const { ids, addId, toggleId, removeId } = idStore();
   const { user, logout } = useAuthContext();
-
 
   const [scrolled, setScrolled] = useState(false);
 

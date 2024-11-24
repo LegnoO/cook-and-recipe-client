@@ -18,8 +18,11 @@ const config: Config = {
       },
     },
     extend: {
+      borderWidth: {
+        "3": "3px", 
+      },
       backgroundPosition: {
-        'center-top': 'center top', 
+        "center-top": "center top",
       },
       spacing: {
         "4.5": "1.125rem",
@@ -95,6 +98,10 @@ const config: Config = {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
         },
         border: "hsl(var(--border) / 0.12)",
         input: "hsl(var(--input) / 0.22)",

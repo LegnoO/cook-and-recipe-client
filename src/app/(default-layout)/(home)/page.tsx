@@ -1,5 +1,4 @@
 // ** Components
-import { typography } from "@/components/Primitives";
 import { Button } from "@/components/ui/button";
 import RecipeCard from "@/components/ui/Card/RecipeCard";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,17 +20,12 @@ export default async function Home() {
                 "inline-block w-2/3 space-y-6 py-[180px] pl-0 pr-[80px] text-foreground"
               }>
               <h2
-                className={typography({
-                  className: "font-medium text-foreground",
-                  display: "lg",
-                })}>
+                className={
+                  "text-[3rem] font-medium leading-[3.75rem] text-foreground"
+                }>
                 The Easiest Way To Make Your Favorite Meal
               </h2>
-              <h3
-                className={typography({
-                  className: "text-foreground",
-                  text: "xl",
-                })}>
+              <h3 className="text-xl text-foreground">
                 Discover 1000+ recipes in your hand with the best recipe. Help
                 you to find the easiest way to cook.
               </h3>

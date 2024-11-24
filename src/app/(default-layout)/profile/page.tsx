@@ -1,18 +1,14 @@
 // ** Components
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ButtonEditProfile from "@/components/ButtonEditProfile";
+
+import UserRecipeCollection from "./UserRecipeCollection";
+
+// ** Icons
 import {
   Clock,
   UserIcon,
@@ -22,17 +18,12 @@ import {
   Phone,
   Users,
 } from "lucide-react";
-import Repeat from "@/components/Repeat";
 
-// ** Services
-
+// ** Lib
 import { formatAddress, getCharInitials } from "@/lib/utils";
-import SearchInput from "@/components/SearchInput";
-import RecipeCollection from "./UserRecipeCollection";
-import ButtonEditProfile from "@/components/ButtonEditProfile";
 import serverFetch from "@/lib/serverFetch";
 
-export async function getUserProfile() {
+async function getUserProfile() {
   const response = await serverFetch(`/users/owned/profile`);
 
   const userInfo = await response.json();
@@ -131,7 +122,7 @@ export default async function Profile() {
           </Card>
         </div>
         <div className="w-[70%]">
-          <RecipeCollection />
+          <UserRecipeCollection />
         </div>
       </div>
     </div>

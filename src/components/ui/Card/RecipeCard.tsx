@@ -3,9 +3,6 @@
 // ** Next Imports
 import Image, { ImageLoaderProps } from "next/image";
 
-// ** Components
-import { typography } from "@/components/Primitives";
-
 const imageLoader = ({ src, width, quality }: ImageLoaderProps) => {
   const srcString = src.split("/");
   const uploadIndex = srcString.indexOf("upload");
@@ -28,16 +25,8 @@ const RecipeCard = () => {
           alt="recipe ..."
         />
       </div>
-      <h3 className={typography({ className: "mb-1 font-medium", text: "lg" })}>
-        Salmon Salad
-      </h3>
-      <p
-        className={typography({
-          className: "text-muted-foreground",
-          text: "md",
-        })}>
-        By Legno
-      </p>
+      <h3 className="mb-1 text-lg font-medium">Salmon Salad</h3>
+      <p className="text-md text-muted-foreground">By Legno</p>
     </div>
   );
 };

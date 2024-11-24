@@ -36,10 +36,6 @@ import { useRouter } from "nextjs-toploader/app";
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
 
-// ** Utils
-
-import { typography } from "../../../components/Primitives";
-
 // ** Services
 import { login, getUserInfo } from "@/services/authService";
 import { useAuthContext } from "@/context/AuthProvider";
@@ -193,12 +189,7 @@ const LoginForm = () => {
                   }}
                 />
 
-                <Link
-                  href="#"
-                  className={typography({
-                    text: "sm",
-                    className: "font-medium leading-none",
-                  })}>
+                <Link href="#" className="text-sm font-medium">
                   Forgot Password?
                 </Link>
               </div>
@@ -214,10 +205,7 @@ const LoginForm = () => {
                 Not registered yet?{" "}
                 <Link
                   href="#"
-                  className={typography({
-                    text: "sm",
-                    className: "font-medium leading-none underline",
-                  })}>
+                  className="text-sm font-medium leading-none underline">
                   Create an account
                 </Link>
               </p>

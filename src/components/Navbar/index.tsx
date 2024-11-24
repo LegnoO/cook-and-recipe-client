@@ -7,18 +7,9 @@ import Link from "next/link";
 import { Fragment, useState, useEffect } from "react";
 
 // ** Components
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Logo, Menu, Close } from "@/components/ui/icons";
-import { typography } from "@/components/Primitives";
+import Notification from "./Notification";
+import UserMenu from "./UserMenu";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import ButtonSignUpForm from "@/components/RegisterForm";
 
 // ** Library Imports
 import { useRouter } from "nextjs-toploader/app";
@@ -26,17 +17,17 @@ import { useRouter } from "nextjs-toploader/app";
 // ** Context
 import { useAuthContext } from "@/context/AuthProvider";
 
+// ** Icons
+import { Logo, Menu, Close } from "@/components/ui/icons";
+
 // ** Library Imports
 import { useMediaQuery } from "usehooks-ts";
-import { Loader2 } from "lucide-react";
-import { LogOut, Settings, User } from "lucide-react";
 
 // ** Store
 import { idStore } from "@/store/idStore";
 
 // ** Lib
 import { cn } from "@/lib/utils";
-import { getCharInitials } from "@/lib/utils/helpers";
 
 const Navbar = () => {
   const router = useRouter();
@@ -47,7 +38,7 @@ const Navbar = () => {
   };
   const menu_items = ["Home", "Recipes", "Chef", "Contact", "About us"];
   const { ids, addId, toggleId, removeId } = idStore();
-  const { user, logout } = useAuthContext();
+  const { user } = useAuthContext();
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -92,12 +83,7 @@ const Navbar = () => {
       <nav className="container flex h-full items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Logo className="text-foreground" />
-          <h5
-            className={typography({
-              className:
-                "inline-block py-2 font-playFair font-medium text-foreground",
-              logo: "md",
-            })}>
+          <h5 className="inline-block py-2 font-playFair text-lg font-medium text-foreground">
             Cook & Recipe
           </h5>
         </Link>
@@ -118,57 +104,12 @@ const Navbar = () => {
           </ul>
         </nav>
 
-        <div className={"flex items-center gap-4"}>
+        <div className={"flex items-center gap-2.5"}>
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Avatar className="cursor-pointer">
-                  <AvatarImage src={user.avatar} />
-                  <AvatarFallback>
-                    {getCharInitials(user.fullName)}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-40">
-                <div className="flex items-center justify-start gap-2 p-2">
-                  <Avatar className="h-12 w-12 cursor-pointer">
-                    <AvatarImage
-                      src={user.avatar}
-                      alt={`${user.fullName} Avatar`}
-                    />
-                    <AvatarFallback>
-                      {getCharInitials(user.fullName)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">{user.fullName}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {user.email}
-                    </p>
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
-
-                <Link href="/profile">
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Settings className="h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                </Link>
-
-                <DropdownMenuItem className="cursor-pointer">
-                  <User className="h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem onClick={logout} className="cursor-pointer">
-                  <LogOut className="mr-1 h-4 w-4" />
-                  <span> Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Fragment>
+              <Notification />
+              <UserMenu />
+            </Fragment>
           ) : (
             <div className="flex items-center gap-4">
               <Button variant="ghost">

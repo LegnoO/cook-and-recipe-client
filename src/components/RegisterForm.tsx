@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 // ** Components
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,7 +60,7 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 const RegisterForm = () => {
-  const { login, setUser } = useAuthContext();
+  const {  setUser } = useAuthContext();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

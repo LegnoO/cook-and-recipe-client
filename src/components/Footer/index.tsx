@@ -1,9 +1,5 @@
 // ** Components
 import { Logo } from "@/components/ui/icons";
-import { typography } from "@/components/Primitives";
-
-// ** Styles
-import styles from "./Footer.module.css";
 
 const Footer = () => {
   return (
@@ -14,11 +10,7 @@ const Footer = () => {
             <div className="w-[70%]">
               <div className="mb-4 flex items-center gap-1">
                 <Logo size={40} className="text-foreground" />
-                <span
-                  className={typography({
-                    className: "inline-block font-medium text-foreground",
-                    display: "xs",
-                  })}>
+                <span className="inline-block text-2xl font-medium text-foreground ">
                   Cook & Recipe
                 </span>
               </div>

@@ -5,7 +5,6 @@ import { useState, useEffect, ChangeEvent } from "react";
 
 // ** Components
 import { Calendar } from "@/components/ui/calendar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -53,6 +52,7 @@ import { useToast } from "@/hooks/useToast";
 // ** Services
 import { useAuthContext } from "@/context/AuthProvider";
 import { cn, getCharInitials } from "@/lib/utils";
+import { Scroll } from "./Scroll";
 
 // ** Types
 type Props = { userProfile: UserProfile };
@@ -91,7 +91,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const ButtonEditProfile = ({ userProfile }: Props) => {
-  const { login, setUser } = useAuthContext();
+  const {  setUser } = useAuthContext();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -162,7 +162,7 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="pr-4">
+        <Scroll>
           <Form {...form}>
             <form
               noValidate
@@ -394,7 +394,7 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
               </div>
             </form>
           </Form>
-        </ScrollArea>
+        </Scroll>
       </DialogContent>
     </Dialog>
   );

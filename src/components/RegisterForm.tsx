@@ -17,7 +17,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/Form";
+} from "@/components/ui/form";
 import { Logo } from "./ui/icons";
 import {
   Card,
@@ -60,7 +60,7 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 const RegisterForm = () => {
-  const {  setUser } = useAuthContext();
+  const { setUser } = useAuthContext();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

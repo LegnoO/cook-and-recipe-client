@@ -21,7 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/Form";
+} from "@/components/ui/form";
 import {
   Dialog,
   DialogTrigger,
@@ -91,7 +91,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const ButtonEditProfile = ({ userProfile }: Props) => {
-  const {  setUser } = useAuthContext();
+  const { setUser } = useAuthContext();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -154,11 +154,11 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button  className="w-full">
-          Edit Profile
-        </Button>
+        <Button className="w-full">Edit Profile</Button>
       </DialogTrigger>
-      <DialogContent aria-describedby={undefined} className="h-[calc(100dvh-30px)] rounded-lg sm:max-w-[425px]">
+      <DialogContent
+        aria-describedby={undefined}
+        className="h-[calc(100dvh-30px)] rounded-lg sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
         </DialogHeader>

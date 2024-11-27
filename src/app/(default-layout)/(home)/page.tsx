@@ -1,6 +1,6 @@
 // ** Components
 import { Button } from "@/components/ui/button";
-import RecipeCard from "@/components/ui/Card/RecipeCard";
+import RecipeCard from "@/components/ui/RecipeCard";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 

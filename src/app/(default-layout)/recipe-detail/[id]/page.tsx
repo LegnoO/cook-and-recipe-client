@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import ImageGallery from "./_components/ImageGallery";
+import ImageGallery from "./ImageGallery";
 
 // ** Icons
 import {

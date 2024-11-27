@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userData = await getUserInfo();
         setUser(userData);
       } catch {
-        redirectToHome();
+        // redirectToHome();
         if (user) setUser(null);
       } finally {
         setAuthLoading(false);
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         authLoading,
         logout: handleLogout,
       }}>
-      {authLoading && <LoadingScreen />}
+      {/* {authLoading && <LoadingScreen />} */}
       {children}
     </AuthContext.Provider>
   );

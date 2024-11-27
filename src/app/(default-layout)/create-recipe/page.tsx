@@ -16,9 +16,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-
 import { Input } from "@/components/ui/input";
-
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import ImageUpload from "./ImageUpload";
 import CategorySelect from "./CategorySelect";
 import DifficultySelect from "./DifficultySelect";
@@ -53,7 +59,7 @@ const formSchema = z.object({
   ingredients: z.array(
     z.object({
       name: z.string().min(1, "Ingredient name is required"),
-      quantity: z.number().min(0, "Quantity must be a positive number"),
+      quantity: z.number().min(1, "Quantity must be a positive number"),
       measurement: z.string().min(1, "Measurement is required"),
     }),
   ),
@@ -87,10 +93,7 @@ const CreateRecipe = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ingredients: [
-        { name: "", quantity: 0, measurement: "" },
-        { name: "", quantity: 0, measurement: "" },
-      ],
+      ingredients: [{ name: "", quantity: 1, measurement: "" }],
       instructionSections: [
         { title: "", instructions: [{ step: 1, description: "" }] },
       ],
@@ -111,20 +114,19 @@ const CreateRecipe = () => {
   }
 
   return (
-    <div className="bg-background py-[35px]">
+    <div className="bg-background pb-[70px] pt-[35px]">
       <div className="container">
         <Form {...form}>
           <form
             noValidate
             autoComplete="off"
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col items-stretch gap-8 md:flex-row">
-            <div className="w-1/2">
-              <h2 className="mb-4 text-lg font-medium uppercase text-muted">
-                Recipe general information
-              </h2>
-
-              <div className="flex flex-col gap-4">
+            className="mx-auto flex max-w-4xl flex-col gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Recipe General Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
                 <ImageUpload form={form} />
                 <FormField
                   control={form.control}
@@ -134,7 +136,7 @@ const CreateRecipe = () => {
                       <FormLabel>Recipe name</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="eg: Vietnamese Pho, Spaghetti Carbonara, Chicken Tikka Masala"
+                          placeholder="e.g. Vietnamese Pho, Spaghetti Carbonara, Chicken Tikka Masala"
                           {...field}
                         />
                       </FormControl>
@@ -148,17 +150,17 @@ const CreateRecipe = () => {
                     name="timeToCook"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Cook duration</FormLabel>
+                        <FormLabel>Cook duration (minutes)</FormLabel>
                         <FormControl>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              min={0}
-                              type="number"
-                              placeholder="eg: 30"
-                              {...field}
-                            />
-                            <span>minute</span>
-                          </div>
+                          <Input
+                            {...field}
+                            min={0}
+                            type="number"
+                            placeholder="e.g. 30"
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value))
+                            }
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -169,17 +171,17 @@ const CreateRecipe = () => {
                     name="serves"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Number of serving</FormLabel>
+                        <FormLabel>Number of serving (person)</FormLabel>
                         <FormControl>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              min={0}
-                              type="number"
-                              placeholder="eg: 4 or 3-5"
-                              {...field}
-                            />
-                            <span>person</span>
-                          </div>
+                          <Input
+                            {...field}
+                            min={0}
+                            type="number"
+                            placeholder="e.g. 4 or 3-5"
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value))
+                            }
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -210,29 +212,32 @@ const CreateRecipe = () => {
                     </FormItem>
                   )}
                 />
-              </div>
-            </div>
-            <div className="w-1/2">
-              <h2 className="mb-4 text-lg font-medium uppercase text-muted">
-                Recipe detail
-              </h2>
-              <div className="flex flex-col gap-4">
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle> Recipe Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
                 <AddIngredient form={form} />
                 <AddInstruction form={form} />
-              </div>
-            </div>
-            {false && (
-              <button
-                onClick={() => {
-                  console.log({
-                    error: form.formState.errors,
-                    data: form.getValues(),
-                  });
-                }}
-                type="submit">
-                submit
-              </button>
-            )}
+              </CardContent>
+              <CardFooter className="flex items-center justify-end gap-4">
+                <Button type="button" variant="outline">
+                  Save as Draft
+                </Button>
+                <Button
+                  onClick={() => {
+                    console.log({
+                      error: form.formState.errors,
+                      data: form.getValues(),
+                    });
+                  }}
+                  type="submit">
+                  Publish Recipe
+                </Button>
+              </CardFooter>
+            </Card>
           </form>
         </Form>
       </div>

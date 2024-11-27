@@ -56,7 +56,7 @@ const CategorySelect = ({ form, onChange }: Props) => {
 
   return (
     <div className="flex flex-col gap-2">
-      <Label htmlFor={id}>Choose a category</Label>
+      <Label htmlFor={id}>Category</Label>
       <Select
         value={form.getValues("category")}
         onValueChange={onChange}

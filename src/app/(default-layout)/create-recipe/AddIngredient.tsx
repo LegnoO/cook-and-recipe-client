@@ -34,66 +34,66 @@ const AddIngredient = ({ form }: Props) => {
   });
 
   return (
-    <div className="rounded-lg border border-divider p-4">
+    <div className="space-y-4">
       <div className="mb-4 flex items-center gap-2">
         <h3 className="font-medium">Ingredients</h3>
         <Info className="h-4 w-4 text-muted" />
       </div>
 
       {ingredientFields.map((field, index) => (
-        <div key={field.id} className="mb-4">
-          <div className="grid grid-cols-[2fr,1fr,1fr,auto] gap-2">
-            <FormField
-              control={form.control}
-              name={`ingredients.${index}.name`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Ingredient name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name={`ingredients.${index}.quantity`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Quantity"
-                      {...field}
-                      onChange={(e) =>
-                        field.onChange(parseFloat(e.target.value))
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name={`ingredients.${index}.measurement`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Unit" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="button"
-              variant="destructive"
-              size="icon"
-              onClick={() => removeIngredient(index)}>
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
+        <div key={field.id} className="grid grid-cols-[2fr,1fr,1fr,auto] gap-2">
+          <FormField
+            control={form.control}
+            name={`ingredients.${index}.name`}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="e.g. All-purpose flour, Fresh basil leaves, Olive oil"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`ingredients.${index}.quantity`}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min={0}
+                    placeholder="Quantity"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`ingredients.${index}.measurement`}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Unit" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="button"
+            variant="destructive"
+            size="icon"
+            onClick={() => removeIngredient(index)}>
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
       ))}
       <Button

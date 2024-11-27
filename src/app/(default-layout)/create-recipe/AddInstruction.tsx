@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 
 // ** Library Imports
 import { UseFormReturn, useFieldArray } from "react-hook-form";
@@ -38,9 +39,12 @@ const AddInstruction = ({ form }: Props) => {
     name: "instructionSections",
   });
 
+  const renderInstruction = (sectionIndex: number) =>
+    form.watch(`instructionSections.${sectionIndex}.instructions`);
+
   return (
-    <div className="rounded-lg border border-divider p-4">
-      <div className="mb-4 flex items-center gap-2">
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
         <h3 className="font-medium">Instructions</h3>
         <Info className="h-4 w-4 text-muted" />
       </div>
@@ -49,15 +53,17 @@ const AddInstruction = ({ form }: Props) => {
         <Fragment>
           {sectionIndex > 0 && <Separator className="mb-4 mt-6" />}
 
-          <div key={field.id} className="mb-4">
+          <div key={field.id}>
             <FormField
               control={form.control}
               name={`instructionSections.${sectionIndex}.title`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Section Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="eg: " {...field} />
+                    <Input
+                      placeholder="e.g. Section Title (Preparation, Cooking, Sauce)"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -65,38 +71,42 @@ const AddInstruction = ({ form }: Props) => {
             />
 
             <div className="mt-4">
-              {form
-                .watch(`instructionSections.${sectionIndex}.instructions`)
-                .map((_, instructionIndex) => (
-                  <div
-                    key={instructionIndex}
-                    className="mb-2 flex items-center gap-2">
-                    <FormField
-                      control={form.control}
-                      name={`instructionSections.${sectionIndex}.instructions.${instructionIndex}.step`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              min={0}
-                              type="number"
-                              {...field}
-                              onChange={(e) =>
-                                field.onChange(parseInt(e.target.value))
-                              }
-                              className="w-16"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+              {renderInstruction(sectionIndex).map(
+                (instruction, instructionIndex) => (
+                  <div key={instructionIndex} className="mb-2 flex gap-4">
+                    {/* <FormField
+                    control={form.control}
+                    name={`instructionSections.${sectionIndex}.instructions.${instructionIndex}.step`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            min={0}
+                            type="number"
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(parseInt(e.target.value))
+                            }
+                            className="w-16"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  /> */}
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      {instruction.step}
+                    </div>
                     <FormField
                       control={form.control}
                       name={`instructionSections.${sectionIndex}.instructions.${instructionIndex}.description`}
                       render={({ field }) => (
                         <FormItem className="flex-grow">
                           <FormControl>
-                            <Input {...field} placeholder="Instruction step" />
+                            <Textarea
+                              {...field}
+                              rows={3}
+                              placeholder={`Step ${instruction.step} instruction...`}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -121,7 +131,8 @@ const AddInstruction = ({ form }: Props) => {
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
-                ))}
+                ),
+              )}
             </div>
             <div className="mt-4 flex items-center gap-2">
               <Button
@@ -145,7 +156,7 @@ const AddInstruction = ({ form }: Props) => {
                 <Plus className="mr-2 h-4 w-4" />
                 Add step
               </Button>
-              {sectionIndex > 0 && (
+              {renderInstruction(sectionIndex).length > 0 && (
                 <Button
                   type="button"
                   variant="destructive"
@@ -161,7 +172,7 @@ const AddInstruction = ({ form }: Props) => {
       <Button
         type="button"
         variant="outline"
-        className="mt-4 w-full"
+        className="w-full"
         onClick={() =>
           appendSection({
             title: "",

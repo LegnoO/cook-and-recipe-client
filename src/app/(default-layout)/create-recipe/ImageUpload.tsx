@@ -7,8 +7,8 @@ import Image from "next/image";
 import { useState, ChangeEvent, Fragment } from "react";
 
 // ** Components
-import { Label } from "@/components/ui/label";
 import {
+  FormLabel,
   FormControl,
   FormField,
   FormItem,
@@ -84,6 +84,7 @@ const ImageUpload = ({ form }: Props) => {
         name="images"
         render={({ field }) => (
           <FormItem>
+            <FormLabel>Recipe Photos</FormLabel>
             <FormControl>
               <div className="grid grid-cols-2 gap-4">
                 {imagePreviews.length === 0 && (

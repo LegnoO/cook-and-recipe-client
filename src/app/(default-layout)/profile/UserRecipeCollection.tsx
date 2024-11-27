@@ -1,5 +1,8 @@
 "use client";
 
+// ** Next Imports
+import Link from "next/link";
+
 // ** React Imports
 import { useState, useEffect, ChangeEvent, Fragment } from "react";
 
@@ -197,10 +200,12 @@ const UserRecipeCollection = () => {
               Dishes you have shared: {fake_data.length}
             </p>
           </div>
-          <Button>
-            <Plus className="h-4 w-4" />
-            Create Recipe
-          </Button>
+          <Link href="/create-recipe">
+            <Button>
+              <Plus className="h-4 w-4" />
+              Create Recipe
+            </Button>
+          </Link>
         </div>
         <div className="flex w-full gap-4 pt-3">
           <SearchInput

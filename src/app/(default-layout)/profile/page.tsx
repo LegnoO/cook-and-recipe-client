@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import ButtonEditProfile from "@/components/ButtonEditProfile";
+import ButtonEditProfile from "@/app/(default-layout)/profile/ButtonEditProfile";
 
 import UserRecipeCollection from "./UserRecipeCollection";
 

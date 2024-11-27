@@ -52,7 +52,7 @@ import { useToast } from "@/hooks/useToast";
 // ** Services
 import { useAuthContext } from "@/context/AuthProvider";
 import { cn, getCharInitials } from "@/lib/utils";
-import { Scroll } from "./Scroll";
+import { Scroll } from "../../../components/Scroll";
 
 // ** Types
 type Props = { userProfile: UserProfile };
@@ -158,17 +158,17 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
       </DialogTrigger>
       <DialogContent
         aria-describedby={undefined}
-        className="h-[calc(100dvh-30px)] rounded-lg sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-        </DialogHeader>
+        className="h-[calc(100dvh-30px)] rounded-lg p-0 sm:max-w-[425px]">
         <Scroll>
+          <DialogHeader className="p-4">
+            <DialogTitle>Edit profile</DialogTitle>
+          </DialogHeader>
           <Form {...form}>
             <form
               noValidate
               autoComplete="off"
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4">
+              className="space-y-4 p-4">
               <FormField
                 name="avatar"
                 control={form.control}

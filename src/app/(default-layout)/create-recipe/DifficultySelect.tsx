@@ -26,7 +26,7 @@ const DifficultySelect = ({ onChange, form }: Props) => {
 
   return (
     <div className="flex flex-col gap-2">
-      <Label htmlFor={id}>Choose a category</Label>
+      <Label htmlFor={id}>Difficulty</Label>
       <Select value={form.getValues("difficulty")} onValueChange={onChange}>
         <SelectTrigger className="w-full" id={id}>
           <SelectValue placeholder="Select difficulty" />

@@ -83,7 +83,7 @@ const Notification = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0">
-        <div className="border-b border-b-divider p-4">
+        <div className="border-b border-b-divider px-4 py-2.5">
           <h3 className="text-lg font-semibold">Notifications</h3>
         </div>
         <Scroll className="max-h-[calc(100vh-200px)]">

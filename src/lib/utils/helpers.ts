@@ -1,3 +1,7 @@
+export const regex = {
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+};
+
 export function getCharInitials(name: string) {
   if (!name) return "";
 
@@ -58,4 +62,36 @@ export function getItemLocalStorage<T>(key: string): T | null {
 
 export function secondsToMinutes(seconds: number) {
   return Math.floor(seconds / 60);
+}
+
+export function isObjectEmpty(obj: Object) {
+  return Object.keys(obj).length === 0;
+}
+
+export function getDecodedParam(param: string) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const encodedValue = urlParams.get(param);
+  return encodedValue ? decodeURIComponent(encodedValue) : null;
+}
+
+export function appendFormData(data: Object) {
+  const formData = new FormData();
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((file) => {
+        if (file instanceof File) {
+          formData.append(key, file);
+        }
+      });
+    } else {
+      formData.append(key, value);
+    }
+  });
+
+  return formData;
+}
+
+export function isObject(value: any) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

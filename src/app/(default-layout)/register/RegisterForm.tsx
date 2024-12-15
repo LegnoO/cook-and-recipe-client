@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Logo } from "./ui/icons";
+import { Logo } from "../../../components/ui/icons";
 import {
   Card,
   CardContent,
@@ -36,12 +36,7 @@ import { Loader2, Eye, EyeOff } from "lucide-react";
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
 
-// ** Utils
-
-import { typography } from "./Primitives";
-
 // ** Services
-import { getUserInfo } from "@/services/authService";
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Schema
@@ -60,10 +55,8 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 const RegisterForm = () => {
-  const { setUser } = useAuthContext();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
   const [error, setError] = useState("");
@@ -77,7 +70,7 @@ const RegisterForm = () => {
     //   setLoading(true);
     //   setError("");
     //   await login(dataSubmit);
-    //   const userInfo = await getUserInfo();
+    //   const userInfo = await fetchUserInfo();
     //   setUser(userInfo);
     // } catch (error) {
     //   setError((prev) => (typeof error === "string" ? error : prev));
@@ -86,14 +79,8 @@ const RegisterForm = () => {
     // }
   }
 
-  function togglePasswordVisibility(
-    state: "showPassword" | "showConfirmPassword",
-  ) {
-    if (state === "showPassword") {
-      setShowPassword((prev) => !prev);
-    } else {
-      setShowConfirmPassword((prev) => !prev);
-    }
+  function togglePasswordVisibility() {
+    setShowPassword((prev) => !prev);
   }
 
   return (
@@ -158,9 +145,7 @@ const RegisterForm = () => {
                           variant="ghost"
                           size="icon"
                           className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                          onClick={() =>
-                            togglePasswordVisibility("showPassword")
-                          }
+                          onClick={() => togglePasswordVisibility()}
                           aria-label={
                             showPassword ? "Hide password" : "Show password"
                           }>
@@ -186,7 +171,7 @@ const RegisterForm = () => {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          type={showConfirmPassword ? "text" : "password"}
+                          type={showPassword ? "text" : "password"}
                           {...field}
                         />
                         <Button
@@ -194,15 +179,11 @@ const RegisterForm = () => {
                           variant="ghost"
                           size="icon"
                           className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                          onClick={() =>
-                            togglePasswordVisibility("showConfirmPassword")
-                          }
+                          onClick={() => togglePasswordVisibility()}
                           aria-label={
-                            showConfirmPassword
-                              ? "Hide password"
-                              : "Show password"
+                            showPassword ? "Hide password" : "Show password"
                           }>
-                          {showConfirmPassword ? (
+                          {showPassword ? (
                             <EyeOff className="h-4 w-4 text-gray-500" />
                           ) : (
                             <Eye className="h-4 w-4 text-gray-500" />
@@ -224,7 +205,10 @@ const RegisterForm = () => {
               {error && <p className="text-destructive">{error}</p>}
               <p className="text-center">
                 Already have an account?{" "}
-                <Link href="#" className="underline">
+                <Link
+                  href="/login"
+                  replace
+                  className="font-medium hover:underline">
                   Sign in
                 </Link>
               </p>

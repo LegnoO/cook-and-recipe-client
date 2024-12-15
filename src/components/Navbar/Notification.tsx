@@ -4,7 +4,6 @@
 import { useState, useEffect } from "react";
 
 // ** Components
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,37 +26,61 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Repeat from "@/components/Repeat";
+import { Scroll } from "@/components/Scroll";
+
+// ** Library Imports
+import { EventSourcePlus } from "event-source-plus";
 
 // ** Icons
 import { Bell, CheckCheck } from "lucide-react";
-import Repeat from "../Repeat";
-import { Scroll } from "../Scroll";
+
+// ** Config
+
+import { getCookieValue } from "@/lib/utils/cookies";
+import clientFetch from "@/lib/clientFetch";
 
 const Notification = () => {
-  const [messages, setMessages] = useState<any[]>([]);
-  console.log("🚀 ~ Notification ~ messages:", messages);
+  const [messages, setMessages] = useState<any>(null);
+  // console.log("🚀 ~ Notification ~ messages:", messages);
 
-  useEffect(() => {
-    const eventSource = new EventSource("https://example.com/sse");
+  // useEffect(() => {
+  //   let errCount = 0;
+  //   const accessToken = getCookieValue("accessToken");
 
-    eventSource.onmessage = (event) => {
-      setMessages((prev) => [...prev, event.data]);
-    };
+  //   async function test() {
+  //     const testRes = await clientFetch("/notification/check-notification", {
+  //       method: "GET",
+  //     });
+  //     console.log("🚀 ~ useEffect ~ test:", await testRes.json());
+  //   }
+  //   test();
+  //   const eventSource = new EventSourcePlus(
+  //     `https://cook-and-recipe.vercel.app/api/notification/check-notification/continuous`,
+  //     {
+  //       maxRetryInterval: 10000,
+  //       headers: {
+  //         Authorization: "Bearer " + accessToken,
+  //       },
+  //     },
+  //   );
+  //   const controller = eventSource.listen({
+  //     onMessage(message) {
+  //       console.log(message);
+  //     },
 
-    eventSource.onerror = () => {
-      console.error("Connection error");
+  //     onResponseError({ request, response, options }) {
+  //       errCount++;
+  //       if (errCount >= 10) {
+  //         controller.abort();
+  //       }
+  //     },
+  //   });
+  // }, []);
 
-      eventSource.close();
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  }, []);
-  
   const MessageItem = () => {
     return (
-      <div className="border-l-3 border-info cursor-pointer border-b border-b-divider p-4 transition-colors hover:bg-secondary/80">
+      <div className="cursor-pointer border-b border-l-3 border-info border-b-divider p-4 transition-colors hover:bg-secondary/80">
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium leading-none">Meeting reminder</p>
@@ -93,7 +116,7 @@ const Notification = () => {
         </Scroll>
         <div className="px-4 py-2">
           <div className="flex cursor-pointer items-center justify-end gap-2">
-            <CheckCheck className="text-info h-4 w-4" />
+            <CheckCheck className="h-4 w-4 text-info" />
             <span className="text-sm">Mark all as read</span>
           </div>
         </div>

@@ -27,8 +27,7 @@
   --brand-foreground: var(--white);
 
   --placeholder: var(--gray-500);
-  --disabled: var(--gray-500);
-  --divider: 240 5.9% 90%;
+  --divider: 0, 0%, 88%;
   --muted: var(--gray-700);
   --muted-foreground: var(--gray-200);
   --fg-primary: var(--gray-900);

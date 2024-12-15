@@ -1,19 +1,16 @@
 // ** Next Imports
 import { Metadata } from "next";
-import { Playfair_Display } from "next/font/google";
 
 // ** Context
 import { AuthProvider } from "@/context/AuthProvider";
 import ReactQueryProvider from "@/context/ReactQueryProvider";
 
 // ** Library Imports
+import { Toaster } from "@/components/ui/toaster";
 import NextTopLoader from "nextjs-toploader";
 
-const playfair = Playfair_Display({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-playfair",
-});
+// ** Lib
+import { raleway, playfair } from "@/lib/font";
 
 // ** CSS
 import "@/styles/globals.css";
@@ -30,12 +27,13 @@ export default function RootLayout({
 }>) {
   return (
     <html className="" lang="en">
-      <body className={`${playfair.variable} antialiased`}>
+      <body className={`${playfair.variable} ${raleway.variable} antialiased`}>
         <NextTopLoader
           height={3}
           color="hsl(var(--primary))"
           showSpinner={false}
         />
+        <Toaster />
         <ReactQueryProvider>
           <AuthProvider>{children}</AuthProvider>
         </ReactQueryProvider>

@@ -1,5 +1,5 @@
 // ** Components
-import RegisterForm from "@/components/RegisterForm";
+import RegisterForm from "@/app/(default-layout)/register/RegisterForm";
 
 export default function Login() {
   return (

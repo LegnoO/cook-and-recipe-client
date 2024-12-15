@@ -78,29 +78,32 @@ const formSchema = z.object({
   dateOfBirth: z.date({
     required_error: "Date of birth is required.",
   }),
-  avatar: z.string().min(1, "Avatar is required"),
-  //   avatar: z
-  //     .instanceof(File)
-  //     .refine((file) => file?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
-  //     .refine(
-  //       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-  //       "Only .jpg, .jpeg, .png and .webp formats are supported.",
-  //     ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
+type Avatar = { url: string; file: File | null };
 
 const ButtonEditProfile = ({ userProfile }: Props) => {
   const { setUser } = useAuthContext();
   const { toast } = useToast();
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [avatarReview, setAvatarReview] = useState("");
+  const [avatar, setAvatar] = useState<Avatar>({
+    url: "",
+    file: null,
+  });
 
   const [error, setError] = useState("");
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
+  const [isOpen, setIsOpen] = useState(false);
+
+  function openDialog() {
+    setIsOpen(true);
+  }
+  function closeDialog() {
+    setIsOpen(false);
+  }
 
   async function onSubmit(dataSubmit: FormValues) {
     try {
@@ -116,9 +119,10 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
   function handleAvatarChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) {
+      setAvatar((prev) => ({ ...prev, file }));
       const reader = new FileReader();
       reader.onload = (e) => {
-        setAvatarReview(e.target?.result as string);
+        setAvatar((prev) => ({ ...prev, url: e.target?.result as string }));
       };
       reader.readAsDataURL(file);
     }
@@ -136,9 +140,7 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
       shouldValidate: true,
     });
     // }
-    form.setValue("avatar", userProfile.avatar, {
-      shouldValidate: true,
-    });
+
     form.setValue("address", userProfile.address, {
       shouldValidate: true,
     });
@@ -152,15 +154,17 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
 
   // console.log("🚀 ~ ButtonEditProfile ~ form:", form.getValues());
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">Edit Profile</Button>
+        <Button onClick={openDialog} className="w-full">
+          Edit Profile
+        </Button>
       </DialogTrigger>
       <DialogContent
         aria-describedby={undefined}
-        className="h-[calc(100dvh-30px)] rounded-lg p-0 sm:max-w-[425px]">
+        className="h-full max-h-[calc(100dvh-30px)] rounded-lg p-0 sm:max-w-[460px]">
         <Scroll>
-          <DialogHeader className="p-4">
+          <DialogHeader className="p-6">
             <DialogTitle>Edit profile</DialogTitle>
           </DialogHeader>
           <Form {...form}>
@@ -168,48 +172,31 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
               noValidate
               autoComplete="off"
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 p-4">
-              <FormField
-                name="avatar"
-                control={form.control}
-                render={() => (
-                  <FormItem className="text-center">
-                    <FormLabel
-                      htmlFor="avatar-upload"
-                      className="inline-flex cursor-pointer justify-center">
-                      <div className="relative">
-                        <Avatar className="h-24 w-24">
-                          <AvatarImage
-                            className="object-cover"
-                            src={
-                              avatarReview ? avatarReview : userProfile.avatar
-                            }
-                            alt="Profile picture"
-                          />
-                          <AvatarFallback>
-                            {getCharInitials(userProfile.fullName)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <Label
-                          htmlFor="avatar-upload"
-                          className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-brand p-1 hover:bg-brand/90">
-                          <Camera className="h-4 w-4 text-brand-foreground" />
-                        </Label>
-                      </div>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        id="avatar-upload"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleAvatarChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              className="flex flex-col gap-4 px-4 pb-6 pt-4">
+              <div className="relative mx-auto">
+                <Avatar className="h-32 w-32">
+                  <AvatarImage
+                    className="object-cover"
+                    src={avatar.url ? avatar.url : userProfile.avatar}
+                    alt="Profile picture"
+                  />
+                  <AvatarFallback>
+                    {getCharInitials(userProfile.fullName)}
+                  </AvatarFallback>
+                </Avatar>
+                <Label
+                  htmlFor="avatar-upload"
+                  className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-primary p-1 text-primary-foreground hover:bg-primary/90">
+                  <Camera className="h-4 w-4" />
+                </Label>
+                <Input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleAvatarChange}
+                />
+              </div>
               <FormField
                 name="fullName"
                 control={form.control}
@@ -226,6 +213,7 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
               />
               <FormField
                 name="email"
+                disabled
                 control={form.control}
                 rules={{ required: true }}
                 render={({ field }) => (
@@ -264,7 +252,7 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "w-full pl-3 text-left font-normal",
+                              "w-full pl-3 text-left font-normal active:scale-100",
                               !field.value && "text-secondary",
                             )}>
                             {field.value ? (
@@ -388,9 +376,11 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
                   )}
                 />
               </div>
-              <div className="flex justify-end gap-4">
-                <Button variant="outline">Cancel</Button>
-                <Button>Save changes</Button>
+              <div className="!mt-8 flex justify-end gap-4">
+                <Button onClick={closeDialog} type="button" variant="outline">
+                  Cancel
+                </Button>
+                <Button type="submit">Save changes</Button>
               </div>
             </form>
           </Form>

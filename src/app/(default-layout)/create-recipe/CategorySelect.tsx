@@ -24,6 +24,7 @@ import { FormValues } from "./page";
 
 interface Category {
   name: string;
+  id: string;
 }
 
 type Props = {
@@ -69,7 +70,7 @@ const CategorySelect = ({ form, onChange }: Props) => {
         <SelectContent>
           {categories.length > 0
             ? categories.map((category) => (
-                <SelectItem key={category.name} value={category.name}>
+                <SelectItem key={category.name} value={category.id}>
                   {category.name}
                 </SelectItem>
               ))

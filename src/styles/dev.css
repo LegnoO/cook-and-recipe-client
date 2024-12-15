@@ -9,8 +9,3 @@ html.dev * {
 html.dev *::before {
   outline: 1px solid blue !important;
 }
-
-html.dev,
-*::after {
-  outline: 1px solid yellow !important;
-}

@@ -57,7 +57,7 @@ const ImageUpload = ({ form }: Props) => {
 
   const ImagePreview = ({ index, image }: { index: number; image: string }) => {
     return (
-      <div className="relative aspect-video w-full overflow-hidden rounded-lg border-2 border-dashed border-divider">
+      <div className="relative aspect-video w-full overflow-hidden rounded-lg border-2 border-dashed">
         <Image
           src={image}
           alt={`Recipe image ${index + 1}`}
@@ -88,7 +88,7 @@ const ImageUpload = ({ form }: Props) => {
             <FormControl>
               <div className="grid grid-cols-2 gap-4">
                 {imagePreviews.length === 0 && (
-                  <div className="relative w-full overflow-hidden rounded-lg border-2 border-dashed border-divider bg-gray-50">
+                  <div className="relative w-full overflow-hidden rounded-lg border-2 border-dashed bg-gray-50">
                     <label className="flex h-[140px] w-full cursor-pointer flex-col items-center justify-center">
                       <Upload className="h-6 w-6 text-muted-foreground" />
                       <span className="mt-2 text-sm font-medium">
@@ -112,7 +112,7 @@ const ImageUpload = ({ form }: Props) => {
                     <ImagePreview key={index} index={index} image={image} />
                   ))}
                 {imagePreviews.length > 0 && imagePreviews.length < 4 && (
-                  <div className="relative w-full overflow-hidden rounded-lg border-2 border-dashed border-divider bg-gray-50">
+                  <div className="relative w-full overflow-hidden rounded-lg border-2 border-dashed bg-gray-50">
                     <label className="flex h-[140px] w-full cursor-pointer flex-col items-center justify-center">
                       <Plus className="h-4 w-4 text-placeholder" />
                       <input

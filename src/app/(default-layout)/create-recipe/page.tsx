@@ -1,11 +1,5 @@
 "use client";
 
-// ** React Imports
-import { Fragment } from "react";
-
-// ** Next Imports
-import Image from "next/image";
-
 // ** Components
 import {
   Form,
@@ -15,6 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -37,8 +32,14 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "nextjs-toploader/app";
 
+// ** Services
+import { createRecipe } from "@/services/recipeServer";
+
 // ** Icons
 import { Trash2, Info, Plus } from "lucide-react";
+
+// ** Lib
+import { appendFormData } from "@/lib/utils";
 
 // ** Schema
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -81,7 +82,7 @@ const formSchema = z.object({
         .refine((file) => file.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
         .refine(
           (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-          ".jpg, .jpeg, .png and .webp files are accepted.",
+          "Only .jpg, .jpeg, .png and .webp formats are supported.",
         ),
     )
     .min(1, "At least one image is required")
@@ -93,7 +94,11 @@ const CreateRecipe = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ingredients: [{ name: "", quantity: 1, measurement: "" }],
+      name: "",
+      serves: 0,
+      timeToCook: 0,
+      description: "",
+      ingredients: [{ name: "", quantity: 0, measurement: "" }],
       instructionSections: [
         { title: "", instructions: [{ step: 1, description: "" }] },
       ],
@@ -111,18 +116,45 @@ const CreateRecipe = () => {
 
   async function onSubmit(dataSubmit: FormValues) {
     console.log("🚀 ~ CreateRecipe ~ dataSubmit:", dataSubmit);
+
+    const formData = appendFormData({
+      name: dataSubmit.name,
+      serves: dataSubmit.serves,
+      timeToCook: dataSubmit.timeToCook,
+      description: dataSubmit.description,
+      difficulty: dataSubmit.difficulty,
+      category: dataSubmit.category,
+      ingredients: JSON.stringify(dataSubmit.ingredients),
+      instructionSections: JSON.stringify(dataSubmit.instructionSections),
+      images: dataSubmit.images,
+    });
+
+    try {
+      await createRecipe(formData);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
-    <div className="bg-background pb-[70px] pt-[35px]">
-      <div className="container">
+    <div className="bg-background">
+      <div className="container py-[calc(72px+30px)]">
         <Form {...form}>
           <form
             noValidate
             autoComplete="off"
             onSubmit={form.handleSubmit(onSubmit)}
-            className="mx-auto flex max-w-4xl flex-col gap-8">
-            <Card>
+            className="mx-auto max-w-4xl">
+            <div className="mb-4">
+              <h1 className="mb-2 text-4xl font-semibold">
+                Create a new Recipe
+              </h1>
+              <p className="text-muted-foreground">
+                Share your culinary creation with our community by adding a new
+                recipe.
+              </p>
+            </div>
+            <Card className="mb-8">
               <CardHeader>
                 <CardTitle>Recipe General Information</CardTitle>
               </CardHeader>
@@ -216,28 +248,30 @@ const CreateRecipe = () => {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle> Recipe Details</CardTitle>
+                <CardTitle className="text-2xl">Recipe Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <AddIngredient form={form} />
+
+                <Separator />
                 <AddInstruction form={form} />
               </CardContent>
-              <CardFooter className="flex items-center justify-end gap-4">
-                <Button type="button" variant="outline">
-                  Save as Draft
-                </Button>
-                <Button
-                  onClick={() => {
-                    console.log({
-                      error: form.formState.errors,
-                      data: form.getValues(),
-                    });
-                  }}
-                  type="submit">
-                  Publish Recipe
-                </Button>
-              </CardFooter>
             </Card>
+            <div className="mt-8 flex items-center justify-end gap-4">
+              <Button type="button" variant="outline">
+                Save as Draft
+              </Button>
+              <Button
+                onClick={() => {
+                  console.log({
+                    error: form.formState.errors,
+                    data: form.getValues(),
+                  });
+                }}
+                type="submit">
+                Publish Recipe
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

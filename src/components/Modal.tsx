@@ -1,7 +1,10 @@
 "use client";
 
 // ** React Imports
-import { ReactNode } from "react";
+import { useState, useEffect, useRef, ReactNode } from "react";
+
+// ** Next Imports
+import { usePathname } from "next/navigation";
 
 // ** Library Imports
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
@@ -21,14 +24,26 @@ type Props = {
 };
 
 const Modal = ({ children }: Props) => {
+  const initialRender = useRef(true);
+  const [open, setOpen] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   function handleOpenChange() {
+    setOpen(false);
     router.back();
   }
 
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
+      setOpen(false);
+    }
+  }, [pathname]);
+
   return (
-    <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <VisuallyHidden.Root>
         <DialogTitle />
       </VisuallyHidden.Root>

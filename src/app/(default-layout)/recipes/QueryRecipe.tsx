@@ -1,7 +1,7 @@
 "use client";
 
 // ** React Imports
-import { ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 
 // ** Next Imports
 import { useRouter, useSearchParams } from "next/navigation";
@@ -28,10 +28,13 @@ import { useDebouncedCallback } from "use-debounce";
 // ** Icons
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 
-// ** Types
-type Props = {};
+const QueryRecipe = () => {
+  const [isPopoverOpen, setPopoverOpen] = useState(false);
+  const [isSelectOpen, setSelectOpen] = useState({
+    name: false,
+    category: false,
+  });
 
-const QueryRecipe = ({}: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
@@ -44,12 +47,19 @@ const QueryRecipe = ({}: Props) => {
     300,
   );
 
-  const handleQuery = (value: string) => {
+  function handleToggleSelect(value: boolean, field: "name" | "category") {
+    setSelectOpen((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  }
+
+  function handleQuery(value: string) {
     const [sortBy, sortOrder] = value.split("_");
     params.set("sortBy", sortBy);
     params.set("sortOrder", sortOrder);
     router.push(`?${params.toString()}`);
-  };
+  }
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
@@ -63,19 +73,35 @@ const QueryRecipe = ({}: Props) => {
           className="max-w-3xl pl-8"
         />
       </div>
-      <Popover>
+      <Popover
+        open={isPopoverOpen}
+        onOpenChange={(open) => {
+          if (open) {
+            setPopoverOpen(open);
+          } else {
+            if (!isSelectOpen.name && !isSelectOpen.category) {
+              setPopoverOpen(false);
+            }
+          }
+        }}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full md:w-auto">
+          <Button
+            variant="outline"
+            className="w-full active:scale-100 md:w-auto">
             <SlidersHorizontal className="mr-1 h-4 w-4" />
             Filter
             <ChevronDown className="ml-1 h-4 w-4" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80">
+        <PopoverContent align="end" className="w-80">
           <div className="grid gap-4">
             <div className="space-y-2">
               <h4 className="font-medium leading-none">Sort by</h4>
               <Select
+                open={isSelectOpen.name}
+                onOpenChange={(open) => {
+                  handleToggleSelect(open, "name");
+                }}
                 defaultValue={searchParams.get("sort") || "name_asc"}
                 onValueChange={handleQuery}>
                 <SelectTrigger>
@@ -92,6 +118,10 @@ const QueryRecipe = ({}: Props) => {
             <div className="space-y-2">
               <h4 className="font-medium leading-none">Category</h4>
               <Select
+                open={isSelectOpen.category}
+                onOpenChange={(open) => {
+                  handleToggleSelect(open, "category");
+                }}
                 defaultValue={searchParams.get("category") || "all"}
                 onValueChange={handleQuery}>
                 <SelectTrigger>

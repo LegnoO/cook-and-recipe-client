@@ -27,7 +27,7 @@ import {
 import {} from "lucide-react";
 
 // ** Services
-import { getUserInfo } from "@/services/authService";
+import { fetchUserInfo } from "@/services/authService";
 
 // ** Types
 type Props = {

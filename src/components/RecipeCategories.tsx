@@ -36,13 +36,13 @@ export default function RecipeCategories() {
   ];
 
   return (
-    <section className="bg-background pb-[50px] pt-[75px]">
+    <section className="section-spacing bg-background">
       <div className="container">
         <div className="flex flex-col gap-2">
-          <h2 className="mb-12 text-center text-4xl font-bold tracking-wider">
+          <h2 className="mb-12 text-center text-4xl font-bold tracking-wider lg:text-3xl">
             Recipe Categories
           </h2>
-          <div className="grid-cols-5-res gap-16">
+          <div className="grid-cols-5-res grid-cols-2 gap-16">
             {fake_data.map((data, index) => (
               <div key={index} className="flex flex-col items-center gap-4">
                 <Image

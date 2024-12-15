@@ -18,8 +18,23 @@ const config: Config = {
       },
     },
     extend: {
+      keyframes: {
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
+      },
+      animation: {
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
+      },
+      fill: {
+        primary: "hsl(var(--primary))",
+      },
+      stroke: {
+        primary: "hsl(var(--primary))",
+      },
       borderWidth: {
-        "3": "3px", 
+        "3": "3px",
       },
       backgroundPosition: {
         "center-top": "center top",
@@ -28,6 +43,7 @@ const config: Config = {
         "4.5": "1.125rem",
       },
       transitionProperty: {
+        width: "width",
         height: "height",
         outline: "outline",
       },
@@ -92,8 +108,8 @@ const config: Config = {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "hsl(var(--accent) / 0.24)",
+          foreground: "hsl(var(--accent-foreground) / 0.92)",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -103,8 +119,8 @@ const config: Config = {
           DEFAULT: "hsl(var(--info))",
           foreground: "hsl(var(--info-foreground))",
         },
-        border: "hsl(var(--border) / 0.12)",
-        input: "hsl(var(--input) / 0.22)",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         chart: {
           "1": "hsl(var(--chart-1))",
@@ -115,7 +131,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        playFair: ["var(--font-playfair)"],
+        playfair: ["var(--font-playfair)"],
+        raleway: ["var(--font-raleway)"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -123,8 +140,7 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        "first-slider":
-          "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg')",
+        "first-slider": "url('/images/slide-background.jpg')",
 
         footer:
           "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg')",

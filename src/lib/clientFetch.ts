@@ -1,5 +1,5 @@
 // ** Config
-import { externalAPI } from "@/config/endpoints";
+
 import { refreshUser } from "@/services/authService";
 
 // ** Lib
@@ -15,12 +15,16 @@ export default async function clientFetch(
   endpoint: string | URL,
   options: CustomRequestInit = {},
 ): Promise<Response> {
-  const fullUrl = `${externalAPI}${endpoint}`;
+  const fullUrl = `${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}${endpoint}`;
 
-  options.headers = {
-    "Content-Type": "application/json",
-    ...(options.headers || undefined),
-  };
+  if (!(options.body instanceof FormData)) {
+    options.headers = {
+      "Content-Type": "application/json",
+      ...(options.headers as Headers),
+    };
+  } else {
+    options.headers = { ...options.headers };
+  }
 
   async function performFetch(): Promise<Response> {
     const accessToken = getCookieValue("accessToken");

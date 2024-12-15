@@ -9,8 +9,7 @@ import Image from "next/image";
 // ** Components
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import PaginationCustom from "@/components/PaginationCustom";
-import Repeat from "@/components/Repeat";
+import PaginationClient from "@/components/Pagination/PaginationClient";
 
 // ** Icons
 import { User } from "lucide-react";
@@ -58,7 +57,7 @@ export default function RecipeCard({ data }: Props) {
         ))}
       </div>
       <div className="mt-10">
-        <PaginationCustom
+        <PaginationClient
           totalPages={50}
           currentPage={1}
           onPageChange={onPageChange}

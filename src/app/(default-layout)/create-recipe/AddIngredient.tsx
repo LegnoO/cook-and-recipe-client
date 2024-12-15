@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { UseFormReturn, useFieldArray } from "react-hook-form";
 
 // ** Icons
-import { Trash2, Info, Plus } from "lucide-react";
+import { X, Plus } from "lucide-react";
 
 // ** Types
 import { FormValues } from "./page";
@@ -35,11 +35,12 @@ const AddIngredient = ({ form }: Props) => {
 
   return (
     <div className="space-y-4">
-      <div className="mb-4 flex items-center gap-2">
-        <h3 className="font-medium">Ingredients</h3>
-        <Info className="h-4 w-4 text-muted" />
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Ingredients</h3>
+        <h4 className="text-sm text-muted-foreground">
+          List all ingredients needed for your recipe.
+        </h4>
       </div>
-
       {ingredientFields.map((field, index) => (
         <div key={field.id} className="grid grid-cols-[2fr,1fr,1fr,auto] gap-2">
           <FormField
@@ -88,18 +89,19 @@ const AddIngredient = ({ form }: Props) => {
             )}
           />
           <Button
+            className="hover:bg-destructive hover:text-destructive-foreground"
             type="button"
-            variant="destructive"
+            variant="ghost"
             size="icon"
             onClick={() => removeIngredient(index)}>
-            <Trash2 className="h-4 w-4" />
+            <X className="h-4 w-4" />
           </Button>
         </div>
       ))}
       <Button
         type="button"
         variant="outline"
-        className="w-full"
+        className="w-full py-6 font-semibold uppercase tracking-wider"
         onClick={() =>
           appendIngredient({
             name: "",
@@ -107,7 +109,7 @@ const AddIngredient = ({ form }: Props) => {
             measurement: "",
           })
         }>
-        <Plus className="mr-2 h-4 w-4" />
+        <Plus className="h-4 w-4" />
         Add ingredient
       </Button>
     </div>

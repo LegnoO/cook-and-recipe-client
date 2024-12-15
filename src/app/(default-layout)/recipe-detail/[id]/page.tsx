@@ -28,7 +28,7 @@ import {
 // ** Lib
 import { getCharInitials } from "@/lib/utils";
 
-import Recipes from "@/components/Recipes";
+import Recipes from "@/components/RecipeCard";
 import BannerLog from "@/components/BannerLog";
 import Repeat from "@/components/Repeat";
 
@@ -117,7 +117,7 @@ export default async function RecipeDetail({ params, searchParams }: Props) {
   }) => (
     <TableRow className="hover:bg-inherit [&:has(button[data-state=checked])_td:nth-child(2)]:line-through">
       <TableCell className="h-[48px] w-[40px] border-r">
-        <Checkbox className="border-divider shadow-none" />
+        <Checkbox className="shadow-none" />
       </TableCell>
       <TableCell>
         {ingredient.quantity * servings} {ingredient.measurement}{" "}
@@ -184,7 +184,7 @@ export default async function RecipeDetail({ params, searchParams }: Props) {
                   </p>
                 </li>
 
-                <li className="flex flex-col border-l border-r border-divider px-6 py-2">
+                <li className="flex flex-col border-l border-r px-6 py-2">
                   <div className="flex items-center gap-1">
                     <Timer className="h-4 w-4" />
                     <h4 className="font-semibold">Cooking:</h4>
@@ -274,59 +274,39 @@ export default async function RecipeDetail({ params, searchParams }: Props) {
 
       <div className="container">
         <div className="pb-32 pt-[75px]">
-          <h2 className="mb-4.5 flex items-center gap-2 text-3xl font-bold tracking-wider">
+          <h2 className="mb-4.5 flex items-center gap-2 text-4xl font-bold tracking-wider">
             Chef Info
           </h2>
           <div className="flex w-full items-stretch gap-4">
-            <div className="w-[65%]">
+            <div className="w-full">
               <div className="flex h-full w-full items-stretch">
-                <img
-                  className="aspect-square h-[280px]"
-                  src="https://recipepress.inspirythemes.com/third/wp-content/uploads/sites/4/2017/01/chef-5-479x492.jpg"
-                  alt=""
-                />
-                <div className="w-[80%]">
+                <div className="max-w-[300px]">
+                  <Image
+                    className="h-[360px] object-cover"
+                    src="https://recipepress.inspirythemes.com/third/wp-content/uploads/sites/4/2017/01/chef-5-479x492.jpg"
+                    alt="Chef Avatar"
+                    width={300}
+                    height={400}
+                  />
+                </div>
+                <div className="flex-1">
                   <div className="h-full bg-background p-2.5">
-                    <div className="flex h-full flex-col gap-4 border border-divider p-4">
-                      <h4 className="relative w-fit font-bold before:absolute before:-bottom-2 before:h-[2px] before:w-2/5 before:bg-primary before:transition-all before:content-[''] hover:before:w-full">
-                        <a>{fake_data.createdBy.fullName}</a>
-                      </h4>
-                      <span className="text-sm text-primary">
-                        Assistant Chef
-                      </span>
-                      <p className="line-clamp-3 text-sm">
+                    <div className="flex h-full flex-col gap-4 border p-4">
+                      <a className="underline-animation">
+                        <h4 className="text-2xl font-bold">
+                          {fake_data.createdBy.fullName}
+                        </h4>
+                      </a>
+                      <i className="font-medium text-primary">Assistant Chef</i>
+                      <p className="line-clamp-5">
                         {fake_data.createdBy.description}
                       </p>
-                      <Button
-                        variant="link"
-                        className="max-w-[140px] justify-start p-0 text-foreground hover:text-primary hover:no-underline">
+                      <Button className="max-w-36">
                         Read More
                         <ChevronsRight className="ml-1 h-4 w-4" />
                       </Button>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="h-full w-[35%]">
-              <div className="flex flex-col gap-4.5 rounded-lg px-3 pb-3">
-                <h4 className="text-2xl font-bold">Featured Recipes</h4>
-                <div className="flex flex-col gap-2">
-                  <Repeat times={3}>
-                    <div className="flex items-center gap-2">
-                      <img
-                        src="https://braise.qodeinteractive.com/wp-content/uploads/2021/09/main-home-recipe-list-img-10-600x680.jpg"
-                        alt=""
-                        className="aspect-square h-16 rounded-sm object-cover"
-                      />
-                      <div className="flex flex-col gap-1">
-                        <h4 className="mb-1 font-medium">Ultimate Pot Roast</h4>
-                        <p className="text-sm text-muted-foreground">
-                          September 21, 2021
-                        </p>
-                      </div>
-                    </div>
-                  </Repeat>
                 </div>
               </div>
             </div>

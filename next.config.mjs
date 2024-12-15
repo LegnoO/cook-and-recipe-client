@@ -9,6 +9,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "recipepress.inspirythemes.com",
+      },
+      {
+        protocol: "https",
         hostname: "pivoo.themepreview.xyz",
       },
       {

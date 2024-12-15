@@ -5,16 +5,16 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export const Logo: React.FC<IconSvgProps> = ({
-  size = 36,
+  size = 24,
   width,
   height,
   ...props
 }) => (
   <svg
+    viewBox="0 0 512 512"
     xmlns="http://www.w3.org/2000/svg"
     height={size || height}
     width={size || width}
-    viewBox="0 0 512 512"
     {...props}>
     <path
       fill="currentColor"
@@ -23,36 +23,103 @@ export const Logo: React.FC<IconSvgProps> = ({
 );
 
 export const Menu: React.FC<IconSvgProps> = ({
-  size = 36,
+  size = 24,
   width,
   height,
   ...props
 }) => (
   <svg
+    viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
     height={size || height}
     width={size || width}
-    viewBox="0 0 24 24"
     {...props}>
     <path fill="currentColor" d="M3 4h18v2H3zm0 7h18v2H3zm0 7h18v2H3z" />
   </svg>
 );
 
 export const Close: React.FC<IconSvgProps> = ({
-  size = 36,
+  size = 24,
+  width,
+  height,
+  ...props
+}) => (
+  <svg
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    height={size || height}
+    width={size || width}
+    {...props}>
+    <path
+      fill="currentColor"
+      d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"
+    />
+  </svg>
+);
+
+export const Facebook: React.FC<IconSvgProps> = ({
+  size = 24,
   width,
   height,
   ...props
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
     height={size || height}
     width={size || width}
-    viewBox="0 0 24 24"
     {...props}>
-    <path
-      fill="currentColor"
-      d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"
-    />
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
+export const Instagram: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    height={size || height}
+    width={size || width}
+    {...props}>
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
+
+export const Linkedin: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    height={size || height}
+    width={size || width}
+    {...props}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
   </svg>
 );

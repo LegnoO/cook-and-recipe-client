@@ -22,6 +22,7 @@ import {
 // ** Lib
 import { formatAddress, getCharInitials } from "@/lib/utils";
 import serverFetch from "@/lib/serverFetch";
+import ButtonRequestChef from "./ButtonRequestChef";
 
 async function getUserProfile() {
   const response = await serverFetch(`/users/owned/profile`);
@@ -36,8 +37,8 @@ export default async function Profile() {
 
   return (
     <div className="container my-[35px] space-y-8 p-4">
-      <div className="flex items-stretch gap-8">
-        <div className="w-[30%]">
+      <div className="flex flex-col items-stretch gap-8 md:flex-row">
+        <div className="w-full md:w-[30%]">
           <Card className="border-none pt-4 shadow-md md:col-span-1">
             <CardHeader>
               <div className="flex flex-col items-center space-y-4">
@@ -115,13 +116,11 @@ export default async function Profile() {
 
               <Separator className="my-6" />
 
-              <Button variant="secondary" className="w-full">
-                Request to become a Chef
-              </Button>
+              <ButtonRequestChef />
             </CardContent>
           </Card>
         </div>
-        <div className="w-[70%]">
+        <div className="w-full md:w-[70%]">
           <UserRecipeCollection />
         </div>
       </div>

@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // ** Config
-import { externalAPI } from "@/config/endpoints";
 
 // ** Types
 type Headers = Record<string, string>;
@@ -15,7 +14,7 @@ export default async function clientFetch(
   endpoint: string | URL,
   options: CustomRequestInit = {},
 ): Promise<Response> {
-  const fullUrl = `${externalAPI}${endpoint}`;
+  const fullUrl = `${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}${endpoint}`;
 
   options.headers = {
     "Content-Type": "application/json",

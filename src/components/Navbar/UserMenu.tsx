@@ -1,3 +1,5 @@
+"use client";
+
 // ** Next Imports
 import Link from "next/link";
 
@@ -21,9 +23,10 @@ import { useAuthContext } from "@/context/AuthProvider";
 import { getCharInitials } from "@/lib/utils/helpers";
 
 // ** Types
-type Props = {};
-const UserMenu = () => {
-  const { user, logout } = useAuthContext();
+type Props = { user: User };
+
+const UserMenu = ({ user }: Props) => {
+  const { isLoading, logout } = useAuthContext();
 
   return (
     <DropdownMenu>
@@ -60,7 +63,10 @@ const UserMenu = () => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={logout} className="cursor-pointer">
+        <DropdownMenuItem
+          disabled={isLoading}
+          onClick={logout}
+          className="cursor-pointer">
           <LogOut className="mr-1 h-4 w-4" />
           <span> Sign out</span>
         </DropdownMenuItem>

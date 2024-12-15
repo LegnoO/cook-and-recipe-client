@@ -2,6 +2,7 @@
 
 // ** Next Imports
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // ** React Imports
 import { useState } from "react";
@@ -25,75 +26,74 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import NoSsr from "@/components/NoSsr";
 
 // ** Library Imports
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 
-// ** Hooks
-import { useToast } from "@/hooks/useToast";
+// ** Context
+import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Services
-import { login, getUserInfo } from "@/services/authService";
-import { useAuthContext } from "@/context/AuthProvider";
+import { login, fetchUserInfo } from "@/services/authService";
 
 // ** Lib
 import { setCookie } from "@/lib/utils/cookies";
-import { getItemLocalStorage } from "@/lib/utils";
+import { getDecodedParam, getItemLocalStorage } from "@/lib/utils";
 
 // ** Schema
-const formSchema = z.object({
-  email: z
-    .string()
-    .email("Invalid email address")
-    .min(5, "Email must be at least 5 characters long")
-    .max(100, "Email must be at most 100 characters long"),
-  password: z
-    .string()
-    .min(3, "Password must be at least 3 characters long")
-    .max(255, "Password must be at most 255 characters long"),
-  rememberMe: z.boolean(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { LoginFormValues, loginFormSchema } from "@/schemas/loginFormSchema";
 
 const LoginForm = () => {
+  const pathname = usePathname();
   const router = useRouter();
   const { setUser } = useAuthContext();
-  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const form = useForm<FormValues>({
+  const form = useForm<LoginFormValues>({
     defaultValues: {
       email: "legno@gmail.com",
       password: "admin",
       rememberMe: getItemLocalStorage<boolean>("rememberMe") || false,
     },
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginFormSchema),
   });
 
-  async function onSubmit(dataSubmit: FormValues) {
+  async function onSubmit(dataSubmit: LoginFormValues) {
     setLoading(true);
-    if (error) setError("");
+    setErrorMessage("");
 
     try {
-      const accessToken = await login(dataSubmit);
-      setCookie("accessToken", accessToken, {
+      const token = await login(dataSubmit);
+      setCookie("accessToken", token, {
         path: "/",
         secure: true,
         sameSite: "none",
       });
-      const userInfo = await getUserInfo();
-      setUser(userInfo);
-      router.back();
+      const userDetails = await fetchUserInfo();
+      console.log("🚀 ~ onSubmit ~ userDetails:", userDetails);
+      setUser(userDetails);
+      const redirectUrl = getDecodedParam("returnTo");
+      if (redirectUrl) {
+        router.push(redirectUrl);
+        return;
+      }
+
+      if (pathname === "/login") {
+        router.push("/");
+      } else {
+        router.back();
+      }
     } catch (error) {
-      if (error instanceof Error) setError(error.message);
+      setErrorMessage(
+        error instanceof Error ? error.message : "An unexpected error occurred",
+      );
     } finally {
       setLoading(false);
     }
@@ -104,9 +104,9 @@ const LoginForm = () => {
   }
 
   return (
-    <Card className="w-full rounded-lg border-none shadow-md">
+    <Card className="w-full max-w-lg rounded-lg border-none shadow-md">
       <CardHeader>
-        <CardTitle className="text-xl">Login</CardTitle>
+        <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>Login to access your account</CardDescription>
       </CardHeader>
       <CardContent>
@@ -175,12 +175,14 @@ const LoginForm = () => {
                       <FormItem className="flex items-center space-x-2">
                         <div className="flex items-center space-x-2">
                           <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
+                            <NoSsr>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </NoSsr>
                           </FormControl>
-                          <FormLabel className="text-sm leading-none">
+                          <FormLabel className="text-sm leading-[0]">
                             Remember Me
                           </FormLabel>
                         </div>
@@ -189,23 +191,31 @@ const LoginForm = () => {
                   }}
                 />
 
-                <Link href="#" className="text-sm font-medium">
+                <Link
+                  replace
+                  href="/forgot-password"
+                  className="text-sm font-medium hover:underline">
                   Forgot Password?
                 </Link>
               </div>
-              <Button disabled={isLoading} className="w-full" type="submit">
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  "Log in"
+              <div className="space-y-2">
+                <Button disabled={isLoading} className="w-full" type="submit">
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    "Log in"
+                  )}
+                </Button>
+                {errorMessage && (
+                  <p className="text-destructive">{errorMessage}</p>
                 )}
-              </Button>
-              {error && <p className="text-destructive">{error}</p>}
+              </div>
               <p className="text-center">
                 Not registered yet?{" "}
                 <Link
-                  href="#"
-                  className="text-sm font-medium leading-none underline">
+                  replace
+                  href="/register"
+                  className="text-sm font-medium leading-none hover:underline">
                   Create an account
                 </Link>
               </p>

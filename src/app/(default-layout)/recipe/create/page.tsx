@@ -1,5 +1,8 @@
 "use client";
 
+// ** React Imports
+import { useState } from "react";
+
 // ** Components
 import {
   Form,
@@ -20,11 +23,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ToastAction } from "@/components/ui/toast";
 import ImageUpload from "./ImageUpload";
 import CategorySelect from "./CategorySelect";
 import DifficultySelect from "./DifficultySelect";
 import AddIngredient from "./AddIngredient";
 import AddInstruction from "./AddInstruction";
+
+// ** Hooks
+import { useToast } from "@/hooks/useToast";
 
 // ** Library Imports
 import { z } from "zod";
@@ -36,20 +43,12 @@ import { useRouter } from "nextjs-toploader/app";
 import { createRecipe } from "@/services/recipeServer";
 
 // ** Icons
-import { Trash2, Info, Plus } from "lucide-react";
+import { Trash2, Info, Plus, CircleCheckIcon } from "lucide-react";
 
 // ** Lib
-import { appendFormData } from "@/lib/utils";
+import { appendFormData, convertMBToBytes } from "@/lib/utils";
 
 // ** Schema
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
-
 const formSchema = z.object({
   name: z.string().min(1, "Recipe name is required"),
   serves: z.number().min(1, "Number of servings is required"),
@@ -79,9 +78,15 @@ const formSchema = z.object({
     .array(
       z
         .instanceof(File)
-        .refine((file) => file.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
         .refine(
-          (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+          (file) => file.size <= convertMBToBytes(5),
+          `Max file size is 5MB.`,
+        )
+        .refine(
+          (file) =>
+            ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
+              file.type,
+            ),
           "Only .jpg, .jpeg, .png and .webp formats are supported.",
         ),
     )
@@ -90,7 +95,9 @@ const formSchema = z.object({
 });
 export type FormValues = z.infer<typeof formSchema>;
 
-const CreateRecipe = () => {
+export default function CreateRecipePage() {
+  const { toast } = useToast();
+  const [isLoading, setLoading] = useState(false);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -115,8 +122,12 @@ const CreateRecipe = () => {
   }
 
   async function onSubmit(dataSubmit: FormValues) {
-    console.log("🚀 ~ CreateRecipe ~ dataSubmit:", dataSubmit);
-
+    console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
+    setLoading(true);
+    toast({
+      title: "Loading...",
+      description: "Please wait while we process your request.",
+    });
     const formData = appendFormData({
       name: dataSubmit.name,
       serves: dataSubmit.serves,
@@ -131,8 +142,22 @@ const CreateRecipe = () => {
 
     try {
       await createRecipe(formData);
+      toast({
+        title: "Success!",
+        description: "Your recipe has been created successfully.",
+        variant: "successful",
+        action: <ToastAction altText="Try again">Close</ToastAction>,
+      });
     } catch (error) {
-      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          error instanceof Error ? error.message : "An error has occurred",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -176,7 +201,7 @@ const CreateRecipe = () => {
                     </FormItem>
                   )}
                 />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="timeToCook"
@@ -220,7 +245,7 @@ const CreateRecipe = () => {
                     )}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <CategorySelect onChange={handleCategoryChange} form={form} />
                   <DifficultySelect
                     onChange={handleDifficultyChange}
@@ -261,14 +286,7 @@ const CreateRecipe = () => {
               <Button type="button" variant="outline">
                 Save as Draft
               </Button>
-              <Button
-                onClick={() => {
-                  console.log({
-                    error: form.formState.errors,
-                    data: form.getValues(),
-                  });
-                }}
-                type="submit">
+              <Button disabled={isLoading} type="submit">
                 Publish Recipe
               </Button>
             </div>
@@ -277,5 +295,4 @@ const CreateRecipe = () => {
       </div>
     </div>
   );
-};
-export default CreateRecipe;
+}

@@ -95,3 +95,11 @@ export function appendFormData(data: Object) {
 export function isObject(value: any) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
+
+export function convertMBToBytes(megabyte: number) {
+  return megabyte * 1024 * 1024;
+}
+
+export function isEmptyObject(obj: object) {
+  return Object.keys(obj).length === 0;
+}

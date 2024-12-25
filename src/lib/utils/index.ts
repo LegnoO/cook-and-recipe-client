@@ -1,4 +1,3 @@
-export * from "./errorHandler";
 export * from "./helpers";
 
 import { clsx, type ClassValue } from "clsx";

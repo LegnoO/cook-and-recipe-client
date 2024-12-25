@@ -38,7 +38,7 @@ export function formatAddress(
   return formattedAddress;
 }
 
-export function createSearchParams(filter: Object) {
+export function createSearchParams(filter: Record<string, unknown>) {
   const params = new URLSearchParams();
 
   Object.entries(filter).forEach(([key, value]) => {
@@ -64,7 +64,7 @@ export function secondsToMinutes(seconds: number) {
   return Math.floor(seconds / 60);
 }
 
-export function isObjectEmpty(obj: Object) {
+export function isObjectEmpty(obj: Record<string, unknown>) {
   return Object.keys(obj).length === 0;
 }
 
@@ -74,7 +74,7 @@ export function getDecodedParam(param: string) {
   return encodedValue ? decodeURIComponent(encodedValue) : null;
 }
 
-export function appendFormData(data: Object) {
+export function appendFormData(data: Record<string, unknown>) {
   const formData = new FormData();
 
   Object.entries(data).forEach(([key, value]) => {
@@ -85,14 +85,14 @@ export function appendFormData(data: Object) {
         }
       });
     } else {
-      formData.append(key, value);
+      formData.append(key, (value as string) || "");
     }
   });
 
   return formData;
 }
 
-export function isObject(value: any) {
+export function isObject(value: Record<string, unknown>) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
@@ -100,6 +100,6 @@ export function convertMBToBytes(megabyte: number) {
   return megabyte * 1024 * 1024;
 }
 
-export function isEmptyObject(obj: object) {
+export function isEmptyObject(obj: Record<string, unknown>) {
   return Object.keys(obj).length === 0;
 }

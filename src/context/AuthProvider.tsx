@@ -11,10 +11,11 @@ import {
   useContext,
   Dispatch,
   SetStateAction,
+  useCallback,
 } from "react";
 
 // ** Components
-import LoadingScreen from "@/components/LoadingScreen";
+// import LoadingScreen from "@/components/LoadingScreen";
 
 // ** Library Imports
 import { useRouter } from "nextjs-toploader/app";
@@ -23,12 +24,10 @@ import { useRouter } from "nextjs-toploader/app";
 import { useToast } from "@/hooks/useToast";
 
 // ** Services
-import { fetchUserInfo, logout } from "@/services/authService";
+import { logout } from "@/services/authService";
 
 // ** Lib
-import { deleteCookie, getCookieValue } from "@/lib/utils/cookies";
-import { isSSR } from "@/lib/utils";
-import { internalAPI } from "@/config/endpoints";
+import { deleteCookie } from "@/lib/utils/cookies";
 
 // ** Types
 interface AuthContext {
@@ -50,11 +49,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setLoading] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
   const clearAuth = searchParams.get("session");
-  const [test, setTest] = useState("");
 
-  function redirectToHome() {
-    if (pathname !== "/") router.push("/");
-  }
+  const redirectToHome = useCallback(() => {
+    if (pathname !== "/") {
+      router.push("/");
+    }
+  }, [pathname, router]);
 
   async function handleLogout() {
     try {
@@ -81,21 +81,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    async function checkUserInfo() {
-      try {
-        const userData = await fetchUserInfo();
-        setUser(userData);
-      } catch {
-        // redirectToHome();
-        if (user) setUser(null);
-      } finally {
-        setAuthLoading(false);
-      }
-    }
-
+    // async function checkUserInfo() {
+    //   try {
+    //     const userData = await fetchUserInfo();
+    //     setUser(userData);
+    //   } catch {
+    //     // redirectToHome();
+    //     if (user) setUser(null);
+    //   } finally {
+    //     setAuthLoading(false);
+    //   }
+    // }
     // checkUserInfo();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    setAuthLoading(false);
   }, []);
 
   useEffect(() => {
@@ -103,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (user) setUser(null);
       redirectToHome();
     }
-  }, [clearAuth]);
+  }, [redirectToHome, user, clearAuth]);
 
   return (
     <AuthContext.Provider

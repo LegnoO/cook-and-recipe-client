@@ -1,7 +1,8 @@
 "use client";
 
 // ** Next Imports
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+
 import Link from "next/link";
 
 // ** React Imports
@@ -13,16 +14,13 @@ import UserMenu from "./UserMenu";
 import { Button } from "@/components/ui/button";
 
 // ** Library Imports
-import { useRouter } from "nextjs-toploader/app";
+import { useMediaQuery } from "usehooks-ts";
 
 // ** Context
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Icons
 import { Logo, Menu, Close } from "@/components/ui/icons";
-
-// ** Library Imports
-import { useMediaQuery } from "usehooks-ts";
 
 // ** Store
 import { idStore } from "@/store/idStore";
@@ -31,70 +29,93 @@ import { idStore } from "@/store/idStore";
 import { cn } from "@/lib/utils";
 
 const Navbar = () => {
-  const isMediumScreen = useMediaQuery("(min-width: 768px)");
+  const animatedNavbarPaths = ["/", "/recipes", "/chefs", "/contact", "/about"];
+  const menuItems = [
+    {
+      label: "Home",
+      url: "/",
+    },
+    {
+      label: "Recipes",
+      url: "/recipes",
+    },
+    {
+      label: "The Team",
+      url: "/chefs",
+    },
+    {
+      label: "Contact",
+      url: "/contact",
+    },
+    {
+      label: "About us",
+      url: "/about",
+    },
+  ];
+  const params = useParams();
   const pathname = usePathname();
+  const isMediumScreen = useMediaQuery("(min-width: 768px)");
 
-  const homeRoute = pathname === "/";
+  const isAnimatedNavbar = animatedNavbarPaths.some((pattern) =>
+    matchPatternWithParams(pattern),
+  );
 
-  const router = useRouter();
+  function matchPatternWithParams(pattern: string) {
+    const pathnameSegments = pathname.split("/").slice(1);
+    const patternSegments = pattern.split("/").slice(1);
+
+    if (!Object.keys(params).length) return pathname === pattern;
+
+    if (patternSegments.length !== pathnameSegments.length) return false;
+
+    return patternSegments.every((seg, index) => {
+      if (seg.startsWith(":")) {
+        const paramKey = seg.slice(1);
+        return params[paramKey] === pathnameSegments[index];
+      }
+
+      return seg === pathnameSegments[index];
+    });
+  }
 
   const idMap = {
     loginModal: "login-modal",
     navExpand: "nav-expand",
   };
 
-  const menu_list = [
-    {
-      title: "Home",
-      url: "/",
-    },
-    {
-      title: "Recipes",
-      url: "/recipes",
-    },
-    {
-      title: "The Team",
-      url: "/chefs",
-    },
-    {
-      title: "Contact",
-      url: "/",
-    },
-    {
-      title: "About us",
-      url: "/",
-    },
-  ];
-
   const { ids, toggleId, removeId } = idStore();
   const { user } = useAuthContext();
 
-  const [scrolled, setScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   function toggleNavExpand() {
     toggleId(idMap.navExpand);
   }
 
-  function navigateTo(url: string) {
-    if (homeRoute) return url;
+  function generateRedirectUrl(url: string) {
+    const isHomePage = pathname === "/";
+    return isHomePage ? url : `${url}?returnTo=${encodeURIComponent(pathname)}`;
+  }
 
-    const encodedPathname = encodeURIComponent(pathname);
-    return `${url}?returnTo=${encodedPathname}`;
+  function getNavbarClasses() {
+    if (!isAnimatedNavbar) {
+      return cn("h-18 z-navbar w-full border-b bg-background");
+    }
+
+    return cn(
+      "fixed right-0 top-0 z-navbar w-full transition-height duration-350 ease-smooth",
+      isScrolled ? "h-18 border-b bg-background" : "bg-overlay h-24",
+    );
   }
 
   useEffect(() => {
     function handleScroll() {
       const scrollPosition = window.scrollY;
-      const dVhHeight = window.innerHeight;
-
-      if (scrollPosition < dVhHeight) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      const viewportHeight = window.innerHeight;
+      setIsScrolled(scrollPosition >= viewportHeight);
     }
-
     window.addEventListener("scroll", handleScroll);
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -105,35 +126,26 @@ const Navbar = () => {
     if (isMediumScreen) {
       removeId(idMap.navExpand);
     }
-  }, [isMediumScreen]);
+  }, [removeId, isMediumScreen, idMap.navExpand]);
 
   return (
-    // <header
-    //   className={cn(
-    //     "right-0 top-0 z-navbar h-22 w-full transition duration-350 ease-smooth",
-    //     homeRoute
-    //       ? scrolled
-    //         ? "fixed bg-background shadow backdrop-blur supports-[backdrop-filter]:bg-background/60"
-    //         : "bg-overlay fixed"
-    //       : "sticky bg-background shadow backdrop-blur supports-[backdrop-filter]:bg-background/60",
-    //   )}>
-    <header
-      className={cn(
-        "fixed right-0 top-0 z-navbar w-full transition-height duration-350 ease-smooth",
-        scrolled ? "h-18 border-b bg-background" : "bg-overlay h-24",
-      )}>
+    <header className={getNavbarClasses()}>
       <nav className={cn("container flex h-full items-center justify-between")}>
         <Link href="/" className="flex items-center gap-2">
           <Logo
             className={cn("text-background", {
-              "text-foreground": scrolled,
+              "text-foreground":
+                (isAnimatedNavbar && isScrolled) ||
+                (!isAnimatedNavbar && !isScrolled),
             })}
           />
           <h5
             className={cn(
               "inline-block py-2 font-playfair text-lg font-medium tracking-widest text-background",
               {
-                "text-foreground": scrolled,
+                "text-foreground":
+                  (isAnimatedNavbar && isScrolled) ||
+                  (!isAnimatedNavbar && !isScrolled),
               },
             )}>
             Cook & Recipe
@@ -142,18 +154,28 @@ const Navbar = () => {
 
         <nav className={"hidden lg:flex"}>
           <ul className={"flex items-center gap-8"}>
-            {menu_list.map((menu, index) => {
+            {menuItems.map((item, index) => {
               return (
                 <li className="flex rounded-md" key={index}>
                   <Link
-                    href={menu.url}
+                    href={item.url}
                     className={cn(
                       "underline-animation px-3 py-2 text-sm font-semibold uppercase leading-4 tracking-widest text-muted-foreground transition-colors hover:text-foreground",
                       {
-                        "hover:text-background": !scrolled,
+                        "hover:text-background":
+                          isAnimatedNavbar && !isScrolled,
+                        "hover:text-foreground": isAnimatedNavbar && isScrolled,
+                        "is-active text-background":
+                          isAnimatedNavbar &&
+                          !isScrolled &&
+                          pathname === item.url,
+                        "is-active text-foreground":
+                          isAnimatedNavbar &&
+                          isScrolled &&
+                          pathname === item.url,
                       },
                     )}>
-                    {menu.title}
+                    {item.label}
                   </Link>
                 </li>
               );
@@ -169,22 +191,22 @@ const Navbar = () => {
             </Fragment>
           ) : (
             <div className="flex items-center gap-4">
-              <Button className="uppercase tracking-widest" variant="ghost">
+              <Button className="uppercase tracking-widest" variant="secondary">
                 {pathname !== "/register" ? (
-                  <Link href={navigateTo("/register")} scroll={false}>
+                  <Link href={generateRedirectUrl("/register")} scroll={false}>
                     Sign Up
                   </Link>
                 ) : (
-                  <Fragment>Sign Up</Fragment>
+                  "Sign Up"
                 )}
               </Button>
               <Button className="uppercase tracking-widest">
                 {pathname !== "/login" ? (
-                  <Link href={navigateTo("/login")} scroll={false}>
+                  <Link href={generateRedirectUrl("/login")} scroll={false}>
                     Sign In
                   </Link>
                 ) : (
-                  <Fragment>Sign In</Fragment>
+                  "Sign In"
                 )}
               </Button>
             </div>
@@ -206,7 +228,7 @@ const Navbar = () => {
           ids.includes(idMap.navExpand) && "visible max-h-96 p-3",
         )}>
         <ul className={"flex flex-col gap-3 rounded-md"}>
-          {menu_list.map((menu, index) => {
+          {menuItems.map((menu, index) => {
             return (
               <li
                 key={index}
@@ -216,7 +238,7 @@ const Navbar = () => {
                 <Link
                   className="block rounded-md px-3 py-2 font-medium"
                   href={menu.url}>
-                  {menu.title}
+                  {menu.label}
                 </Link>
               </li>
             );

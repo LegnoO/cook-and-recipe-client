@@ -138,6 +138,10 @@
 
   .underline-animation {
     @apply after:relative after:top-[4px] after:block after:h-[2px] after:w-2/5 after:origin-left after:scale-x-0 after:bg-primary after:transition-all after:content-[''] hover:after:scale-x-100;
+
+    &.is-active {
+      @apply after:scale-x-100;
+    }
   }
 
   .lined-paper-background {
@@ -176,6 +180,19 @@
 
   .bg-overlay {
     background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .title-slider-responsive {
+    font-size: clamp(1.875rem, 2vw + 1.25rem + 2.5px, 3rem);
+    font-weight: 400;
+    letter-spacing: clamp(10px, 1vw + 2px, 15px);
+  }
+
+  .description-slider-responsive {
+    font-size: clamp(1rem, 2vw + 1rem + 2.5px, 2rem);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -1px;
   }
 }
 

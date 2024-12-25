@@ -1,47 +1,24 @@
 "use client";
 
-// ** React Imports
-import { useState, useEffect } from "react";
-
 // ** Components
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import Repeat from "@/components/Repeat";
 import { Scroll } from "@/components/Scroll";
-
-// ** Library Imports
-import { EventSourcePlus } from "event-source-plus";
 
 // ** Icons
 import { Bell, CheckCheck } from "lucide-react";
 
 // ** Config
 
-import { getCookieValue } from "@/lib/utils/cookies";
-import clientFetch from "@/lib/clientFetch";
-
 const Notification = () => {
-  const [messages, setMessages] = useState<any>(null);
+  // const [messages, setMessages] = useState<any>(null);
   // console.log("🚀 ~ Notification ~ messages:", messages);
 
   // useEffect(() => {
@@ -80,7 +57,7 @@ const Notification = () => {
 
   const MessageItem = () => {
     return (
-      <div className="cursor-pointer border-b border-l-3 border-info border-b-divider p-4 transition-colors hover:bg-secondary/80">
+      <div className="cursor-pointer border-b border-l-3 border-l-info p-4 transition-colors hover:bg-secondary/80">
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium leading-none">Meeting reminder</p>
@@ -97,16 +74,13 @@ const Notification = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="relative h-10 w-10 rounded-full">
-          <Bell />
+        <Button variant="secondary" className="relative h-10 w-10 rounded-full">
+          <Bell className="!h-5 !w-5" />
           <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-red-500" />
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0">
-        <div className="border-b border-b-divider px-4 py-2.5">
+        <div className="border-b px-4 py-2.5">
           <h3 className="text-lg font-semibold">Notifications</h3>
         </div>
         <Scroll className="max-h-[calc(100vh-200px)]">

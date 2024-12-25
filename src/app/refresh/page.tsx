@@ -26,7 +26,7 @@ export default function RefreshAPI() {
     }
 
     handleRefresh();
-  }, []);
+  }, [router]);
 
   return <LoadingScreen />;
 }

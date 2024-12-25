@@ -140,8 +140,9 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        "first-slider": "url('/images/slide-background.jpg')",
-
+        home: "url('/images/slide-background.jpg')",
+        "list-recipe":
+          "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1734463782/cook-and-recipe/list-recipe-background.jpg')",
         footer:
           "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg')",
       },

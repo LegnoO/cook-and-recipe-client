@@ -1,6 +1,10 @@
 // ** Next Imports
 import { Metadata } from "next";
 
+// ** Components
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
 // ** Context
 import { AuthProvider } from "@/context/AuthProvider";
 import ReactQueryProvider from "@/context/ReactQueryProvider";
@@ -22,8 +26,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html className="" lang="en">
@@ -35,7 +41,13 @@ export default function RootLayout({
         />
         <Toaster />
         <ReactQueryProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {" "}
+            <Navbar />
+            {modal}
+            {children}
+            <Footer />
+          </AuthProvider>
         </ReactQueryProvider>
       </body>
     </html>

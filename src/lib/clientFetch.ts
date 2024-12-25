@@ -45,7 +45,8 @@ export default async function clientFetch(
           await refreshUser();
           return await performFetch();
         } catch {
-          window.location.replace("/");
+          console.log('window.location.replace("/")');
+          // window.location.replace("/");
         }
       }
 

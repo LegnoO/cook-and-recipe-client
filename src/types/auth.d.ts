@@ -6,9 +6,9 @@ type ChefLevel = "Beginner" | "Home cook" | "Professional" | "Master chef";
 type ChefStatus = "active" | "disabled" | "pending" | "rejected" | "banned";
 
 type ChefInfo = {
+  level: ChefLevel;
   startedDate: string;
   description: string;
-  level: ChefLevel;
   status: ChefStatus;
   approvalDate: string;
 };
@@ -19,7 +19,7 @@ type User = {
   id: string;
   fullName: string;
   email: string;
-  dateOfBirth: string | null;
+  dateOfBirth: Date | null;
   address: {
     number: string;
     street: string;
@@ -37,6 +37,13 @@ type UserProfile = Omit<User, "id"> & {
   gender: Gender;
   createdDate: string;
   chefInfo: ChefInfo;
+};
+
+type UserInfo = {
+  id: string;
+  avatar: string;
+  fullName: string;
+  email: string;
 };
 
 type AuthTokens = string;

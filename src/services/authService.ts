@@ -73,7 +73,7 @@ export async function refreshUser() {
     ? JSON.parse(localStorage.getItem("rememberMe")!)
     : false;
 
-  const response = await clientFetch(`/refresh`, {
+  const response = await clientFetch(`/auth/refresh`, {
     method: "POST",
     body: JSON.stringify({
       rememberMe,

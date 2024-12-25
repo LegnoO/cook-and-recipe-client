@@ -6,14 +6,31 @@ type ListRecipe = {
 type Recipe = {
   id: string;
   name: string;
-  description: string;
+  category: Category;
   timeToCook: number;
   difficulty: RecipeDifficultyEnum;
   serves: number;
   imageUrls: string[];
+  createdDate: string;
+  createdBy: {
+    level: ChefLevel;
+    startedDate: string;
+    description: string;
+    userInfo: UserInfo;
+  };
+  viewCount: number;
+  feedbackCount: number;
+  rating: null | number;
+  description: string;
   status: boolean;
   verifyStatus: RecipeVerifyStatusEnum;
-  createdDate: string;
+};
+
+type Category = {
+  id: string;
+  name: string;
+  imageUrl: string;
+  description: string;
 };
 
 type RecipeDifficultyEnum =
@@ -23,4 +40,8 @@ type RecipeDifficultyEnum =
   | "Professional"
   | "Expert";
 
-type RecipeVerifyStatusEnum = "rejected" | "unverified" | "verified";
+type RecipeVerifyStatusEnum =
+  | "rejected"
+  | "unverified"
+  | "pending"
+  | "verified";

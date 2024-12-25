@@ -1,6 +1,4 @@
-
-
-const recipe = {
+export const recipe = {
   name: "Vietnamese Pho",
   description:
     "A delicious and aromatic Vietnamese soup made with beef, fresh herbs, and rice noodles. Perfect for any occasion.",
@@ -93,5 +91,3 @@ const recipe = {
   images: ["", "", "", ""],
   category: "Soup",
 };
-
-

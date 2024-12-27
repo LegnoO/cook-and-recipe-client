@@ -10,7 +10,7 @@ export async function createRecipe(formData: FormData) {
   return await response.json();
 }
 
-export async function fetchRecipeDetail(id: string) {
+export async function fetchRecipeDetail(id: string): Promise<Recipe> {
   const response = await clientFetch(`/recipe/owned/find/${id}`, {
     method: "GET",
   });
@@ -25,6 +25,22 @@ export async function requestVerifyRecipe(id: string) {
       method: "PATCH",
     },
   );
+
+  return await response.json();
+}
+
+export async function publicRecipe(id: string) {
+  const response = await clientFetch(`/recipe/owned/find/${id}/public`, {
+    method: "PATCH",
+  });
+
+  return await response.json();
+}
+
+export async function privateRecipe(id: string) {
+  const response = await clientFetch(`/recipe/owned/find/${id}/private`, {
+    method: "PATCH",
+  });
 
   return await response.json();
 }

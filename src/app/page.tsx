@@ -1,23 +1,44 @@
 // ** Next Imports
 import Image from "next/image";
+import Link from "next/link";
 
 // ** Components
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/icons";
+
 import RecipeCategories from "@/components/RecipeCategories";
-import Recipes from "@/components/RecipeCard";
+import RecipeCard from "@/components/RecipeCard";
+
+// ** Icons
+import { MoveUpRight } from "lucide-react";
+
+// ** Lib
+import serverFetch from "@/lib/serverFetch";
+
+export async function getRecipeDetails() {
+  const response = await serverFetch(
+    `/recipe/public/find?index=1&size=10&sortOrder=desc`,
+  );
+
+  const recipeData: ListRecipe = await response.json();
+  return recipeData;
+}
 
 export default async function Home() {
+  const { data: recipes } = await getRecipeDetails();
+
   return (
     <>
       <section className="relative max-w-full bg-home bg-cover bg-center bg-no-repeat">
         <div className="container">
           <div className="flex min-h-screen flex-col items-center justify-center">
-            <div className="w-full space-y-6 text-center text-background">
-              <Logo className="title-slider-responsive mx-auto h-8 w-8 text-background sm:h-10 sm:w-10 md:h-14 md:w-14" />
-              <h2 className="title-slider-responsive">FOOD MADE WITH LOVE</h2>
-              <div className="mx-auto h-[2px] w-[10%] bg-primary" />
-              <h3 className="description-slider-responsive text-muted-foreground">
+            <div className="mt-16 w-full text-center text-background">
+              <Logo className="title-slider-responsive mx-auto mb-6 h-8 w-8 text-background sm:h-10 sm:w-10 md:h-14 md:w-14" />
+              <h2 className="title-slider-responsive mb-6 uppercase">
+                food made with love
+              </h2>
+              <div className="mx-auto mb-4 h-[2px] w-[4%] bg-primary" />
+              <h3 className="description-slider-responsive mb-4">
                 Take a slice of our perfect culinary heaven!
               </h3>
               <Button className="rounded-sm p-4 font-playfair text-sm font-medium uppercase tracking-widest md:p-6 md:text-base">
@@ -58,7 +79,27 @@ export default async function Home() {
         </div>
       </section>
       <RecipeCategories />
-      <Recipes />
+
+      <section className="section-spacing bg-background">
+        <div className="container">
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="text-4xl font-bold tracking-wider lg:text-3xl">
+              Popular Recipes
+            </h2>
+            <Link href="/chefs">
+              <Button>
+                View more
+                <MoveUpRight />
+              </Button>
+            </Link>
+          </div>
+          <div className="grid-cols-3-res gap-8">
+            {recipes.map((recipe, index) => (
+              <RecipeCard recipe={recipe} key={index} />
+            ))}
+          </div>
+        </div>
+      </section>
     </>
   );
 }

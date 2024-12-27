@@ -11,3 +11,5 @@ type QueryOptions<T> = Pagination &
     sortBy: string;
     sortOrder: SortOrder;
   };
+
+type SearchParams = { [key: string]: string | string[] | undefined };

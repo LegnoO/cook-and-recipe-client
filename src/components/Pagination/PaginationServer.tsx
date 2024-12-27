@@ -1,3 +1,6 @@
+// ** React Imports
+import { Fragment } from "react";
+
 // ** Next Imports
 import Link from "next/link";
 
@@ -8,12 +11,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn, createSearchParams } from "@/lib/utils";
 
 type Props = {
-  endpoint: string;
   totalPages: number;
   currentPage: number;
 };
 
-const PaginationServer = ({ endpoint, totalPages, currentPage }: Props) => {
+const PaginationServer = ({ totalPages, currentPage }: Props) => {
   const firstPage = 1;
   const maxVisiblePages = 7;
   const linkClass =
@@ -21,7 +23,7 @@ const PaginationServer = ({ endpoint, totalPages, currentPage }: Props) => {
 
   function getHref(index: number) {
     const params = createSearchParams({ index });
-    return `${endpoint}?${params}`;
+    return `?${params}`;
   }
 
   const renderEllipsis = (key: string) => (
@@ -71,8 +73,14 @@ const PaginationServer = ({ endpoint, totalPages, currentPage }: Props) => {
     const isEndRange = totalPages - currentPage < 4;
 
     if (totalPages <= maxVisiblePages) {
-      return Array.from({ length: totalPages }, (_, index) =>
-        renderPageButton(index + 1, currentPage === index + 1),
+      return (
+        <Fragment>
+          {renderChevron(Math.max(1, currentPage - 1), "left")}
+          {Array.from({ length: totalPages }, (_, index) =>
+            renderPageButton(index + 1, currentPage === index + 1),
+          )}
+          {renderChevron(Math.min(totalPages, currentPage + 1), "right")}
+        </Fragment>
       );
     }
 

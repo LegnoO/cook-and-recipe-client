@@ -66,6 +66,7 @@ const OwnRecipeCard = ({ recipe }: Props) => {
             className="object-cover"
             fill
             src={
+              recipe.imageUrls[0] ||
               "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg"
             }
             alt="card"

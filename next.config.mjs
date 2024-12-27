@@ -26,6 +26,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "point.moxcreative.com",
       },
+      {
+        protocol: "https",
+        hostname: "gourmand.qodeinteractive.com",
+      },
     ],
   },
 };

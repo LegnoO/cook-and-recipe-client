@@ -49,7 +49,7 @@ const Navbar = () => {
     },
     {
       label: "About us",
-      url: "/about",
+      url: "/recipes/676d8ebdb442f5f00f27e711",
     },
   ];
   const params = useParams();
@@ -112,7 +112,8 @@ const Navbar = () => {
     function handleScroll() {
       const scrollPosition = window.scrollY;
       const viewportHeight = window.innerHeight;
-      setIsScrolled(scrollPosition >= viewportHeight);
+      const navbarHeight = 98;
+      setIsScrolled(scrollPosition >= viewportHeight - navbarHeight);
     }
     window.addEventListener("scroll", handleScroll);
     handleScroll();

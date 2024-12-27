@@ -23,6 +23,8 @@ import CategorySelect from "./CategorySelect";
 import DifficultySelect from "./DifficultySelect";
 import AddIngredient from "./AddIngredient";
 import AddInstruction from "./AddInstruction";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
@@ -33,7 +35,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // ** Services
-import { createRecipe } from "@/services/recipeServer";
+import { createRecipe, requestVerifyRecipe } from "@/services/recipeServer";
 
 // ** Lib
 import { appendFormData, convertMBToBytes } from "@/lib/utils";
@@ -87,6 +89,7 @@ export type FormValues = z.infer<typeof formSchema>;
 
 export default function CreateRecipePage() {
   const { toast } = useToast();
+  const [recipeStatus, setRecipeStatus] = useState<RecipeStatus>("private");
   const [isLoading, setLoading] = useState(false);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -111,6 +114,10 @@ export default function CreateRecipePage() {
     form.setValue("difficulty", value);
   }
 
+  function handleRecipeStatusChange(value: RecipeStatus) {
+    setRecipeStatus(value);
+  }
+
   async function onSubmit(dataSubmit: FormValues) {
     console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
     setLoading(true);
@@ -125,7 +132,11 @@ export default function CreateRecipePage() {
     });
 
     try {
-      await createRecipe(formData);
+      const createdRecipe = await createRecipe(formData);
+
+      if (recipeStatus === "public")
+        await requestVerifyRecipe(createdRecipe._id);
+
       toast({
         title: "Success!",
         description: "Your recipe has been created successfully.",
@@ -146,7 +157,7 @@ export default function CreateRecipePage() {
   }
 
   return (
-    <div className="bg-background">
+    <div className="bg-secondary">
       <div className="container py-16">
         <Form {...form}>
           <form
@@ -163,116 +174,168 @@ export default function CreateRecipePage() {
                 recipe.
               </p>
             </div>
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle>Recipe General Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <ImageUpload form={form} />
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Recipe name</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g. Vietnamese Pho, Spaghetti Carbonara, Chicken Tikka Masala"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="space-y-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recipe General Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <ImageUpload form={form} />
                   <FormField
                     control={form.control}
-                    name="timeToCook"
+                    name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Cook duration (minutes)</FormLabel>
+                        <FormLabel>Recipe name</FormLabel>
                         <FormControl>
                           <Input
+                            placeholder="e.g. Vietnamese Pho, Spaghetti Carbonara, Chicken Tikka Masala"
                             {...field}
-                            min={0}
-                            type="number"
-                            placeholder="e.g. 30"
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="timeToCook"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Cook duration (minutes)</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              min={0}
+                              type="number"
+                              placeholder="e.g. 30"
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="serves"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Number of serving (person)</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              min={0}
+                              type="number"
+                              placeholder="e.g. 4 or 3-5"
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <CategorySelect
+                      onChange={handleCategoryChange}
+                      form={form}
+                    />
+                    <DifficultySelect
+                      onChange={handleDifficultyChange}
+                      form={form}
+                    />
+                  </div>
                   <FormField
                     control={form.control}
-                    name="serves"
+                    name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Number of serving (person)</FormLabel>
+                        <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Input
+                          <Textarea
+                            rows={3}
+                            placeholder="e.g., A hearty Vietnamese soup with rich broth, tender beef, and fresh herbs. Perfect for cold days!"
                             {...field}
-                            min={0}
-                            type="number"
-                            placeholder="e.g. 4 or 3-5"
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <CategorySelect onChange={handleCategoryChange} form={form} />
-                  <DifficultySelect
-                    onChange={handleDifficultyChange}
-                    form={form}
-                  />
-                </div>
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={3}
-                          placeholder="e.g., A hearty Vietnamese soup with rich broth, tender beef, and fresh herbs. Perfect for cold days!"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">Recipe Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <AddIngredient form={form} />
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl">Recipe Details</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <AddIngredient form={form} />
 
-                <Separator />
-                <AddInstruction form={form} />
-              </CardContent>
-            </Card>
-            <div className="mt-8 flex items-center justify-end gap-4">
-              <Button type="button" variant="outline">
-                Save as Draft
-              </Button>
-              <Button disabled={isLoading} type="submit">
-                Publish Recipe
-              </Button>
+                  <Separator />
+                  <AddInstruction form={form} />
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl">Set Recipe As</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <RadioGroup
+                    defaultValue={recipeStatus}
+                    onValueChange={handleRecipeStatusChange}>
+                    <div className="has-button-checked:bg-secondary mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4">
+                      <RadioGroupItem
+                        value="private"
+                        id="private"
+                        className="mt-1"
+                      />
+                      <div className="grid gap-1.5">
+                        <Label
+                          htmlFor="private"
+                          className="flex flex-col gap-1.5 font-medium">
+                          <span>Private - Only you can see</span>
+                          <span className="text-sm text-muted-foreground">
+                            This recipe will be visible only to you as the
+                            creator
+                          </span>
+                        </Label>
+                      </div>
+                    </div>
+                    <div className="has-button-checked:bg-secondary flex items-start space-x-3 space-y-0 rounded-lg border p-4">
+                      <RadioGroupItem
+                        value="public"
+                        id="public"
+                        className="mt-1"
+                      />
+                      <div className="grid gap-1.5">
+                        <Label
+                          htmlFor="public"
+                          className="flex flex-col gap-1.5 font-medium">
+                          <span>Public for everyone</span>
+                          <span className="text-sm text-muted-foreground">
+                            Anyone can view this recipe after admin approval
+                            creator
+                          </span>
+                        </Label>
+                      </div>
+                    </div>
+                  </RadioGroup>
+                </CardContent>
+              </Card>
+              <div className="flex items-center justify-end gap-4">
+                <Button type="button" variant="outline">
+                  Save as Draft
+                </Button>
+                <Button disabled={isLoading} type="submit">
+                  Publish Recipe
+                </Button>
+              </div>
             </div>
           </form>
         </Form>

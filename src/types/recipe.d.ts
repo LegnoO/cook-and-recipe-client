@@ -33,6 +33,8 @@ type Category = {
   description: string;
 };
 
+type RecipeStatus = "public" | "private";
+
 type RecipeDifficultyEnum =
   | "Easy"
   | "Medium"

@@ -1,8 +1,5 @@
 "use client";
 
-// ** Next Imports
-import { usePathname, useSearchParams } from "next/navigation";
-
 // ** React Imports
 import {
   createContext,
@@ -14,8 +11,11 @@ import {
   useCallback,
 } from "react";
 
+// ** Next Imports
+import { usePathname, useSearchParams } from "next/navigation";
+
 // ** Components
-// import LoadingScreen from "@/components/LoadingScreen";
+import LoadingScreen from "@/components/LoadingScreen";
 
 // ** Library Imports
 import { useRouter } from "nextjs-toploader/app";
@@ -24,7 +24,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useToast } from "@/hooks/useToast";
 
 // ** Services
-import { logout } from "@/services/authService";
+import { fetchUserInfo, logout } from "@/services/authService";
 
 // ** Lib
 import { deleteCookie } from "@/lib/utils/cookies";
@@ -80,27 +80,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  async function checkUserInfo() {
+    setAuthLoading(true);
+    try {
+      const userData = await fetchUserInfo();
+      setUser(userData);
+    } catch {
+      // redirectToHome();
+      if (user) setUser(null);
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
   useEffect(() => {
-    // async function checkUserInfo() {
-    //   try {
-    //     const userData = await fetchUserInfo();
-    //     setUser(userData);
-    //   } catch {
-    //     // redirectToHome();
-    //     if (user) setUser(null);
-    //   } finally {
-    //     setAuthLoading(false);
-    //   }
-    // }
-    // checkUserInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    setAuthLoading(false);
+    checkUserInfo();
   }, []);
 
   useEffect(() => {
     if (clearAuth) {
+      // try {
+      // checkUserInfo();
+      // } catch {
       if (user) setUser(null);
-      redirectToHome();
+      // redirectToHome();
+      // }
     }
   }, [redirectToHome, user, clearAuth]);
 
@@ -113,7 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         logout: handleLogout,
       }}>
-      {/* {authLoading && <LoadingScreen />} */}
+      {authLoading && <LoadingScreen />}
       {children}
     </AuthContext.Provider>
   );

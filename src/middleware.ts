@@ -1,7 +1,7 @@
 // ** Next Imports
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-export function middleware(request: Request) {
+export function middleware(request: NextRequest) {
   const url = new URL(request.url);
   const origin = url.origin;
   const pathname = url.pathname;

@@ -1,48 +1,48 @@
-// ** Next Imports
-import { headers } from "next/headers";
+// ** React Imports
+import { Fragment } from "react";
 
 // ** Components
 import BannerLog from "@/components/BannerLog";
 import Repeat from "@/components/Repeat";
-import PaginationServer from "@/components/Pagination/PaginationServer";
 import ChefCard from "./ChefCard";
+import PaginationServer from "@/components/Pagination/PaginationServer";
 
 // ** Types
 type Props = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: SearchParams;
 };
 
-// async function getChef() {
-//   const response = await serverFetch(`/users/owned/profile`);
-
-//   const userInfo = await response.json();
-//   return userInfo;
-// }
-
 export default function ChefsPage({ searchParams }: Props) {
-  const headersList = headers();
-  const pathname = headersList.get("x-pathname") || "";
-
   return (
-    <section className="bg-background">
-      <BannerLog title="The Team" />
-      <div className="section-spacing container">
-        <h2 className="mb-16 text-center text-4xl uppercase tracking-widest">
-          Chefs
-        </h2>
-        <div className="grid-cols-3-res">
-          <Repeat times={3}>
-            <ChefCard />
-          </Repeat>
+    <Fragment>
+      <section className="bg-chefs relative max-w-full bg-cover bg-center bg-no-repeat">
+        <div className="container">
+          <div className="flex min-h-screen flex-col items-center justify-center">
+            <div className="mt-16 w-full text-center text-background">
+              <h2 className="title-slider-responsive mb-6 uppercase">
+                the team
+              </h2>
+              <div className="mx-auto mb-4 h-[2px] w-[4%] bg-primary" />
+              <h3 className="description-slider-responsive">
+                The talent behind the scenes
+              </h3>
+            </div>
+          </div>
         </div>
-        <div className="mt-16">
-          <PaginationServer
-            endpoint={pathname}
-            totalPages={50}
-            currentPage={Number(searchParams.index) || 0}
-          />
+      </section>
+      <section className="bg-background">
+        <div className="section-spacing container">
+          <h2 className="mb-4 text-center text-4xl uppercase tracking-widest">
+            Chefs
+          </h2>
+          <div className="mx-auto mb-24 h-[2px] w-[4%] bg-primary" />
+          <div className="grid-cols-3-res">
+            <Repeat times={3}>
+              <ChefCard />
+            </Repeat>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </Fragment>
   );
 }

@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import ImageGallery from "./ImageGallery";
+import Recipes from "@/components/RecipeCard";
+import BannerLog from "@/components/BannerLog";
 
 // ** Icons
 import {
@@ -22,19 +24,26 @@ import {
 } from "lucide-react";
 
 // ** Lib
+import serverFetch from "@/lib/serverFetch";
 import { getCharInitials } from "@/lib/utils";
 
-import Recipes from "@/components/RecipeCard";
-import BannerLog from "@/components/BannerLog";
-
 // ** Types
-// type Props = {
-//   params: { id: string };
-//   searchParams: { [key: string]: string | string[] | undefined };
-// };
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-export default async function RecipeDetailPage() {
-  const fake_data = {
+export async function getRecipeDetails(id: string) {
+  const response = await serverFetch(`/recipe/public/find/${id}`);
+
+  const recipe = await response.json();
+  return recipe;
+}
+
+export default async function RecipeDetailPage({ params }: Props) {
+  const recipeDetail = await getRecipeDetails(params.id);
+  console.log("🚀 ~ RecipeDetailPage ~ recipeDetail:", recipeDetail);
+  const _s = {
     id: "670ed5fe95ce989ba6a00276",
     name: "Lamb soup with spices & rice",
     timeToCook: 4,
@@ -127,7 +136,7 @@ export default async function RecipeDetailPage() {
       <section className="pb-28 pt-12">
         <div className="container flex">
           <div className="w-1/2">
-            <ImageGallery images={fake_data.imageUrls} />
+            <ImageGallery images={recipeDetail.imageUrls} />
           </div>
           <div className="w-1/2">
             <div className="flex h-full flex-col justify-center gap-3 p-12">
@@ -150,7 +159,7 @@ export default async function RecipeDetailPage() {
                       alt={`avatar`}
                     />
                     <AvatarFallback>
-                      {getCharInitials(fake_data.name)}L
+                      {getCharInitials(recipeDetail.name)}L
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex w-full items-center justify-between">
@@ -175,7 +184,7 @@ export default async function RecipeDetailPage() {
                     <h4 className="font-semibold">Yields:</h4>
                   </div>
                   <p className="text-muted-foreground">
-                    {fake_data.serves} Servings
+                    {recipeDetail.serves} Servings
                   </p>
                 </li>
 
@@ -185,7 +194,7 @@ export default async function RecipeDetailPage() {
                     <h4 className="font-semibold">Cooking:</h4>
                   </div>
                   <p className="text-muted-foreground">
-                    {fake_data.timeToCook} min
+                    {recipeDetail.timeToCook} min
                   </p>
                 </li>
 
@@ -195,7 +204,7 @@ export default async function RecipeDetailPage() {
                     <h4 className="font-semibold">Difficulties:</h4>
                   </div>
                   <p className="text-muted-foreground">
-                    {fake_data.difficulty}
+                    {recipeDetail.difficulty}
                   </p>
                 </li>
               </ul>
@@ -214,7 +223,7 @@ export default async function RecipeDetailPage() {
                 <span>Cooking Instructions</span>
               </h2>
               <div className="flex flex-col pb-10 [&:has(p.a)]:bg-red-500">
-                {fake_data.instructionSections.map(
+                {recipeDetail.instructionSections.map(
                   (instructionSection, index) => (
                     <div className="mb-5" key={index}>
                       <h5 className="flex items-center gap-2 text-lg font-medium text-primary">
@@ -247,7 +256,7 @@ export default async function RecipeDetailPage() {
                 <span>Ingredients</span>
               </h2>
               <div className="flex flex-col">
-                {fake_data.ingredients.map((ingredient, index) => (
+                {recipeDetail.ingredients.map((ingredient, index) => (
                   <Fragment key={index}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -289,12 +298,12 @@ export default async function RecipeDetailPage() {
                     <div className="flex h-full flex-col gap-4 border p-4">
                       <a className="underline-animation">
                         <h4 className="text-2xl font-bold">
-                          {fake_data.createdBy.fullName}
+                          {recipeDetail.createdBy.fullName}
                         </h4>
                       </a>
                       <i className="font-medium text-primary">Assistant Chef</i>
                       <p className="line-clamp-5">
-                        {fake_data.createdBy.description}
+                        {recipeDetail.createdBy.description}
                       </p>
                       <Button className="max-w-36">
                         Read More

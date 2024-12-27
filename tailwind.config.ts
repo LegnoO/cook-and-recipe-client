@@ -141,13 +141,24 @@ const config: Config = {
       },
       backgroundImage: {
         home: "url('/images/slide-background.jpg')",
-        "list-recipe":
-          "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1734463782/cook-and-recipe/list-recipe-background.jpg')",
+        chefs:
+          "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1735330084/cook-and-recipe/Hero%20Banner/chefs.jpg')",
+        recipes:
+          "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1735330791/cook-and-recipe/Hero%20Banner/recipes.jpg')",
         footer:
           "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg')",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({
+      addVariant,
+    }: {
+      addVariant: (name: string, definition: string) => void;
+    }) {
+      addVariant("has-button-checked", '&:has(button[aria-checked="true"])');
+    },
+  ],
 };
 export default config;

@@ -1,10 +1,10 @@
 "use client";
 
 // ** React Imports
-import { useState, ChangeEvent } from "react";
+import { useState, useCallback, ChangeEvent } from "react";
 
 // ** Next Imports
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 
 // ** Components
 import {
@@ -24,27 +24,33 @@ import { Button } from "@/components/ui/button";
 
 // ** Library Imports
 import { useDebouncedCallback } from "use-debounce";
+import { useRouter } from "nextjs-toploader/app";
 
 // ** Icons
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 
 const QueryRecipe = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const params = new URLSearchParams(searchParams);
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const [isSelectOpen, setSelectOpen] = useState({
     name: false,
     category: false,
   });
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
-
-  const onSearchRecipe = useDebouncedCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      params.set("search", event.target.value);
-      router.push(`?${params.toString()}`);
-    },
-    300,
+  const onSearchRecipe = useCallback(
+    useDebouncedCallback((event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value.trim();
+      if (value) {
+        params.set("search", value);
+      } else {
+        params.delete("search");
+      }
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    }, 300),
+    [params, router, pathname],
   );
 
   function handleToggleSelect(value: boolean, field: "name" | "category") {
@@ -58,7 +64,7 @@ const QueryRecipe = () => {
     const [sortBy, sortOrder] = value.split("_");
     params.set("sortBy", sortBy);
     params.set("sortOrder", sortOrder);
-    router.push(`?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   return (

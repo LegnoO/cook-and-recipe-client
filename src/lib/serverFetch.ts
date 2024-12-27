@@ -30,11 +30,9 @@ export default async function clientFetch(
       options.headers!["Authorization"] = `Bearer ${accessToken}`;
 
     const response = await fetch(fullUrl, options);
-    console.log("🚀 ~ performFetch ~ fullUrl, options:", { fullUrl, options });
 
     if (!response.ok && response.status === 401) {
-      console.log("🚀 ~ performFetch ~ response:", await response.json());
-      redirect("/?session=expired");
+      redirect("/session");
     }
 
     return response;

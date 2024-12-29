@@ -1,7 +1,7 @@
 // ** Components
-import ForgotPasswordForm from "@/app/forgot-password/ForgotPasswordForm";
-import Modal from "@/components/Modal";
 import { Scroll } from "@/components/Scroll";
+import Modal from "@/components/Modal";
+import ForgotPasswordForm from "@/app/forgot-password/ForgotPasswordForm";
 
 export default function ForgotPasswordModal() {
   return (

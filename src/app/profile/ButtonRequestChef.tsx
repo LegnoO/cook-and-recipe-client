@@ -49,7 +49,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/useToast";
 
 // ** Services
-// import { requestBecomeChef } from "@/services/client/chefService";
+import { requestBecomeChef } from "@/services/chefService";
 
 // ** Lib
 import { Scroll } from "@/components/Scroll";
@@ -85,14 +85,13 @@ const ButtonRequestChef = () => {
 
   async function onSubmit(dataSubmit: FormValues) {
     console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
-
     setLoading(true);
     toast({
       title: "Loading...",
       description: "Please wait while we process your request.",
     });
     try {
-      // await requestBecomeChef(dataSubmit);
+      await requestBecomeChef(dataSubmit);
       setDialogOpen(false);
       toast({
         title: "Success!",

@@ -31,7 +31,7 @@ const UserMenu = ({ user }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer">
+        <Avatar className="cursor-pointer shadow">
           <AvatarImage src={user.avatar} />
           <AvatarFallback>{getCharInitials(user.fullName)}</AvatarFallback>
         </Avatar>

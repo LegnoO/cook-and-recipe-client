@@ -102,7 +102,7 @@ export default async function RecipesListPage({ searchParams }: Props) {
 
   return (
     <>
-      <section className="relative max-w-full bg-recipes bg-cover bg-center bg-no-repeat">
+      <section className="bg-recipes-banner relative max-w-full bg-cover bg-center bg-no-repeat">
         <div className="container">
           <div className="flex min-h-screen flex-col items-center justify-center">
             <div className="mt-16 w-full text-center text-background">

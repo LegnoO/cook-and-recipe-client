@@ -15,9 +15,14 @@ import { format } from "date-fns";
 
 // ** Lib
 import { formatAddress, getCharInitials } from "@/lib/utils";
+import serverFetch from "@/lib/serverFetch";
 
-// ** Services
-import { getUserProfile } from "@/services/server/test";
+async function getUserProfile() {
+  const response = await serverFetch(`/users/owned/profile`);
+
+  const userInfo = await response.json();
+  return userInfo;
+}
 
 export default async function Profile() {
   const userProfile = await getUserProfile();
@@ -41,7 +46,9 @@ export default async function Profile() {
                     </AvatarFallback>
                   </Avatar>
 
-                  <Badge variant="default" className="absolute -right-4 -top-4">
+                  <Badge
+                    variant={userProfile.chefInfo ? "default" : "secondary"}
+                    className="absolute -right-4 -top-4">
                     <ChefHat className="mr-1 h-4 w-4" />
                     {userProfile.chefInfo ? "Chef" : "User"}
                   </Badge>
@@ -52,23 +59,28 @@ export default async function Profile() {
                   <span className="text-sm text-muted-foreground">
                     {userProfile.email}
                   </span>
-                  <Badge variant="secondary">
-                    {userProfile.chefInfo.level}
-                  </Badge>
+                  {userProfile.chefInfo && (
+                    <Badge variant="secondary">
+                      {userProfile.chefInfo.level}
+                    </Badge>
+                  )}
                 </div>
               </div>
             </CardHeader>
             <CardContent className="relative flex flex-col items-center space-y-4">
               <ButtonEditProfile userProfile={userProfile} />
               <Separator className="my-6" />
-
               <div className="flex w-full flex-col gap-2">
                 <div className="flex items-start gap-3">
                   <MapPin className="h-5 w-5" />
                   <div className="space-y-1">
                     <p className="text-sm font-medium">Address</p>
                     <p className="text-sm text-muted-foreground">
-                      {formatAddress(userProfile.address)}
+                      {userProfile.address ? (
+                        formatAddress(userProfile.address)
+                      ) : (
+                        <i className="text-muted-foreground">Not set</i>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -78,7 +90,9 @@ export default async function Profile() {
                   <div className="space-y-1">
                     <p className="text-sm font-medium">Phone</p>
                     <p className="text-sm text-muted-foreground">
-                      {userProfile.phone}
+                      {userProfile.phone || (
+                        <i className="text-muted-foreground">Not set</i>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -102,7 +116,9 @@ export default async function Profile() {
                   <div className="space-y-1">
                     <p className="text-sm font-medium">Gender</p>
                     <p className="text-sm text-muted-foreground">
-                      {userProfile.gender}
+                      {userProfile.gender || (
+                        <i className="text-muted-foreground">Not set</i>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -110,7 +126,7 @@ export default async function Profile() {
 
               <Separator className="my-6" />
 
-              <ButtonRequestChef />
+              {!userProfile.chefInfo && <ButtonRequestChef />}
             </CardContent>
           </Card>
         </div>

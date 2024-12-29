@@ -140,11 +140,9 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        home: "url('/images/slide-background.jpg')",
-        chefs:
-          "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1735330084/cook-and-recipe/Hero%20Banner/chefs.jpg')",
-        recipes:
-          "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1735330791/cook-and-recipe/Hero%20Banner/recipes.jpg')",
+        "home-banner": "url('/images/home-banner.jpg')",
+        "recipes-banner": "url('/images/recipes-banner.jpg')",
+        "chefs-banner": "url('/images/chefs-banner.jpg')",
         footer:
           "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg')",
       },

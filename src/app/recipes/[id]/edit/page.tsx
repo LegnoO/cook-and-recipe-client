@@ -40,7 +40,7 @@ import {
   fetchRecipeDetail,
   // privateRecipe,
   // publicRecipe,
-} from "@/services/client/recipeService";
+} from "@/services/recipeService";
 
 // ** Lib
 import {

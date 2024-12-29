@@ -67,7 +67,7 @@ import {
 } from "@/lib/utils";
 
 // ** Services
-import { updateInfo } from "@/services/client/chefService";
+import { updateInfo } from "@/services/chefService";
 
 // ** Types
 type Props = { userProfile: UserProfile };
@@ -210,16 +210,12 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
     );
   };
 
-  console.log(form.formState.errors);
-
   async function onSubmit(dataSubmit: FormValues) {
     setLoading(true);
     toast({
       title: "Loading...",
       description: "Please wait while we process your request.",
     });
-
-    console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
 
     try {
       const formData = appendFormData({

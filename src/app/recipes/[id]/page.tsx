@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import ImageGallery from "./ImageGallery";
+import { Label } from "@/components/ui/label";
+import RecipeCard from "@/components/RecipeCard";
 
 // ** Icons
 import {
@@ -22,22 +24,30 @@ import {
 } from "lucide-react";
 
 // ** Lib
+import serverFetch from "@/lib/serverFetch";
 import { calculateDaysAgo, getCharInitials } from "@/lib/utils";
-
-// ** Services
-import { getRecipeDetails } from "@/services/server/test";
-import { Label } from "@/components/ui/label";
-
-import RecipeCard from "@/components/RecipeCard";
-
-// ** Services
-import { getRecipeList } from "@/services/server/test";
 
 // ** Types
 type Props = {
   params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
+
+async function getRecipeDetails(id: string): Promise<RecipeDetails> {
+  const response = await serverFetch(`/recipe/public/find/${id}`);
+
+  const recipeDetails = await response.json();
+  return recipeDetails;
+}
+
+async function getRecipeList(): Promise<ListRecipe> {
+  const response = await serverFetch(
+    `/recipe/public/find?index=1&size=10&sortOrder=desc`,
+  );
+
+  const recipeData = await response.json();
+  return recipeData;
+}
 
 export default async function RecipeDetailPage({ params }: Props) {
   const { data: recipes } = await getRecipeList();

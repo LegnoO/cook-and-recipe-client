@@ -24,7 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 // ** Services
-import { resetPassword } from "@/services/client/authService";
+import { resetPassword } from "@/services/authService";
 
 // ** Schemas
 const schema = z

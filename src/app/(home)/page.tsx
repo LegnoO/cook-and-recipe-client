@@ -1,3 +1,6 @@
+// ** React Imports
+import { Fragment } from "react";
+
 // ** Next Imports
 import Image from "next/image";
 import Link from "next/link";
@@ -11,16 +14,32 @@ import RecipeCard from "@/components/RecipeCard";
 // ** Icons
 import { MoveUpRight } from "lucide-react";
 
-// ** Services
-import { getRecipeList, getCategories } from "@/services/server/test";
+// ** Lib
+import serverFetch from "@/lib/serverFetch";
+
+async function getRecipeList(): Promise<ListRecipe> {
+  const response = await serverFetch(
+    `/recipe/public/find?index=1&size=10&sortOrder=desc`,
+  );
+
+  const recipeData = await response.json();
+  return recipeData;
+}
+
+async function getCategories(): Promise<Category[]> {
+  const response = await serverFetch(`/category/public/find`);
+
+  const categoryData = await response.json();
+  return categoryData;
+}
 
 export default async function Home() {
   const { data: recipes } = await getRecipeList();
   const categories = await getCategories();
 
   return (
-    <>
-      <section className="relative max-w-full bg-home bg-cover bg-center bg-no-repeat">
+    <Fragment>
+      <section className="relative max-w-full bg-home-banner bg-center bg-no-repeat">
         <div className="container">
           <div className="flex min-h-screen flex-col items-center justify-center">
             <div className="mt-16 w-full text-center text-background">
@@ -48,6 +67,7 @@ export default async function Home() {
                 src="https://res.cloudinary.com/dzyqhkgxy/image/upload/v1733823949/iq6wdoaqeji7esbwndmr.jpg"
                 alt="Recipe Slide"
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
             <div className="flex-1">
@@ -104,6 +124,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-    </>
+    </Fragment>
   );
 }

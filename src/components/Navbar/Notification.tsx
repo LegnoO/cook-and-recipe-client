@@ -57,7 +57,7 @@ const Notification = () => {
 
   const MessageItem = () => {
     return (
-      <div className="cursor-pointer border-b border-l-3 border-l-info p-4 transition-colors hover:bg-secondary/80">
+      <div className="cursor-pointer border-b border-l-3 border-l-primary p-3 transition-colors hover:bg-secondary/80">
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium leading-none">Meeting reminder</p>
@@ -80,8 +80,8 @@ const Notification = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0">
-        <div className="border-b px-4 py-2.5">
-          <h3 className="text-lg font-semibold">Notifications</h3>
+        <div className="border-b px-3 py-2">
+          <h3 className="text-base font-semibold lg:text-lg">Notifications</h3>
         </div>
         <Scroll className="max-h-[calc(100vh-200px)]">
           <Repeat times={20}>
@@ -90,7 +90,7 @@ const Notification = () => {
         </Scroll>
         <div className="px-4 py-2">
           <div className="flex cursor-pointer items-center justify-end gap-2">
-            <CheckCheck className="h-4 w-4 text-info" />
+            <CheckCheck className="h-4 w-4 text-primary" />
             <span className="text-sm">Mark all as read</span>
           </div>
         </div>

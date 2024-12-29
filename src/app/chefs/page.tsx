@@ -13,7 +13,7 @@ import ChefCard from "./ChefCard";
 export default function ChefsPage() {
   return (
     <Fragment>
-      <section className="relative max-w-full bg-chefs bg-cover bg-center bg-no-repeat">
+      <section className="bg-chefs-banner relative max-w-full bg-cover bg-center bg-no-repeat">
         <div className="container">
           <div className="flex min-h-screen flex-col items-center justify-center">
             <div className="mt-16 w-full text-center text-background">
@@ -34,7 +34,7 @@ export default function ChefsPage() {
             Chefs
           </h2>
           <div className="mx-auto mb-24 h-[2px] w-[4%] bg-primary" />
-          <div className="grid-cols-3-res">
+          <div className="grid-cols-3-res place-items-center gap-8">
             <Repeat times={3}>
               <ChefCard />
             </Repeat>

@@ -28,7 +28,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // ** Services
-import { sendOtp, requestReset } from "@/services/client/authService";
+import { sendOtp, requestReset } from "@/services/authService";
 
 // ** Schemas
 const schema = z.object({

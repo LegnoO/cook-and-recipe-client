@@ -40,7 +40,11 @@ const StatusAction = ({ status, verifyStatus }: Props) => {
           </Label>
         );
       default:
-        return <Button variant="secondary">Request Verify</Button>;
+        return (
+          <div className="h-9 bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground shadow-sm hover:bg-secondary/80">
+            Request Verify Recipe
+          </div>
+        );
     }
   };
 

@@ -35,10 +35,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // ** Services
-import {
-  createRecipe,
-  requestVerifyRecipe,
-} from "@/services/client/recipeService";
+import { createRecipe, requestVerifyRecipe } from "@/services/recipeService";
 
 // ** Lib
 import { appendFormData, convertMBToBytes } from "@/lib/utils";

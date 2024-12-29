@@ -39,7 +39,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Services
-import { login, fetchUserInfo } from "@/services/client/authService";
+import { login, fetchUserInfo } from "@/services/authService";
 
 // ** Lib
 import { setCookie } from "@/lib/utils/cookies";
@@ -114,6 +114,7 @@ const LoginForm = () => {
         <div className="grid gap-4">
           <Form {...form}>
             <form
+              method="POST"
               noValidate
               autoComplete="off"
               onSubmit={form.handleSubmit(onSubmit)}

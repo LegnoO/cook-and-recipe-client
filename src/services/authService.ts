@@ -1,5 +1,6 @@
 // ** Lib
 import clientFetch from "@/lib/clientFetch";
+import { setCookie } from "@/lib/utils/cookies";
 
 export async function login({ email, password, rememberMe }: LoginCredentials) {
   const response = await clientFetch(`/auth/public/login`, {
@@ -81,5 +82,10 @@ export async function refreshUser() {
     credentials: "include",
   });
 
-  return await response.text();
+  const newToken = await response.text();
+  setCookie("accessToken", newToken, {
+    path: "/",
+    secure: true,
+    sameSite: "none",
+  });
 }

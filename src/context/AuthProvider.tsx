@@ -12,7 +12,7 @@ import {
 } from "react";
 
 // ** Next Imports
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 // ** Components
 import LoadingScreen from "@/components/LoadingScreen";
@@ -24,7 +24,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useToast } from "@/hooks/useToast";
 
 // ** Services
-import { fetchUserInfo, logout } from "@/services/client/authService";
+import { fetchUserInfo, logout } from "@/services/authService";
 
 // ** Lib
 import { deleteCookie } from "@/lib/utils/cookies";
@@ -33,6 +33,7 @@ import { deleteCookie } from "@/lib/utils/cookies";
 interface AuthContext {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
+  setAuthLoading: Dispatch<SetStateAction<boolean>>;
   authLoading: boolean;
   isLoading: boolean;
   logout: () => Promise<void>;
@@ -42,22 +43,24 @@ const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState(false);
-  const [authLoading, setAuthLoading] = useState(false);
-  const clearAuth = searchParams.get("session");
+  const [authLoading, setAuthLoading] = useState(true);
 
-  const redirectToHome = useCallback(() => {
-    if (pathname !== "/") {
-      router.push("/");
-    }
-  }, [pathname, router]);
+  const redirectTo = useCallback(
+    (path: string) => {
+      if (pathname !== path) {
+        router.push(path);
+      }
+    },
+    [pathname, router],
+  );
 
   async function handleLogout() {
     try {
+      redirectTo("/login");
       setLoading(true);
       await logout();
       setUser(null);
@@ -67,7 +70,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "You have been logged out of your account.",
         duration: 3000,
       });
-      redirectToHome();
     } catch (error) {
       toast({
         title: "Logout failed",
@@ -80,33 +82,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const checkUserInfo = useCallback(async () => {
-    setAuthLoading(true);
-    try {
-      const userData = await fetchUserInfo();
-      setUser(userData);
-    } catch {
-      // redirectToHome();
-      if (user) setUser(null);
-    } finally {
-      setAuthLoading(false);
-    }
-  }, [user]);
-
   useEffect(() => {
-    // checkUserInfo();
-  }, [checkUserInfo]);
-
-  useEffect(() => {
-    if (clearAuth) {
-      // try {
-      // checkUserInfo();
-      // } catch {
-      if (user) setUser(null);
-      // redirectToHome();
-      // }
+    async function checkUserInfo() {
+      setAuthLoading(true);
+      try {
+        const userData = await fetchUserInfo();
+        setUser(userData);
+      } catch {
+        redirectTo("/");
+        if (user) setUser(null);
+      } finally {
+        setAuthLoading(false);
+      }
     }
-  }, [redirectToHome, user, clearAuth]);
+    checkUserInfo();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -116,6 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         authLoading,
         isLoading,
         logout: handleLogout,
+        setAuthLoading,
       }}>
       {authLoading && <LoadingScreen />}
       {children}

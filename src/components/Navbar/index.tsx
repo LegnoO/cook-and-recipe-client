@@ -132,7 +132,7 @@ const Navbar = () => {
   return (
     <header className={getNavbarClasses()}>
       <nav className={cn("container flex h-full items-center justify-between")}>
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 whitespace-nowrap">
           <Logo
             className={cn("text-background", {
               "text-foreground":
@@ -142,7 +142,7 @@ const Navbar = () => {
           />
           <h5
             className={cn(
-              "inline-block py-2 font-playfair text-lg font-medium tracking-widest text-background",
+              "inline-block whitespace-nowrap py-2 font-playfair text-lg font-medium tracking-widest text-background",
               {
                 "text-foreground":
                   (isAnimatedNavbar && isScrolled) ||
@@ -154,14 +154,14 @@ const Navbar = () => {
         </Link>
 
         <nav className={"hidden lg:flex"}>
-          <ul className={"flex items-center gap-8"}>
+          <ul className={"flex items-center gap-4 xl:gap-8"}>
             {menuItems.map((item, index) => {
               return (
                 <li className="flex rounded-md" key={index}>
                   <Link
                     href={item.url}
                     className={cn(
-                      "underline-animation px-3 py-2 text-sm font-semibold uppercase leading-4 tracking-widest text-muted-foreground transition-colors hover:text-foreground",
+                      "underline-animation whitespace-nowrap px-3 py-2 text-sm font-semibold uppercase leading-4 tracking-widest text-muted-foreground transition-colors hover:text-foreground",
                       {
                         "hover:text-background":
                           isAnimatedNavbar && !isScrolled,
@@ -249,7 +249,7 @@ const Navbar = () => {
               <li
                 key={index}
                 className={
-                  "rounded-md hover:cursor-pointer hover:bg-secondary lg:flex lg:items-center"
+                  "whitespace-nowrap rounded-md hover:cursor-pointer hover:bg-secondary lg:flex lg:items-center"
                 }>
                 <Link
                   className="block rounded-md px-3 py-2 font-medium"
@@ -261,7 +261,7 @@ const Navbar = () => {
           })}
           <li
             className={
-              "flex justify-center rounded-md bg-primary text-primary-foreground lg:hidden lg:items-center"
+              "flex justify-center whitespace-nowrap rounded-md bg-primary text-primary-foreground lg:hidden lg:items-center"
             }>
             <Link
               className="block rounded-md px-3 py-2 font-medium"

@@ -1,5 +1,5 @@
 // ** Services
-import { refreshUser } from "@/services/client/authService";
+import { refreshUser } from "@/services/authService";
 
 // ** Lib
 import { getCookieValue } from "@/lib/utils/cookies";
@@ -32,13 +32,17 @@ export default async function clientFetch(
       options.headers!["Authorization"] = `Bearer ${accessToken}`;
 
     const response = await fetch(fullUrl, options);
-
+    console.log({ fullUrl });
     if (!response.ok) {
+      const excludedUrls = [
+        "/users/owned/info",
+        "/auth/refresh",
+        "/auth/public/login",
+      ];
+
       if (
         response.status === 401 &&
-        !fullUrl.includes("/users/owned/info") &&
-        !fullUrl.includes("/refresh") &&
-        !fullUrl.includes("/login")
+        !excludedUrls.some((url) => fullUrl.includes(url))
       ) {
         try {
           await refreshUser();

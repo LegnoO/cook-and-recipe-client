@@ -10,14 +10,14 @@ export async function getRecipeOwned(
   return await response.json();
 }
 
-export async function requestBecomeChef(formData: {
+export async function requestBecomeChef(requestInfo: {
   level: string;
   description: string;
 }) {
-  const response = await clientFetch("/", {
+  const response = await clientFetch("/chefs/owned/register", {
     method: "POST",
     body: JSON.stringify({
-      formData,
+      requestInfo,
     }),
   });
 

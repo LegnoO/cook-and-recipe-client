@@ -18,16 +18,15 @@ const ChefCard = () => {
   return (
     <Card className="w-full max-w-sm border-none shadow-none">
       <CardHeader className="p-0">
-        <div className="relative mx-auto aspect-square w-[200px] overflow-hidden rounded-full">
-          <Image
-            className="rounded-inherit object-cover"
-            fill
-            src={
-              "https://res.cloudinary.com/dzl5ur69n/image/upload/v1733600651/yyhtnniclx0ja0n2pjhq.jpg"
-            }
-            alt={""}
-          />
-        </div>
+        <Image
+          className="mx-auto rounded-full object-cover"
+          width={200}
+          height={200}
+          src={
+            "https://res.cloudinary.com/dzl5ur69n/image/upload/v1733600651/yyhtnniclx0ja0n2pjhq.jpg"
+          }
+          alt={""}
+        />
       </CardHeader>
       <CardContent className="mt-6 text-center">
         <CardTitle className="mb-4 text-base font-semibold uppercase tracking-widest">

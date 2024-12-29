@@ -49,20 +49,14 @@ export default function RecipeCard({ recipe }: Props) {
   // ];
 
   return (
-    // <section className="section-spacing bg-background">
-    //   <div className="container">
-    //     <div className="flex flex-col gap-2">
-
-    //     </div>
-    //   </div>
-    // </section>
     <div className="group">
       <Card className="overflow-hidden rounded-none border-none shadow-none">
         <CardHeader className="relative p-0">
-          <div className="relative aspect-[136/91] w-full rounded-lg">
+          <div className="relative overflow-hidden rounded-lg">
             <Image
-              className="rounded-inherit object-cover"
-              fill
+              className="rounded-lg object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+              width={384}
+              height={257}
               src={
                 recipe.imageUrls[0] ||
                 "https://gourmand.qodeinteractive.com/wp-content/uploads/2018/02/port-f-img-1.jpg"
@@ -70,13 +64,6 @@ export default function RecipeCard({ recipe }: Props) {
               alt={recipe.name}
             />
 
-            {/* <div className="rounded-inherit bg-overlay absolute inset-0 bg-opacity-0 opacity-0 transition-opacity duration-300 group-hover:bg-opacity-40 group-hover:opacity-100">
-                <div className="flex h-full w-full items-center justify-center">
-                  <p className="text-lg font-semibold text-white">
-                    {data.name}
-                  </p>
-                </div>
-              </div> */}
             <BookMarkButton />
           </div>
         </CardHeader>
@@ -84,15 +71,17 @@ export default function RecipeCard({ recipe }: Props) {
           <div className="flex flex-col">
             <div className="mb-2 flex items-center justify-between">
               <h3 className="line-clamp-1 text-sm font-semibold uppercase tracking-[1.90px] lg:text-base">
-                Russian Salad
+                {recipe.name}
               </h3>
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
-                <span className="text-sm font-medium">4.5</span>
+                <span className="text-sm font-medium">
+                  {recipe.rating || 0}
+                </span>
               </div>
             </div>
             <p className="text-sm font-medium text-primary lg:text-base">
-              Beverages
+              {recipe.category.name}
             </p>
           </div>
         </CardContent>

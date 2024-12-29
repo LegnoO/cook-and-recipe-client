@@ -5,27 +5,18 @@ import Link from "next/link";
 // ** Components
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/icons";
-
-import RecipeCategories from "@/components/RecipeCategories";
+import Categories from "@/components/Categories";
 import RecipeCard from "@/components/RecipeCard";
 
 // ** Icons
 import { MoveUpRight } from "lucide-react";
 
-// ** Lib
-import serverFetch from "@/lib/serverFetch";
-
-export async function getRecipeDetails() {
-  const response = await serverFetch(
-    `/recipe/public/find?index=1&size=10&sortOrder=desc`,
-  );
-
-  const recipeData: ListRecipe = await response.json();
-  return recipeData;
-}
+// ** Services
+import { getRecipeList, getCategories } from "@/services/server/test";
 
 export default async function Home() {
-  const { data: recipes } = await getRecipeDetails();
+  const { data: recipes } = await getRecipeList();
+  const categories = await getCategories();
 
   return (
     <>
@@ -78,8 +69,21 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      <RecipeCategories />
 
+      <section className="section-spacing bg-background">
+        <div className="container">
+          <div className="flex flex-col gap-2">
+            <h2 className="mb-12 text-center text-4xl font-bold tracking-wider lg:text-3xl">
+              Recipe Categories
+            </h2>
+            <div className="grid-cols-5-res grid-cols-2 gap-16">
+              {categories.map((category, index) => (
+                <Categories key={index} category={category} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="section-spacing bg-background">
         <div className="container">
           <div className="mb-8 flex items-center justify-between">
@@ -94,7 +98,7 @@ export default async function Home() {
             </Link>
           </div>
           <div className="grid-cols-3-res gap-8">
-            {recipes.map((recipe, index) => (
+            {(recipes as Recipe[]).map((recipe, index) => (
               <RecipeCard recipe={recipe} key={index} />
             ))}
           </div>

@@ -42,6 +42,7 @@ import { Label } from "@/components/ui/label";
 import { Scroll } from "@/components/Scroll";
 import CalendarButton from "@/components/CalendarButton";
 import LoadingButton from "@/components/LoadingButton";
+import { ToastAction } from "@/components/ui/toast";
 
 // ** Library Imports
 import { z } from "zod";
@@ -57,8 +58,6 @@ import { useToast } from "@/hooks/useToast";
 //** Context
 import { useAuthContext } from "@/context/AuthProvider";
 
-// ** Services
-
 // ** Lib
 import {
   appendFormData,
@@ -66,8 +65,9 @@ import {
   convertMBToBytes,
   getCharInitials,
 } from "@/lib/utils";
-import { updateInfo } from "@/services/chefService";
-import { ToastAction } from "@/components/ui/toast";
+
+// ** Services
+import { updateInfo } from "@/services/client/chefService";
 
 // ** Types
 type Props = { userProfile: UserProfile };

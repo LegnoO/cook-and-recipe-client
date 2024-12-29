@@ -39,7 +39,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Services
-import { login, fetchUserInfo } from "@/services/authService";
+import { login, fetchUserInfo } from "@/services/client/authService";
 
 // ** Lib
 import { setCookie } from "@/lib/utils/cookies";

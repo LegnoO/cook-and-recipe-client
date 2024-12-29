@@ -4,7 +4,7 @@
 import { useState, useCallback, ChangeEvent } from "react";
 
 // ** Next Imports
-import { useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 // ** Components
 import {
@@ -29,28 +29,52 @@ import { useRouter } from "nextjs-toploader/app";
 // ** Icons
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 
-const QueryRecipe = () => {
+// ** Types
+type Props = {
+  categories: Category[];
+};
+
+const QueryRecipe = ({ categories }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const params = new URLSearchParams(searchParams);
+
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const [isSelectOpen, setSelectOpen] = useState({
     name: false,
     category: false,
   });
 
+  function getQueryValue(field: "sort" | "category") {
+    if (field === "sort") {
+      const sort = searchParams.get("sort") || "name";
+      const sortOrder = searchParams.get("sortOrder") || "asc";
+      return `${sort}_${sortOrder}`;
+    }
+
+    if (field === "category") {
+      return searchParams.get("category") || "all";
+    }
+  }
+
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+    router.push(`?${params.toString()}`, {
+      scroll: false,
+    });
+  }, 300);
+
   const onSearchRecipe = useCallback(
-    useDebouncedCallback((event: ChangeEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value.trim();
-      if (value) {
-        params.set("search", value);
-      } else {
-        params.delete("search");
-      }
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
-    }, 300),
-    [params, router, pathname],
+      debouncedSearch(value);
+    },
+    [debouncedSearch],
   );
 
   function handleToggleSelect(value: boolean, field: "name" | "category") {
@@ -60,12 +84,26 @@ const QueryRecipe = () => {
     }));
   }
 
-  function handleQuery(value: string) {
-    const [sortBy, sortOrder] = value.split("_");
-    params.set("sortBy", sortBy);
-    params.set("sortOrder", sortOrder);
-    router.push(`${pathname}?${params.toString()}`);
+  function handleQuery(value: string, field: "category" | "sort") {
+    const params = new URLSearchParams(searchParams);
+    if (field === "sort") {
+      const [sortBy, sortOrder] = value.split("_");
+      params.set("sortBy", sortBy);
+      params.set("sortOrder", sortOrder);
+    }
+
+    if (field === "category") {
+      params.set("category", value);
+    }
+    router.push(`?${params.toString()}`, {
+      scroll: false,
+    });
   }
+
+  console.log({
+    category: getQueryValue("category"),
+    sort: getQueryValue("sort"),
+  });
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
@@ -108,8 +146,9 @@ const QueryRecipe = () => {
                 onOpenChange={(open) => {
                   handleToggleSelect(open, "name");
                 }}
-                defaultValue={searchParams.get("sort") || "name_asc"}
-                onValueChange={handleQuery}>
+                value={getQueryValue("sort")}
+                defaultValue={getQueryValue("sort")}
+                onValueChange={(value) => handleQuery(value, "sort")}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose sorting" />
                 </SelectTrigger>
@@ -124,20 +163,23 @@ const QueryRecipe = () => {
             <div className="space-y-2">
               <h4 className="font-medium leading-none">Category</h4>
               <Select
+                value={getQueryValue("category")}
                 open={isSelectOpen.category}
                 onOpenChange={(open) => {
                   handleToggleSelect(open, "category");
                 }}
-                defaultValue={searchParams.get("category") || "all"}
-                onValueChange={handleQuery}>
+                defaultValue={getQueryValue("category")}
+                onValueChange={(value) => handleQuery(value, "category")}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="drinks">Đồ uống</SelectItem>
-                  <SelectItem value="main">Món chính</SelectItem>
-                  <SelectItem value="desserts">Tráng miệng</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

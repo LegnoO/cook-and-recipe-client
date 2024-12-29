@@ -1,16 +1,14 @@
-// ** Next Imports
-import Image from "next/image";
-
 // ** React Imports
 import { Fragment } from "react";
+
+// ** Next Imports
+import Image from "next/image";
 
 // ** Components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import ImageGallery from "./ImageGallery";
-import Recipes from "@/components/RecipeCard";
-import BannerLog from "@/components/BannerLog";
 
 // ** Icons
 import {
@@ -24,8 +22,16 @@ import {
 } from "lucide-react";
 
 // ** Lib
-import serverFetch from "@/lib/serverFetch";
-import { getCharInitials } from "@/lib/utils";
+import { calculateDaysAgo, getCharInitials } from "@/lib/utils";
+
+// ** Services
+import { getRecipeDetails } from "@/services/server/test";
+import { Label } from "@/components/ui/label";
+
+import RecipeCard from "@/components/RecipeCard";
+
+// ** Services
+import { getRecipeList } from "@/services/server/test";
 
 // ** Types
 type Props = {
@@ -33,75 +39,69 @@ type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export async function getRecipeDetails(id: string) {
-  const response = await serverFetch(`/recipe/public/find/${id}`);
-
-  const recipe = await response.json();
-  return recipe;
-}
-
 export default async function RecipeDetailPage({ params }: Props) {
+  const { data: recipes } = await getRecipeList();
   const recipeDetail = await getRecipeDetails(params.id);
-  console.log("🚀 ~ RecipeDetailPage ~ recipeDetail:", recipeDetail);
-  const _s = {
-    id: "670ed5fe95ce989ba6a00276",
-    name: "Lamb soup with spices & rice",
-    timeToCook: 4,
-    difficulty: "Medium",
-    serves: 4,
-    imageUrls: [
-      "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
-      "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
-      // "https://braise.qodeinteractive.com/wp-content/uploads/2021/09/recipe-single-featured.jpg",
-      "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
-      "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
-    ],
-    createdDate: "2024-10-15T20:50:17.235Z",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipicibe elit, sed do eiusmod tempor inci didunt ut labore e dolore magnna ad aliquam. Ut enim ad minim. quis nostrud exer citation ullamco laboris nisi ut aliquip ex ea commodo co nsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fu giat nulla pariatur. Excepteur sint occaecat cupidatat non proident. sunt in culpa qui officia deser unt a mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipicibe elit sed do eiusmo.",
-    ingredients: [
-      { name: "All-purpose flour", quantity: 2, measurement: "cups" },
-      { name: "Granulated sugar", quantity: 1, measurement: "cup" },
-      { name: "Baking powder", quantity: 2, measurement: "teaspoons" },
-      { name: "Salt", quantity: 0.5, measurement: "teaspoon" },
-      { name: "Unsalted butter", quantity: 0.5, measurement: "cup" },
-      { name: "Eggs", quantity: 2, measurement: "large" },
-      { name: "Milk", quantity: 0.75, measurement: "cup" },
-      { name: "Vanilla extract", quantity: 1, measurement: "teaspoon" },
-    ],
-    instructionSections: [
-      {
-        title: "Prepare the ingredients",
-        instructions: [
-          { step: 1, description: "Cut the lamb into bite-sized pieces" },
-          { step: 2, description: "Dice the onion and carrots" },
-          { step: 3, description: "Mince the garlic" },
-        ],
-      },
-      {
-        title: "Cook the soup",
-        instructions: [
-          { step: 1, description: "Brown the lamb in a large pot" },
-          { step: 2, description: "Add vegetables and sauté until soft" },
-          { step: 3, description: "Add spices and rice" },
-          {
-            step: 4,
-            description: "Pour in broth and simmer until meat is tender",
-          },
-        ],
-      },
-    ],
-    createdBy: {
-      id: "670d73f1beeeb06c352ab012",
-      avatar:
-        "https://res.cloudinary.com/dzl5ur69n/image/upload/v1730112900/hcanawuro1lszydjponm.png",
-      fullName: "Legno",
-      email: "legno@gmail.com",
-      description:
-        "Lorem ipsum dolor sit amet, ad consectetur adi picibe elit, sed do eiusmod tempor inci didunt quo labore e dolore magna aliqua ut.",
-    },
-    category: "baked",
-  };
+
+  // const _s = {
+  //   id: "670ed5fe95ce989ba6a00276",
+  //   name: "Lamb soup with spices & rice",
+  //   timeToCook: 4,
+  //   difficulty: "Medium",
+  //   serves: 4,
+  //   imageUrls: [
+  //     "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
+  //     "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
+  //     // "https://braise.qodeinteractive.com/wp-content/uploads/2021/09/recipe-single-featured.jpg",
+  //     "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
+  //     "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
+  //   ],
+  //   createdDate: "2024-10-15T20:50:17.235Z",
+  //   description:
+  //     "Lorem ipsum dolor sit amet, consectetur adipicibe elit, sed do eiusmod tempor inci didunt ut labore e dolore magnna ad aliquam. Ut enim ad minim. quis nostrud exer citation ullamco laboris nisi ut aliquip ex ea commodo co nsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fu giat nulla pariatur. Excepteur sint occaecat cupidatat non proident. sunt in culpa qui officia deser unt a mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipicibe elit sed do eiusmo.",
+  //   ingredients: [
+  //     { name: "All-purpose flour", quantity: 2, measurement: "cups" },
+  //     { name: "Granulated sugar", quantity: 1, measurement: "cup" },
+  //     { name: "Baking powder", quantity: 2, measurement: "teaspoons" },
+  //     { name: "Salt", quantity: 0.5, measurement: "teaspoon" },
+  //     { name: "Unsalted butter", quantity: 0.5, measurement: "cup" },
+  //     { name: "Eggs", quantity: 2, measurement: "large" },
+  //     { name: "Milk", quantity: 0.75, measurement: "cup" },
+  //     { name: "Vanilla extract", quantity: 1, measurement: "teaspoon" },
+  //   ],
+  //   instructionSections: [
+  //     {
+  //       title: "Prepare the ingredients",
+  //       instructions: [
+  //         { step: 1, description: "Cut the lamb into bite-sized pieces" },
+  //         { step: 2, description: "Dice the onion and carrots" },
+  //         { step: 3, description: "Mince the garlic" },
+  //       ],
+  //     },
+  //     {
+  //       title: "Cook the soup",
+  //       instructions: [
+  //         { step: 1, description: "Brown the lamb in a large pot" },
+  //         { step: 2, description: "Add vegetables and sauté until soft" },
+  //         { step: 3, description: "Add spices and rice" },
+  //         {
+  //           step: 4,
+  //           description: "Pour in broth and simmer until meat is tender",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  //   createdBy: {
+  //     id: "670d73f1beeeb06c352ab012",
+  //     avatar:
+  //       "https://res.cloudinary.com/dzl5ur69n/image/upload/v1730112900/hcanawuro1lszydjponm.png",
+  //     fullName: "Legno",
+  //     email: "legno@gmail.com",
+  //     description:
+  //       "Lorem ipsum dolor sit amet, ad consectetur adi picibe elit, sed do eiusmod tempor inci didunt quo labore e dolore magna aliqua ut.",
+  //   },
+  //   category: "baked",
+  // };
 
   // const recipeId = params.id;
   // const servings =
@@ -132,52 +132,52 @@ export default async function RecipeDetailPage({ params }: Props) {
 
   return (
     <Fragment>
-      <BannerLog title="Recipe Detail" />
-      <section className="pb-28 pt-12">
-        <div className="container flex">
-          <div className="w-1/2">
+      <section className="bg-secondary pb-20 pt-12">
+        <div className="container flex flex-col lg:flex-row">
+          <div className="w-full lg:w-1/2">
             <ImageGallery images={recipeDetail.imageUrls} />
           </div>
-          <div className="w-1/2">
+          <div className="w-full lg:w-1/2">
             <div className="flex h-full flex-col justify-center gap-3 p-12">
               <h6 className="mb-2 font-medium uppercase tracking-wider text-primary">
-                Drink Recipes
+                {recipeDetail.category.name}
               </h6>
-              <h2 className="mb-2 text-5xl font-bold">The Real Mojito</h2>
+              <h2 className="mb-2 text-5xl font-bold">{recipeDetail.name}</h2>
               <p className="mb-3 text-muted-foreground">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
-                tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
+                {recipeDetail.description}
               </p>
 
               <div className="mb-2 flex items-center rounded-lg">
-                <div className="flex w-full items-center gap-1.5 px-4">
+                <div className="flex w-full items-center gap-3 px-4">
                   <Avatar className="h-12 w-12">
                     <AvatarImage
-                      src={
-                        "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/profile-image-100x100.jpg"
-                      }
-                      alt={`avatar`}
+                      className="object-cover"
+                      src={recipeDetail.createdBy.userInfo.avatar}
+                      alt={`Author ${recipeDetail.createdBy.userInfo.fullName}`}
                     />
                     <AvatarFallback>
-                      {getCharInitials(recipeDetail.name)}L
+                      {getCharInitials(
+                        recipeDetail.createdBy.userInfo.fullName,
+                      )}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex w-full items-center justify-between">
-                    <div className="flex flex-col gap-1">
-                      <span>Author</span>
-                      <span className="text-primary">Tester</span>
-                    </div>
+                    <span className="text-sm font-medium text-primary lg:text-base">
+                      {recipeDetail.createdBy.userInfo.fullName}
+                    </span>
+
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm text-muted-foreground">
-                        Posted 2 days ago
+                        Posted {calculateDaysAgo(recipeDetail.createdDate)} days
+                        ago
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <ul className="mt-2 grid grid-cols-3 items-center rounded-lg bg-background p-4">
+              <ul className="grid-cols-3-res mt-2 grid place-items-center items-center rounded-lg bg-background p-4">
                 <li className="flex flex-col px-6 py-2">
                   <div className="flex items-center gap-1">
                     <UtensilsCrossed className="h-4 w-4" />
@@ -212,9 +212,10 @@ export default async function RecipeDetailPage({ params }: Props) {
           </div>
         </div>
       </section>
+
       <section className="bg-background pb-28 pt-12">
-        <div className="container flex gap-20">
-          <div className="w-[65%]">
+        <div className="container flex flex-col gap-20 lg:flex-row">
+          <div className="w-full lg:w-[65%]">
             <div className="lined-paper-background rounded-lg px-6 pb-8 pt-5 shadow-md">
               <h2 className="mb-4.5 flex items-center gap-2 text-2xl font-semibold">
                 <span>
@@ -234,9 +235,11 @@ export default async function RecipeDetailPage({ params }: Props) {
                           (instruction, index) => (
                             <p
                               key={index}
-                              className="flex items-center gap-2 text-muted-foreground">
-                              <span>Step {instruction.step}:</span>
-                              <span> {instruction.description}</span>
+                              className="flex gap-2 text-muted-foreground">
+                              <span className="whitespace-nowrap font-medium">
+                                Step {instruction.step}:
+                              </span>
+                              <span>{instruction.description}</span>
                             </p>
                           ),
                         )}
@@ -247,7 +250,7 @@ export default async function RecipeDetailPage({ params }: Props) {
               </div>
             </div>
           </div>
-          <div className="w-[35%]">
+          <div className="w-full lg:w-[35%]">
             <div className="lined-paper-background rounded-lg px-6 pb-8 pt-5 shadow-md">
               <h2 className="mb-5 flex items-center gap-2 text-2xl font-semibold">
                 <span>
@@ -255,20 +258,19 @@ export default async function RecipeDetailPage({ params }: Props) {
                 </span>
                 <span>Ingredients</span>
               </h2>
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-3">
                 {recipeDetail.ingredients.map((ingredient, index) => (
-                  <Fragment key={index}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Checkbox /> <span>{ingredient.name}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted">
-                          {ingredient.quantity} {ingredient.measurement}
-                        </span>
-                      </div>
-                    </div>
-                  </Fragment>
+                  <div key={index} className="flex w-full items-center gap-2">
+                    <Checkbox id={`ingredient-${index}`} />
+                    <Label
+                      className="flex w-full items-center justify-between"
+                      htmlFor={`ingredient-${index}`}>
+                      <span>{ingredient.name}</span>
+                      <span className="text-muted-foreground">
+                        {ingredient.quantity} {ingredient.measurement}
+                      </span>
+                    </Label>
+                  </div>
                 ))}
               </div>
             </div>
@@ -276,39 +278,44 @@ export default async function RecipeDetailPage({ params }: Props) {
         </div>
       </section>
 
-      <div className="container">
-        <div className="pb-32 pt-[75px]">
-          <h2 className="mb-4.5 flex items-center gap-2 text-4xl font-bold tracking-wider">
+      <section className="bg-secondary">
+        <div className="container pb-32 pt-[75px]">
+          <h2 className="mb-6 flex items-center gap-2 text-4xl font-bold tracking-wider">
             Chef Info
           </h2>
           <div className="flex w-full items-stretch gap-4">
             <div className="w-full">
-              <div className="flex h-full w-full items-stretch">
-                <div className="max-w-[300px]">
+              <div className="flex h-full w-full flex-col items-stretch lg:flex-row">
+                <div className="relative aspect-[1/1.5] h-[320px] max-w-full lg:aspect-square lg:max-w-[300px]">
                   <Image
-                    className="h-[360px] object-cover"
-                    src="https://recipepress.inspirythemes.com/third/wp-content/uploads/sites/4/2017/01/chef-5-479x492.jpg"
-                    alt="Chef Avatar"
-                    width={300}
-                    height={400}
+                    fill
+                    className="rounded-lg object-cover"
+                    src={recipeDetail.createdBy.userInfo.avatar}
+                    alt={`Chef ${recipeDetail.createdBy.userInfo.fullName}`}
                   />
                 </div>
                 <div className="flex-1">
-                  <div className="h-full bg-background p-2.5">
-                    <div className="flex h-full flex-col gap-4 border p-4">
-                      <a className="underline-animation">
-                        <h4 className="text-2xl font-bold">
-                          {recipeDetail.createdBy.fullName}
+                  <div className="h-full rounded-md bg-background p-2.5">
+                    <div className="h-full w-full rounded-lg border p-4">
+                      <div className="flex h-full w-full flex-col gap-4 lg:w-[70%]">
+                        <h4 className="underline-animation w-fit text-2xl font-bold">
+                          {recipeDetail.createdBy.userInfo.fullName}
                         </h4>
-                      </a>
-                      <i className="font-medium text-primary">Assistant Chef</i>
-                      <p className="line-clamp-5">
-                        {recipeDetail.createdBy.description}
-                      </p>
-                      <Button className="max-w-36">
-                        Read More
-                        <ChevronsRight className="ml-1 h-4 w-4" />
-                      </Button>
+                        <i className="font-medium text-primary">
+                          Chef {recipeDetail.createdBy.level}
+                        </i>
+                        <p className="text-muted-foreground">
+                          {recipeDetail.createdBy.description} A passionate chef
+                          specializing in Asian cuisine with over 5 years of
+                          cooking experience. Known for creating authentic and
+                          innovative dishes that blend traditional techniques
+                          with modern presentation.
+                        </p>
+                        <Button className="mt-auto max-w-36">
+                          Read More
+                          <ChevronsRight className="ml-1 h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -316,10 +323,24 @@ export default async function RecipeDetailPage({ params }: Props) {
             </div>
           </div>
         </div>
-      </div>
-      <div className="bg-background">
-        <Recipes />
-      </div>
+      </section>
+
+      <section className="section-spacing bg-background">
+        <div className="container">
+          <h3 className="mb-8 text-4xl font-bold tracking-wider lg:text-3xl">
+            More Recipes by Chef{" "}
+            <span className="text-primary">
+              {recipeDetail.createdBy.userInfo.fullName}
+            </span>
+          </h3>
+
+          <div className="grid-cols-3-res gap-8">
+            {recipes.map((recipe, index) => (
+              <RecipeCard recipe={recipe} key={index} />
+            ))}
+          </div>
+        </div>
+      </section>
     </Fragment>
     // <main className="flex items-center">
     //   <div className="container">

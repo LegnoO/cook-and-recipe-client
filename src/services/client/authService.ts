@@ -81,5 +81,5 @@ export async function refreshUser() {
     credentials: "include",
   });
 
-  await response.json();
+  return await response.text();
 }

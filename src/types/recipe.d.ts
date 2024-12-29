@@ -26,11 +26,41 @@ type Recipe = {
   verifyStatus: RecipeVerifyStatusEnum;
 };
 
-type Category = {
+type RecipeDetails = {
   id: string;
   name: string;
-  imageUrl: string;
+  timeToCook: number;
+  difficulty: string;
+  serves: number;
+  imageUrls: string[];
+  createdDate: string;
   description: string;
+  ingredients: ingredients[];
+  instructionSections: Instruction[];
+  createdBy: {
+    level: ChefLevel;
+    startedDate: string;
+    description: string;
+    userInfo: UserInfo;
+  };
+  category: Category;
+  feedbacks: string[];
+  rating: null | number;
+  viewCount: number;
+};
+
+type Ingredients = {
+  name: string;
+  quantity: number;
+  measurement: string;
+};
+
+type Instruction = {
+  title: string;
+  instructions: {
+    step: number;
+    description: string;
+  }[];
 };
 
 type RecipeStatus = "public" | "private";

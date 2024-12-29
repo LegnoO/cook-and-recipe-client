@@ -38,12 +38,16 @@ import { useQuery } from "@tanstack/react-query";
 // ** Services
 import {
   fetchRecipeDetail,
-  privateRecipe,
-  publicRecipe,
-} from "@/services/recipeServer";
+  // privateRecipe,
+  // publicRecipe,
+} from "@/services/client/recipeService";
 
 // ** Lib
-import { appendFormData, convertMBToBytes, isEmptyObject } from "@/lib/utils";
+import {
+  // appendFormData,
+  convertMBToBytes,
+  isEmptyObject,
+} from "@/lib/utils";
 
 // ** Config
 import { queryOptionsConfig } from "@/config/useQueryOptions";
@@ -132,24 +136,24 @@ export default function UpdateRecipePage({ params }: Props) {
     setRecipeStatus(value);
   }
 
-  async function handleRequestRecipeStatus() {
-    if (!recipeDetail) {
-      return;
-    }
-    if (
-      recipeStatus === "public" &&
-      recipeDetail.verifyStatus === "unverified"
-    ) {
-    }
+  // async function handleRequestRecipeStatus() {
+  //   if (!recipeDetail) {
+  //     return;
+  //   }
+  //   if (
+  //     recipeStatus === "public" &&
+  //     recipeDetail.verifyStatus === "unverified"
+  //   ) {
+  //   }
 
-    if (recipeDetail.verifyStatus === "verified") {
-      if (recipeStatus === "public") {
-        await privateRecipe(recipeDetail.id);
-      } else {
-        await publicRecipe(recipeDetail.id);
-      }
-    }
-  }
+  //   if (recipeDetail.verifyStatus === "verified") {
+  //     if (recipeStatus === "public") {
+  //       await privateRecipe(recipeDetail.id);
+  //     } else {
+  //       await publicRecipe(recipeDetail.id);
+  //     }
+  //   }
+  // }
 
   console.log(form.formState.errors);
   console.log("==============> ", form.getValues());
@@ -160,11 +164,11 @@ export default function UpdateRecipePage({ params }: Props) {
       title: "Loading...",
       description: "Please wait while we process your request.",
     });
-    const formData = appendFormData({
-      ...dataSubmit,
-      ingredients: JSON.stringify(dataSubmit.ingredients),
-      instructionSections: JSON.stringify(dataSubmit.instructionSections),
-    });
+    // const formData = appendFormData({
+    //   ...dataSubmit,
+    //   ingredients: JSON.stringify(dataSubmit.ingredients),
+    //   instructionSections: JSON.stringify(dataSubmit.instructionSections),
+    // });
 
     try {
       // await createRecipe(formData);

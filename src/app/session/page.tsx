@@ -1,16 +1,28 @@
+"use client";
+
+// ** React Imports
+import { useEffect } from "react";
+
 // ** Components
 import LoadingScreen from "@/components/LoadingScreen";
 
-async function refreshUser() {
-  const res = await fetch(
-    "https://cook-and-recipe.vercel.app/api/auth/refresh",
-    { method: "POST" },
-  );
-  console.log(res);
-  return await res.json();
-}
+// ** Library Imports
+import { useRouter } from "nextjs-toploader/app";
 
-export default async function SessionPage() {
-  console.log("=====>", await refreshUser());
+// ** Services
+import { refreshUser } from "@/services/client/authService";
+
+export default function SessionPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    async function tryRefresh() {
+      await refreshUser();
+      router.back();
+    }
+
+    tryRefresh();
+  }, [router]);
+
   return <LoadingScreen />;
 }

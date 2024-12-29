@@ -24,7 +24,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useToast } from "@/hooks/useToast";
 
 // ** Services
-import { fetchUserInfo, logout } from "@/services/authService";
+import { fetchUserInfo, logout } from "@/services/client/authService";
 
 // ** Lib
 import { deleteCookie } from "@/lib/utils/cookies";
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  async function checkUserInfo() {
+  const checkUserInfo = useCallback(async () => {
     setAuthLoading(true);
     try {
       const userData = await fetchUserInfo();
@@ -91,11 +91,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setAuthLoading(false);
     }
-  }
+  }, [user]);
 
   useEffect(() => {
-    checkUserInfo();
-  }, []);
+    // checkUserInfo();
+  }, [checkUserInfo]);
 
   useEffect(() => {
     if (clearAuth) {

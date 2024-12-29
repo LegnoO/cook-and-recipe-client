@@ -14,15 +14,10 @@ import { UserIcon, ChefHat, MapPin, Calendar, Phone } from "lucide-react";
 import { format } from "date-fns";
 
 // ** Lib
-import serverFetch from "@/lib/serverFetch";
 import { formatAddress, getCharInitials } from "@/lib/utils";
 
-export async function getUserProfile() {
-  const response = await serverFetch(`/users/owned/profile`);
-
-  const userInfo = await response.json();
-  return userInfo;
-}
+// ** Services
+import { getUserProfile } from "@/services/server/test";
 
 export default async function Profile() {
   const userProfile = await getUserProfile();

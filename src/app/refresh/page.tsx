@@ -10,7 +10,7 @@ import { useRouter } from "nextjs-toploader/app";
 import LoadingScreen from "@/components/LoadingScreen";
 
 // ** Services
-import { refreshUser } from "@/services/authService";
+import { refreshUser } from "@/services/client/authService";
 
 export default function RefreshAPI() {
   const router = useRouter();

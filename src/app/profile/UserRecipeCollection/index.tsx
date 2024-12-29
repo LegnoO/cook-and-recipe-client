@@ -25,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import OwnRecipeCard from "./OwnRecipeCard";
 import { Button } from "@/components/ui/button";
 import SearchInput from "@/components/SearchInput";
 import PaginationClient from "@/components/Pagination/PaginationClient";
@@ -37,8 +38,7 @@ import { Plus, Loader2 } from "lucide-react";
 import { queryOptionsConfig } from "@/config/useQueryOptions";
 
 // ** Services
-import { getRecipeOwned } from "@/services/chefService";
-import OwnRecipeCard from "./OwnRecipeCard";
+import { getRecipeOwned } from "@/services/client/chefService";
 
 const UserRecipeCollection = () => {
   const defaultQueryOptions: QueryOptions<{ name: string }> = {

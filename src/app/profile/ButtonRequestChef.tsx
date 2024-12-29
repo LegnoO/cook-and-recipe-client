@@ -49,7 +49,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/useToast";
 
 // ** Services
-// import { requestBecomeChef } from "@/services/chefService";
+// import { requestBecomeChef } from "@/services/client/chefService";
 
 // ** Lib
 import { Scroll } from "@/components/Scroll";

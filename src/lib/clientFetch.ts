@@ -1,6 +1,5 @@
-// ** Config
-
-import { refreshUser } from "@/services/authService";
+// ** Services
+import { refreshUser } from "@/services/client/authService";
 
 // ** Lib
 import { getCookieValue } from "@/lib/utils/cookies";
@@ -45,13 +44,11 @@ export default async function clientFetch(
           await refreshUser();
           return await performFetch();
         } catch {
-          console.log('window.location.replace("/")');
-          // window.location.replace("/");
+          window.location.replace("/login");
         }
       }
 
       const errorMessage = await response.json();
-      console.log("🚀 ~ performFetch ~ errorMessage:", errorMessage);
       throw new Error(errorMessage.message);
     }
 

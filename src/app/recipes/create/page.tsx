@@ -35,7 +35,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // ** Services
-import { createRecipe, requestVerifyRecipe } from "@/services/recipeServer";
+import {
+  createRecipe,
+  requestVerifyRecipe,
+} from "@/services/client/recipeService";
 
 // ** Lib
 import { appendFormData, convertMBToBytes } from "@/lib/utils";
@@ -289,7 +292,7 @@ export default function CreateRecipePage() {
                   <RadioGroup
                     defaultValue={recipeStatus}
                     onValueChange={handleRecipeStatusChange}>
-                    <div className="has-button-checked:bg-secondary mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4">
+                    <div className="mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary">
                       <RadioGroupItem
                         value="private"
                         id="private"
@@ -307,7 +310,7 @@ export default function CreateRecipePage() {
                         </Label>
                       </div>
                     </div>
-                    <div className="has-button-checked:bg-secondary flex items-start space-x-3 space-y-0 rounded-lg border p-4">
+                    <div className="flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary">
                       <RadioGroupItem
                         value="public"
                         id="public"

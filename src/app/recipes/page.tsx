@@ -42,7 +42,7 @@ type Props = {
 //   });
 // }
 
-export async function getRecipeDetails() {
+async function getRecipeList() {
   const response = await serverFetch(
     `/recipe/public/find?index=1&size=10&sortOrder=desc`,
   );
@@ -51,8 +51,17 @@ export async function getRecipeDetails() {
   return recipeData;
 }
 
+async function getCategories() {
+  const response = await serverFetch(`/category/public/find`);
+
+  const categoryData: Category[] = await response.json();
+  return categoryData;
+}
+
 export default async function RecipesListPage({ searchParams }: Props) {
-  const { data: recipes, paginate } = await getRecipeDetails();
+  const { data: recipes, paginate } = await getRecipeList();
+  const categories = await getCategories();
+
   console.log("🚀 ~ RecipesListPage ~ searchParams:", searchParams);
 
   // const recipes = [
@@ -93,7 +102,7 @@ export default async function RecipesListPage({ searchParams }: Props) {
 
   return (
     <>
-      <section className="bg-recipes relative max-w-full bg-cover bg-center bg-no-repeat">
+      <section className="relative max-w-full bg-recipes bg-cover bg-center bg-no-repeat">
         <div className="container">
           <div className="flex min-h-screen flex-col items-center justify-center">
             <div className="mt-16 w-full text-center text-background">
@@ -110,10 +119,8 @@ export default async function RecipesListPage({ searchParams }: Props) {
       </section>
       <main className="bg-background py-12">
         <div className="container">
-          <div className="mb-6 py-4">
-            <div className="flex w-full gap-4 pt-3">
-              <QueryRecipe />
-            </div>
+          <div className="mb-6 py-4 pt-3">
+            <QueryRecipe categories={categories} />
           </div>
           <div className="grid-cols-3-res grid gap-8">
             {/* {recipes.map((recipe, index) => (

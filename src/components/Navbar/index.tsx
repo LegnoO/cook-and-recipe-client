@@ -191,7 +191,7 @@ const Navbar = () => {
               <UserMenu user={user} />
             </Fragment>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="hidden items-center gap-4 lg:flex">
               <Button className="uppercase tracking-widest" variant="secondary">
                 {pathname !== "/register" ? (
                   <Link href={generateRedirectUrl("/register")} scroll={false}>
@@ -216,17 +216,32 @@ const Navbar = () => {
             onClick={toggleNavExpand}
             className={"flex items-center lg:hidden"}>
             {ids.includes(idMap.navExpand) ? (
-              <Close className="text-foreground" />
+              <Close
+                className={cn("text-background", {
+                  "text-foreground":
+                    (isAnimatedNavbar && isScrolled) ||
+                    (!isAnimatedNavbar && !isScrolled),
+                })}
+              />
             ) : (
-              <Menu className="text-foreground" />
+              <Menu
+                className={cn("text-background", {
+                  "text-foreground":
+                    (isAnimatedNavbar && isScrolled) ||
+                    (!isAnimatedNavbar && !isScrolled),
+                })}
+              />
             )}
           </div>
         </div>
       </nav>
+
       <div
         className={cn(
-          "invisible m-0 max-h-0 overflow-hidden rounded-b-lg border border-border bg-background transition-all duration-350 ease-smooth",
-          ids.includes(idMap.navExpand) && "visible max-h-96 p-3",
+          "invisible z-[1000] m-0 max-h-0 overflow-hidden rounded-b-lg border border-border bg-background transition-all duration-350 ease-smooth",
+          {
+            "visible max-h-96 p-3": ids.includes(idMap.navExpand),
+          },
         )}>
         <ul className={"flex flex-col gap-3 rounded-md"}>
           {menuItems.map((menu, index) => {
@@ -244,6 +259,26 @@ const Navbar = () => {
               </li>
             );
           })}
+          <li
+            className={
+              "flex justify-center rounded-md bg-primary text-primary-foreground lg:hidden lg:items-center"
+            }>
+            <Link
+              className="block rounded-md px-3 py-2 font-medium"
+              href="/login">
+              Sign In
+            </Link>
+          </li>
+          <li
+            className={
+              "flex justify-center rounded-md bg-secondary text-secondary-foreground lg:hidden lg:items-center"
+            }>
+            <Link
+              className="block rounded-md px-3 py-2 font-medium"
+              href="/register">
+              Sign Up
+            </Link>
+          </li>
         </ul>
       </div>
     </header>

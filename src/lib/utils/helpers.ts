@@ -103,3 +103,11 @@ export function convertMBToBytes(megabyte: number) {
 export function isEmptyObject(obj: Record<string, unknown>) {
   return Object.keys(obj).length === 0;
 }
+
+export function calculateDaysAgo(dateString: string) {
+  const targetDate = new Date(dateString);
+  const currentDate = new Date();
+  const differenceInTime = currentDate.getTime() - targetDate.getTime();
+  const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));
+  return differenceInDays;
+}

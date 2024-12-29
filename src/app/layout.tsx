@@ -42,7 +42,6 @@ export default function RootLayout({
         <Toaster />
         <ReactQueryProvider>
           <AuthProvider>
-            {" "}
             <Navbar />
             {modal}
             {children}

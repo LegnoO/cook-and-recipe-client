@@ -2,20 +2,18 @@
 import { Fragment } from "react";
 
 // ** Components
-import BannerLog from "@/components/BannerLog";
 import Repeat from "@/components/Repeat";
 import ChefCard from "./ChefCard";
-import PaginationServer from "@/components/Pagination/PaginationServer";
 
 // ** Types
-type Props = {
-  searchParams: SearchParams;
-};
+// type Props = {
+//   searchParams: SearchParams;
+// };
 
-export default function ChefsPage({ searchParams }: Props) {
+export default function ChefsPage() {
   return (
     <Fragment>
-      <section className="bg-chefs relative max-w-full bg-cover bg-center bg-no-repeat">
+      <section className="relative max-w-full bg-chefs bg-cover bg-center bg-no-repeat">
         <div className="container">
           <div className="flex min-h-screen flex-col items-center justify-center">
             <div className="mt-16 w-full text-center text-background">

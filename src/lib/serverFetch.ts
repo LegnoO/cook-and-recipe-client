@@ -1,6 +1,6 @@
 // ** Next Imports
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 // ** Config
 
@@ -10,10 +10,10 @@ type CustomRequestInit = RequestInit & {
   headers?: Headers;
 };
 
-export default async function clientFetch(
+export default async function serverFetch(
   endpoint: string | URL,
   options: CustomRequestInit = {},
-): Promise<Response> {
+) {
   const fullUrl = `${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}${endpoint}`;
 
   options.headers = {
@@ -21,7 +21,7 @@ export default async function clientFetch(
     ...(options.headers || undefined),
   };
 
-  async function performFetch(): Promise<Response> {
+  async function performFetch() {
     const cookieStore = cookies();
 
     const accessToken = cookieStore.get("accessToken")?.value;
@@ -31,8 +31,14 @@ export default async function clientFetch(
 
     const response = await fetch(fullUrl, options);
 
-    if (!response.ok && response.status === 401) {
-      redirect("/session");
+    if (!response.ok) {
+      if (response.status === 401) {
+        redirect("/session");
+      }
+
+      if (response.status === 404 || response.status === 500) {
+        notFound();
+      }
     }
 
     return response;

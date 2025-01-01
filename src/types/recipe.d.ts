@@ -1,4 +1,4 @@
-type ListRecipe = {
+type RecipeListResponse = {
   data: Recipe[];
   paginate: Pagination;
 };

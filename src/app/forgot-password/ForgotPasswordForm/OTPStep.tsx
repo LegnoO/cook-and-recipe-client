@@ -150,7 +150,7 @@ const EmailStep = ({ email, setCodeId, onNextStep }: Props) => {
         </span>
       </p>
       {message && (
-        <p className="text-center text-sm text-muted-foreground">{message}</p>
+        <p className="text-center text-sm font-semibold">{message}</p>
       )}
     </div>
   );

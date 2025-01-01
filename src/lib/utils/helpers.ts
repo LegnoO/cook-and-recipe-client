@@ -79,9 +79,9 @@ export function appendFormData(data: Record<string, unknown>) {
 
   Object.entries(data).forEach(([key, value]) => {
     if (Array.isArray(value)) {
-      value.forEach((file) => {
-        if (file instanceof File) {
-          formData.append(key, file);
+      value.forEach((element) => {
+        if (element instanceof File) {
+          formData.append(key, element);
         }
       });
     } else {

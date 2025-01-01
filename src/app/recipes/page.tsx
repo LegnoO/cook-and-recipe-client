@@ -4,10 +4,10 @@
 import QueryRecipe from "./QueryRecipe";
 import RecipeCard from "@/components/RecipeCard";
 import PaginationServer from "@/components/Pagination/PaginationServer";
+import Repeat from "@/components/Repeat";
 
 // ** Lib
 import serverFetch from "@/lib/serverFetch";
-import Repeat from "@/components/Repeat";
 
 // ** Types
 type Props = {
@@ -47,7 +47,7 @@ async function getRecipeList() {
     `/recipe/public/find?index=1&size=10&sortOrder=desc`,
   );
 
-  const recipeData: ListRecipe = await response.json();
+  const recipeData: RecipeListResponse = await response.json();
   return recipeData;
 }
 
@@ -102,7 +102,7 @@ export default async function RecipesListPage({ searchParams }: Props) {
 
   return (
     <>
-      <section className="bg-recipes-banner relative max-w-full bg-cover bg-center bg-no-repeat">
+      <section className="relative max-w-full bg-recipes-banner bg-cover bg-center bg-no-repeat">
         <div className="container">
           <div className="flex min-h-screen flex-col items-center justify-center">
             <div className="mt-16 w-full text-center text-background">

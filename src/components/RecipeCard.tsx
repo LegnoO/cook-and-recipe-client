@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import BookMarkButton from "./BookMarkButton";
 
 // ** Icons
-import { Star } from "lucide-react";
+import Rating from "./Rating";
 
 // ** Types
 type Props = { recipe: Recipe | RecipeDetails };
@@ -73,12 +73,8 @@ export default function RecipeCard({ recipe }: Props) {
               <h3 className="line-clamp-1 text-sm font-semibold uppercase tracking-[1.90px] lg:text-base">
                 {recipe.name}
               </h3>
-              <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
-                <span className="text-sm font-medium">
-                  {recipe.rating || 0}
-                </span>
-              </div>
+
+              <Rating defaultValue={recipe.rating || 0} />
             </div>
             <p className="text-sm font-medium text-primary lg:text-base">
               {recipe.category.name}

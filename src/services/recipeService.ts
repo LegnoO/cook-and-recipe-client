@@ -10,6 +10,15 @@ export async function createRecipe(formData: FormData) {
   return await response.json();
 }
 
+export async function updateRecipe(formData: FormData, recipeId: string) {
+  const response = await clientFetch(`/recipe/owned/find/${recipeId}/edit`, {
+    method: "PUT",
+    body: formData,
+  });
+
+  return await response.json();
+}
+
 export async function fetchRecipeDetail(id: string): Promise<Recipe> {
   const response = await clientFetch(`/recipe/owned/find/${id}`, {
     method: "GET",

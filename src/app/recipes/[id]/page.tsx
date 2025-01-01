@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import ImageGallery from "./ImageGallery";
 import { Label } from "@/components/ui/label";
 import RecipeCard from "@/components/RecipeCard";
+import Comment from "./Comment";
 
 // ** Icons
 import {
@@ -40,7 +41,7 @@ async function getRecipeDetails(id: string): Promise<RecipeDetails> {
   return recipeDetails;
 }
 
-async function getRecipeList(): Promise<ListRecipe> {
+async function getRecipeList(): Promise<RecipeListResponse> {
   const response = await serverFetch(
     `/recipe/public/find?index=1&size=10&sortOrder=desc`,
   );
@@ -349,6 +350,12 @@ export default async function RecipeDetailPage({ params }: Props) {
               <RecipeCard recipe={recipe} key={index} />
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="section-spacing bg-background">
+        <div className="container">
+          <Comment />
         </div>
       </section>
     </Fragment>

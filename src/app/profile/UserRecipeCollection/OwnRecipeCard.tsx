@@ -1,5 +1,8 @@
 "use client";
 
+// ** React Imports
+import { Fragment } from "react";
+
 // ** Next Imports
 import Image from "next/image";
 import Link from "next/link";
@@ -28,16 +31,15 @@ import {
 } from "lucide-react";
 
 // ** Services
-// import { requestVerifyRecipe } from "@/services/recipeServer";
-
-// ** Lib
+import { requestVerifyRecipe } from "@/services/recipeService";
 
 // ** Types
 type Props = {
   recipe: Recipe;
   refetch: () => void;
 };
-const OwnRecipeCard = ({ recipe }: Props) => {
+
+const OwnRecipeCard = ({ recipe, refetch }: Props) => {
   const infoContact = [
     {
       icon: <Clock className="h-4 w-4" />,
@@ -53,10 +55,10 @@ const OwnRecipeCard = ({ recipe }: Props) => {
     },
   ];
 
-  // async function togglePublish(id: string) {
-  //   await requestVerifyRecipe(id);
-  //   refetch();
-  // }
+  async function togglePublish() {
+    await requestVerifyRecipe(recipe.id);
+    refetch();
+  }
 
   return (
     <Card className="overflow-hidden">
@@ -99,6 +101,7 @@ const OwnRecipeCard = ({ recipe }: Props) => {
         </div>
         <div className="mt-4 flex items-center justify-between">
           <StatusAction
+            togglePublish={togglePublish}
             verifyStatus={recipe.verifyStatus}
             status={recipe.status}
           />
@@ -114,14 +117,17 @@ const OwnRecipeCard = ({ recipe }: Props) => {
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
-              <Link href={`/recipes/${recipe.id}`}>
-                <DropdownMenuItem className="cursor-pointer">
-                  <Eye className="h-4 w-4" />
-                  <span>View</span>
-                </DropdownMenuItem>
-              </Link>
-              <DropdownMenuSeparator />
-
+              {recipe.status && (
+                <Fragment>
+                  <Link href={`/recipes/${recipe.id}`}>
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Eye className="h-4 w-4" />
+                      <span>View</span>
+                    </DropdownMenuItem>
+                  </Link>
+                  <DropdownMenuSeparator />
+                </Fragment>
+              )}
               <DropdownMenuItem className="cursor-pointer">
                 <div className="flex items-center gap-2 text-destructive">
                   <Trash className="h-4 w-4" />

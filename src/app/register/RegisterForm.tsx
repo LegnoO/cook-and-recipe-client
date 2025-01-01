@@ -1,10 +1,10 @@
 "use client";
 
-// ** Next Imports
-import Link from "next/link";
-
 // ** React Imports
 import { useState } from "react";
+
+// ** Next Imports
+import Link from "next/link";
 
 // ** Components
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import {
   Card,
   CardContent,
@@ -31,7 +30,13 @@ import LoadingButton from "@/components/LoadingButton";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "nextjs-toploader/app";
+
+// ** Icons
 import { Eye, EyeOff } from "lucide-react";
+
+// ** Services
+import { register } from "@/services/authService";
 
 // ** Schema
 const formSchema = z
@@ -49,31 +54,26 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 const RegisterForm = () => {
-  // const { toast } = useToast();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
 
   async function onSubmit(dataSubmit: FormValues) {
-    console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
     setLoading(true);
     setError("");
-    // console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
-    // try {
-    //   setLoading(true);
-    //   setError("");
-    //   await login(dataSubmit);
-    //   const userInfo = await fetchUserInfo();
-    //   setUser(userInfo);
-    // } catch (error) {
-    //   setError((prev) => (typeof error === "string" ? error : prev));
-    // } finally {
-    //   setLoading(false);
-    // }
+
+    try {
+      await register(dataSubmit);
+      router.push("/login");
+    } catch (error) {
+      setError((prev) => (typeof error === "string" ? error : prev));
+    } finally {
+      setLoading(false);
+    }
   }
 
   function togglePasswordVisibility() {

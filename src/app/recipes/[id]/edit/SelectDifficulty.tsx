@@ -20,7 +20,7 @@ type Props = {
   onChange: (value: FormValues["difficulty"]) => void;
 };
 
-const DifficultySelect = ({ onChange, form }: Props) => {
+const SelectDifficulty = ({ onChange, form }: Props) => {
   const id = "select-difficulty-create-recipe";
   const difficulties = ["Easy", "Medium", "Hard", "Professional", "Expert"];
 
@@ -43,4 +43,4 @@ const DifficultySelect = ({ onChange, form }: Props) => {
   );
 };
 
-export default DifficultySelect;
+export default SelectDifficulty;

@@ -26,7 +26,7 @@ import { getCharInitials } from "@/lib/utils/helpers";
 type Props = { user: User };
 
 const UserMenu = ({ user }: Props) => {
-  const { isLoading, logout } = useAuthContext();
+  const { logout } = useAuthContext();
 
   return (
     <DropdownMenu>
@@ -63,12 +63,9 @@ const UserMenu = ({ user }: Props) => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          disabled={isLoading}
-          onClick={logout}
-          className="cursor-pointer">
+        <DropdownMenuItem onClick={logout} className="cursor-pointer">
           <LogOut className="mr-1 h-4 w-4" />
-          <span> Sign out</span>
+          <span>Sign out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

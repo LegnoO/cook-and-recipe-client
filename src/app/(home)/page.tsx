@@ -17,7 +17,7 @@ import { MoveUpRight } from "lucide-react";
 // ** Lib
 import serverFetch from "@/lib/serverFetch";
 
-async function getRecipeList(): Promise<ListRecipe> {
+async function getRecipeList(): Promise<RecipeListResponse> {
   const response = await serverFetch(
     `/recipe/public/find?index=1&size=10&sortOrder=desc`,
   );

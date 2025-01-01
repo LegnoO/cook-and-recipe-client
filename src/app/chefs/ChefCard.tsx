@@ -14,30 +14,33 @@ import {
 // ** Icons
 import { Facebook, Instagram, Linkedin } from "@/components/ui/icons";
 
-const ChefCard = () => {
+// ** Types
+type Props = { chef: Chef };
+
+const ChefCard = ({ chef }: Props) => {
   return (
     <Card className="w-full max-w-sm border-none shadow-none">
       <CardHeader className="p-0">
         <Image
-          className="mx-auto rounded-full object-cover"
+          className="mx-auto aspect-square h-[200px] rounded-full object-cover"
           width={200}
           height={200}
           src={
+            chef.userInfo.avatar ||
             "https://res.cloudinary.com/dzl5ur69n/image/upload/v1733600651/yyhtnniclx0ja0n2pjhq.jpg"
           }
-          alt={""}
+          alt={chef.userInfo.fullName}
         />
       </CardHeader>
       <CardContent className="mt-6 text-center">
         <CardTitle className="mb-4 text-base font-semibold uppercase tracking-widest">
-          Mason Robinson
+          {chef.userInfo.fullName}
         </CardTitle>
         <CardDescription className="font-medium uppercase tracking-widest">
-          Master Chef
+          {chef.level}
         </CardDescription>
         <p className="mt-5 text-center text-sm font-normal leading-6 tracking-normal text-muted-foreground">
-          Lorem ipsum dolor sit amet, consectetur a elit. In ut ullamcorper leo,
-          eget euismod orci. Cum sociis natoque penatibus et magnis dis
+          {chef.description}
         </p>
       </CardContent>
       <CardFooter className="justify-center gap-3 p-0 text-muted-foreground">

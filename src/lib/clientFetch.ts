@@ -32,7 +32,7 @@ export default async function clientFetch(
       options.headers!["Authorization"] = `Bearer ${accessToken}`;
 
     const response = await fetch(fullUrl, options);
-    console.log({ fullUrl });
+
     if (!response.ok) {
       const excludedUrls = [
         "/users/owned/info",

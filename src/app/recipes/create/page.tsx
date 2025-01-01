@@ -33,6 +33,7 @@ import { useToast } from "@/hooks/useToast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "nextjs-toploader/app";
 
 // ** Services
 import { createRecipe, requestVerifyRecipe } from "@/services/recipeService";
@@ -47,7 +48,7 @@ const formSchema = z.object({
   timeToCook: z.number().min(1, "Cook duration is required"),
   description: z.string().min(1, "Description is required"),
   difficulty: z.enum(["Easy", "Medium", "Hard", "Professional", "Expert"]),
-  category: z.string().min(1, "Category is required"),
+  categoryId: z.string().min(1, "Category is required"),
   ingredients: z.array(
     z.object({
       name: z.string().min(1, "Ingredient name is required"),
@@ -88,6 +89,7 @@ const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>;
 
 export default function CreateRecipePage() {
+  const router = useRouter();
   const { toast } = useToast();
   const [recipeStatus, setRecipeStatus] = useState<RecipeStatus>("private");
   const [isLoading, setLoading] = useState(false);
@@ -106,8 +108,8 @@ export default function CreateRecipePage() {
     },
   });
 
-  function handleCategoryChange(value: FormValues["category"]) {
-    form.setValue("category", value);
+  function handleCategoryChange(value: FormValues["categoryId"]) {
+    form.setValue("categoryId", value);
   }
 
   function handleDifficultyChange(value: FormValues["difficulty"]) {
@@ -143,6 +145,7 @@ export default function CreateRecipePage() {
         variant: "successful",
         action: <ToastAction altText="Try again">Close</ToastAction>,
       });
+      router.push("/profile");
     } catch (error) {
       toast({
         variant: "destructive",

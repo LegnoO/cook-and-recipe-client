@@ -32,46 +32,21 @@ type Props = {
   images: ListImage;
 };
 
-const ImageUpload = ({ form, images, setImages }: Props) => {
+const UploadImage = ({ form, images, setImages }: Props) => {
   const error = form.formState.errors;
-  const imageUrls = form.getValues("imageUrls");
 
-  // imageUrls.map((url) => ({ file: null, url })),
-
-  function handleImageData(newListImage: ListImage) {
-    const listUrl = newListImage
-      .filter((image) => image.file === null)
-      .map((x) => x.url) as string[];
-
-    const listFile = newListImage
-      .filter((image) => image.file !== null)
-      .map((x) => x.file) as File[];
-
-    form.setValue("imageUrls", listUrl);
-    form.setValue("newImages", listFile);
-
-    return { listFile, listUrl };
-  }
-
-  function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
+  function handleUploadImage(event: ChangeEvent<HTMLInputElement>) {
     const files = event.target.files ? Array.from(event.target.files) : null;
 
     if (files) {
-      console.log("🚀 ~ handleImageUpload ~ files:", files);
-      if (imageUrls && files?.length + imageUrls.length < 5) {
+      if (images.length < 5) {
         const newImagesFile = files.map((file) => ({
           url: URL.createObjectURL(file),
           file,
         }));
 
-        setImages((prev) => {
-          const newListImage = [...prev, ...newImagesFile];
-
-          handleImageData(newListImage);
-
-          form.clearErrors("newImages");
-          return newListImage;
-        });
+        form.clearErrors("newImages");
+        setImages((prev) => [...prev, ...newImagesFile]);
       } else {
         form.setError("newImages", {
           message: "Maximum 4 images are allowed",
@@ -84,7 +59,6 @@ const ImageUpload = ({ form, images, setImages }: Props) => {
   function removeImage(index: number) {
     const currentImagesFile = [...images];
     currentImagesFile.splice(index, 1);
-    handleImageData(currentImagesFile);
     setImages(currentImagesFile);
   }
 
@@ -131,7 +105,7 @@ const ImageUpload = ({ form, images, setImages }: Props) => {
                 type="file"
                 className="hidden"
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleUploadImage}
               />
             </label>
           </div>
@@ -150,7 +124,7 @@ const ImageUpload = ({ form, images, setImages }: Props) => {
                 type="file"
                 className="hidden"
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleUploadImage}
               />
             </label>
           </div>
@@ -162,4 +136,4 @@ const ImageUpload = ({ form, images, setImages }: Props) => {
     </div>
   );
 };
-export default ImageUpload;
+export default UploadImage;

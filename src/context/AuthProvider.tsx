@@ -8,11 +8,7 @@ import {
   useContext,
   Dispatch,
   SetStateAction,
-  useCallback,
 } from "react";
-
-// ** Next Imports
-import { usePathname } from "next/navigation";
 
 // ** Components
 import LoadingScreen from "@/components/LoadingScreen";
@@ -35,35 +31,22 @@ interface AuthContext {
   setUser: Dispatch<SetStateAction<User | null>>;
   setAuthLoading: Dispatch<SetStateAction<boolean>>;
   authLoading: boolean;
-  isLoading: boolean;
   logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { toast } = useToast();
-  const pathname = usePathname();
   const router = useRouter();
+  const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setLoading] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-
-  const redirectTo = useCallback(
-    (path: string) => {
-      if (pathname !== path) {
-        router.push(path);
-      }
-    },
-    [pathname, router],
-  );
 
   async function handleLogout() {
     try {
-      redirectTo("/login");
-      setLoading(true);
-      await logout();
       setUser(null);
+      window.location.href = "/";
+      await logout();
       deleteCookie("accessToken");
       toast({
         title: "Logged out successfully",
@@ -77,8 +60,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         variant: "destructive",
         duration: 3000,
       });
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -89,8 +70,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userData = await fetchUserInfo();
         setUser(userData);
       } catch {
-        redirectTo("/");
-        if (user) setUser(null);
+        router.push("/");
+        setUser(null);
       } finally {
         setAuthLoading(false);
       }
@@ -106,7 +87,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         setUser,
         authLoading,
-        isLoading,
         logout: handleLogout,
         setAuthLoading,
       }}>

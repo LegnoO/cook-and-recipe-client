@@ -29,10 +29,10 @@ interface Category {
 
 type Props = {
   form: UseFormReturn<FormValues>;
-  onChange: (value: FormValues["category"]) => void;
+  onChange: (value: FormValues["categoryId"]) => void;
 };
 
-const CategorySelect = ({ form, onChange }: Props) => {
+const SelectCategory = ({ form, onChange }: Props) => {
   const id = "select-category-create-recipe";
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setLoading] = useState(false);
@@ -54,12 +54,17 @@ const CategorySelect = ({ form, onChange }: Props) => {
 
     fetchCategories();
   }, []);
+  // console.log({
+  //   values: form.getValues(),
+  //   errors: form.formState.errors,
+  //   categoryId: form.getValues("categoryId"),
+  // });
 
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor={id}>Category</Label>
       <Select
-        value={form.getValues("category")}
+        value={form.getValues("categoryId")}
         onValueChange={onChange}
         disabled={isLoading}>
         <SelectTrigger className="w-full" id={id}>
@@ -81,4 +86,4 @@ const CategorySelect = ({ form, onChange }: Props) => {
   );
 };
 
-export default CategorySelect;
+export default SelectCategory;

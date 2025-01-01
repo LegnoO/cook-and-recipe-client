@@ -29,7 +29,7 @@ interface Category {
 
 type Props = {
   form: UseFormReturn<FormValues>;
-  onChange: (value: FormValues["category"]) => void;
+  onChange: (value: FormValues["categoryId"]) => void;
 };
 
 const CategorySelect = ({ form, onChange }: Props) => {
@@ -59,7 +59,7 @@ const CategorySelect = ({ form, onChange }: Props) => {
     <div className="flex flex-col gap-2">
       <Label htmlFor={id}>Category</Label>
       <Select
-        value={form.getValues("category")}
+        value={form.getValues("categoryId")}
         onValueChange={onChange}
         disabled={isLoading}>
         <SelectTrigger className="w-full" id={id}>

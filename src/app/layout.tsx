@@ -4,13 +4,13 @@ import { Metadata } from "next";
 // ** Components
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Toaster } from "@/components/ui/toaster";
 
 // ** Context
 import { AuthProvider } from "@/context/AuthProvider";
 import ReactQueryProvider from "@/context/ReactQueryProvider";
 
 // ** Library Imports
-import { Toaster } from "@/components/ui/toaster";
 import NextTopLoader from "nextjs-toploader";
 
 // ** Lib

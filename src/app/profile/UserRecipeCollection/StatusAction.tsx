@@ -19,19 +19,23 @@ import { Button } from "@/components/ui/button";
 type Props = {
   verifyStatus: RecipeVerifyStatusEnum;
   status: boolean;
+  togglePublish: () => Promise<void>;
 };
 
-const StatusAction = ({ status, verifyStatus }: Props) => {
+const StatusAction = ({ status, verifyStatus, togglePublish }: Props) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const renderStatus = () => {
     switch (verifyStatus) {
       case "verified":
         return (
-          <Switch
-            checked={status}
-            // onCheckedChange={() => togglePublish(recipe.id)}
-          />
+          <div className="flex items-center gap-2">
+            <Switch
+              checked={status}
+              // onCheckedChange={() => togglePublish(recipeId)}
+            />
+            <Label>{status ? "Public" : "Private"}</Label>
+          </div>
         );
       case "pending":
         return (
@@ -41,7 +45,9 @@ const StatusAction = ({ status, verifyStatus }: Props) => {
         );
       default:
         return (
-          <div className="h-9 bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground shadow-sm hover:bg-secondary/80">
+          <div
+            onClick={togglePublish}
+            className="h-9 bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground shadow-sm hover:bg-secondary/80">
             Request Verify Recipe
           </div>
         );

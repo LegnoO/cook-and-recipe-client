@@ -132,7 +132,9 @@ const Navbar = () => {
   return (
     <header className={getNavbarClasses()}>
       <nav className={cn("container flex h-full items-center justify-between")}>
-        <Link href="/" className="flex items-center gap-2 whitespace-nowrap">
+        <Link
+          href="/test"
+          className="flex items-center gap-2 whitespace-nowrap">
           <Logo
             className={cn("text-background", {
               "text-foreground":

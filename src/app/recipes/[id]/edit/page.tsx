@@ -20,9 +20,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToastAction } from "@/components/ui/toast";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import ImageUpload from "./ImageUpload";
-import CategorySelect from "./CategorySelect";
-import DifficultySelect from "./DifficultySelect";
+import UploadImage from "./UploadImage";
+import SelectCategory from "./SelectCategory";
+import SelectDifficulty from "./SelectDifficulty";
 import AddIngredient from "./AddIngredient";
 import AddInstruction from "./AddInstruction";
 
@@ -37,14 +37,20 @@ import { useQuery } from "@tanstack/react-query";
 
 // ** Services
 import {
+  updateRecipe,
   fetchRecipeDetail,
-  // privateRecipe,
-  // publicRecipe,
+  privateRecipe,
+  publicRecipe,
+  requestVerifyRecipe,
 } from "@/services/recipeService";
+
+// ** Library Imports
+import { useRouter } from "nextjs-toploader/app";
 
 // ** Lib
 import {
-  // appendFormData,
+  cn,
+  appendFormData,
   convertMBToBytes,
   isEmptyObject,
 } from "@/lib/utils";
@@ -59,7 +65,7 @@ const formSchema = z.object({
   timeToCook: z.number().min(1, "Cook duration is required"),
   description: z.string().min(1, "Description is required"),
   difficulty: z.enum(["Easy", "Medium", "Hard", "Professional", "Expert"]),
-  category: z.string().min(1, "Category is required"),
+  categoryId: z.string().min(1, "Category is required"),
   ingredients: z.array(
     z.object({
       name: z.string().min(1, "Ingredient name is required"),
@@ -78,9 +84,10 @@ const formSchema = z.object({
       ),
     }),
   ),
-  imageUrls: z.array(z.string()).nullable(),
-  newImages: z
-    .array(
+  oldImageUrls: z.array(z.string()).nullable(),
+  newImages: z.union([
+    z.null(),
+    z.array(
       z
         .instanceof(File)
         .refine(
@@ -94,9 +101,10 @@ const formSchema = z.object({
             ),
           "Only .jpg, .jpeg, .png and .webp formats are supported.",
         ),
-    )
-    .nullable(),
+    ),
+  ]),
 });
+
 export type FormValues = z.infer<typeof formSchema>;
 
 // ** Types
@@ -110,6 +118,7 @@ type ListImage = {
 }[];
 
 export default function UpdateRecipePage({ params }: Props) {
+  const router = useRouter();
   const [recipeStatus, setRecipeStatus] = useState<RecipeStatus>("private");
   const { data: recipeDetail } = useQuery({
     queryKey: ["recipe-detail-edit"],
@@ -123,9 +132,8 @@ export default function UpdateRecipePage({ params }: Props) {
     resolver: zodResolver(formSchema),
   });
 
-  console.log("🚀 ~ UpdateRecipePage ~ recipeDetail:", recipeDetail);
-  function handleCategoryChange(value: FormValues["category"]) {
-    form.setValue("category", value);
+  function handleCategoryChange(value: FormValues["categoryId"]) {
+    form.setValue("categoryId", value);
   }
 
   function handleDifficultyChange(value: FormValues["difficulty"]) {
@@ -136,49 +144,67 @@ export default function UpdateRecipePage({ params }: Props) {
     setRecipeStatus(value);
   }
 
-  // async function handleRequestRecipeStatus() {
-  //   if (!recipeDetail) {
-  //     return;
-  //   }
-  //   if (
-  //     recipeStatus === "public" &&
-  //     recipeDetail.verifyStatus === "unverified"
-  //   ) {
-  //   }
+  async function handleRequestRecipeStatus() {
+    if (!recipeDetail) {
+      return;
+    }
+    if (
+      recipeStatus === "public" &&
+      recipeDetail.verifyStatus === "unverified"
+    ) {
+      await requestVerifyRecipe(recipeDetail.id);
+    }
 
-  //   if (recipeDetail.verifyStatus === "verified") {
-  //     if (recipeStatus === "public") {
-  //       await privateRecipe(recipeDetail.id);
-  //     } else {
-  //       await publicRecipe(recipeDetail.id);
-  //     }
-  //   }
-  // }
+    if (recipeDetail.verifyStatus === "verified") {
+      if (recipeStatus === "public") {
+        await publicRecipe(recipeDetail.id);
+      } else {
+        await privateRecipe(recipeDetail.id);
+      }
+    }
+  }
 
-  console.log(form.formState.errors);
-  console.log("==============> ", form.getValues());
   async function onSubmit(dataSubmit: FormValues) {
-    console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
+    console.log({
+      dataSubmit,
+      images,
+      newImages: images
+        .filter((image) => image.file !== null)
+        .map((x) => x.file) as File[],
+      oldImageUrls: images
+        .filter((image) => image.file === null)
+        .map((x) => x.url),
+    });
+
     setLoading(true);
     toast({
       title: "Loading...",
       description: "Please wait while we process your request.",
     });
-    // const formData = appendFormData({
-    //   ...dataSubmit,
-    //   ingredients: JSON.stringify(dataSubmit.ingredients),
-    //   instructionSections: JSON.stringify(dataSubmit.instructionSections),
-    // });
+
+    const formData = appendFormData({
+      ...dataSubmit,
+      ingredients: JSON.stringify(dataSubmit.ingredients),
+      instructionSections: JSON.stringify(dataSubmit.instructionSections),
+      newImages: images
+        .filter((image) => image.file !== null)
+        .map((x) => x.file),
+
+      oldImageUrls: JSON.stringify(
+        images.filter((image) => image.file === null).map((x) => x.url),
+      ),
+    });
 
     try {
-      // await createRecipe(formData);
-      // await handleRequestRecipeStatus();
+      await updateRecipe(formData, recipeDetail!.id);
+      await handleRequestRecipeStatus();
       toast({
         title: "Success!",
-        description: "Your recipe has been created successfully.",
+        description: "Your recipe has been updated successfully.",
         variant: "successful",
         action: <ToastAction altText="Try again">Close</ToastAction>,
       });
+      router.push("/profile");
     } catch (error) {
       toast({
         variant: "destructive",
@@ -194,9 +220,23 @@ export default function UpdateRecipePage({ params }: Props) {
 
   useEffect(() => {
     if (recipeDetail) {
-      form.reset({ ...recipeDetail, category: recipeDetail.category.id });
+      form.reset({
+        ...recipeDetail,
+        categoryId: recipeDetail.category.id,
+        newImages: null,
+        oldImageUrls: null,
+      });
+      setImages(
+        recipeDetail.imageUrls.map((url) => ({
+          url,
+          file: null,
+        })),
+      );
+      setRecipeStatus(recipeDetail.status ? "public" : "private");
     }
-  }, [form, recipeDetail]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recipeDetail]);
 
   if (!recipeDetail || isEmptyObject(form.getValues())) {
     return (
@@ -205,8 +245,6 @@ export default function UpdateRecipePage({ params }: Props) {
       </div>
     );
   }
-
-  console.log(form.getValues());
 
   return (
     <div className="bg-background">
@@ -230,7 +268,7 @@ export default function UpdateRecipePage({ params }: Props) {
                   <CardTitle>Recipe General Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <ImageUpload
+                  <UploadImage
                     form={form}
                     images={images}
                     setImages={setImages}
@@ -296,11 +334,11 @@ export default function UpdateRecipePage({ params }: Props) {
                     />
                   </div>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <CategorySelect
+                    <SelectCategory
                       onChange={handleCategoryChange}
                       form={form}
                     />
-                    <DifficultySelect
+                    <SelectDifficulty
                       onChange={handleDifficultyChange}
                       form={form}
                     />
@@ -340,9 +378,17 @@ export default function UpdateRecipePage({ params }: Props) {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <RadioGroup
+                    disabled={recipeDetail.verifyStatus === "pending"}
                     defaultValue={recipeStatus}
                     onValueChange={handleRecipeStatusChange}>
-                    <div className="mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary">
+                    <div
+                      className={cn(
+                        "mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary",
+                        {
+                          "bg-secondary":
+                            recipeDetail.verifyStatus === "pending",
+                        },
+                      )}>
                       <RadioGroupItem
                         value="private"
                         id="private"
@@ -360,7 +406,14 @@ export default function UpdateRecipePage({ params }: Props) {
                         </Label>
                       </div>
                     </div>
-                    <div className="flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary">
+                    <div
+                      className={cn(
+                        "mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary",
+                        {
+                          "bg-secondary":
+                            recipeDetail.verifyStatus === "pending",
+                        },
+                      )}>
                       <RadioGroupItem
                         value="public"
                         id="public"
@@ -380,6 +433,11 @@ export default function UpdateRecipePage({ params }: Props) {
                         </Label>
                       </div>
                     </div>
+                    {recipeDetail.verifyStatus === "pending" && (
+                      <p className="text-nowrap text-muted-foreground">
+                        Waiting for verification
+                      </p>
+                    )}
                   </RadioGroup>
                 </CardContent>
               </Card>

@@ -64,6 +64,7 @@ export const Facebook: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <svg
+    className="hover:fill-[#1877F2] hover:stroke-[#1877F2]"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="none"
@@ -85,6 +86,7 @@ export const Instagram: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <svg
+    className="group hover:fill-[#E4405F] hover:stroke-[#E4405F]"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="none"
@@ -96,12 +98,42 @@ export const Instagram: React.FC<IconSvgProps> = ({
     width={size || width}
     {...props}>
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    <circle cx="12" cy="12" r="4" className="group-hover:fill-background" />
+    <line
+      x1="17.5"
+      x2="17.51"
+      y1="6.5"
+      y2="6.5"
+      className="group-hover:stroke-background"
+    />
   </svg>
 );
 
 export const Linkedin: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => (
+  <svg
+    className="hover:fill-[#0077B5] hover:stroke-[#0077B5]"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    height={size || height}
+    width={size || width}
+    {...props}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+export const Star: React.FC<IconSvgProps> = ({
   size = 24,
   width,
   height,
@@ -118,8 +150,13 @@ export const Linkedin: React.FC<IconSvgProps> = ({
     height={size || height}
     width={size || width}
     {...props}>
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-    <rect width="4" height="12" x="2" y="9" />
-    <circle cx="4" cy="4" r="2" />
+    <path
+      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77"
+      className="hover:fill-primary"
+    />
+    <path
+      d="M12 2l-3.09 6.26L2 9.27l5 4.87-1.18 6.88L12 17.77"
+      className="hover:fill-primary"
+    />
   </svg>
 );

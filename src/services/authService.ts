@@ -25,6 +25,21 @@ export async function logout() {
   await response.text();
 }
 
+export async function register(newCredentials: {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  fullName: string;
+}) {
+  const response = await clientFetch(`/auth/register`, {
+    method: "POST",
+    body: JSON.stringify(newCredentials),
+    credentials: "include",
+  });
+
+  await response.json();
+}
+
 export async function fetchUserInfo() {
   const response = await clientFetch("/users/owned/info", { method: "GET" });
 

@@ -14,7 +14,7 @@ export default async function serverFetch(
   endpoint: string | URL,
   options: CustomRequestInit = {},
 ) {
-  const fullUrl = `${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}${endpoint}`;
+  const fullUrl = `${process.env.DATABASE_URL}${endpoint}`;
 
   options.headers = {
     "Content-Type": "application/json",

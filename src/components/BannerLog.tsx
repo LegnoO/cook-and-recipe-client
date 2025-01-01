@@ -15,7 +15,7 @@ const BannerLog = ({
       className="h-[210px] bg-cover bg-center-top bg-no-repeat"
       style={{ background: `url(${url})` }}>
       <div className="container flex h-full items-center">
-        <h1 className="font-semibold text-5xl text-white">{title}</h1>
+        <h1 className="text-5xl font-semibold text-white">{title}</h1>
       </div>
     </div>
   );

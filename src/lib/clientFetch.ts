@@ -14,7 +14,7 @@ export default async function clientFetch(
   endpoint: string | URL,
   options: CustomRequestInit = {},
 ): Promise<Response> {
-  const fullUrl = `${process.env.NEXT_PUBLIC_EXTERNAL_API_URL}${endpoint}`;
+  const fullUrl = `${process.env.NEXT_PUBLIC_DATABASE_URL}${endpoint}`;
 
   if (!(options.body instanceof FormData)) {
     options.headers = {

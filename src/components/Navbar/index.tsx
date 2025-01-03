@@ -40,7 +40,7 @@ const Navbar = () => {
       url: "/recipes",
     },
     {
-      label: "The Team",
+      label: "Chefs",
       url: "/chefs",
     },
     {

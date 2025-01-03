@@ -28,6 +28,7 @@ export default function SessionPage() {
     async function tryRefresh() {
       try {
         await refreshUser();
+
         router.back();
       } catch {
         router.push("/login");

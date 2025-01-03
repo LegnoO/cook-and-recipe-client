@@ -35,7 +35,7 @@ export default async function clientFetch(
 
     if (!response.ok) {
       const excludedUrls = [
-        "/users/owned/info",
+        // "/users/owned/info",
         "/auth/refresh",
         "/auth/public/login",
       ];

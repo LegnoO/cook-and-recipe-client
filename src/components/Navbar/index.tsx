@@ -261,26 +261,30 @@ const Navbar = () => {
               </li>
             );
           })}
-          <li
-            className={
-              "flex justify-center whitespace-nowrap rounded-md bg-primary text-primary-foreground lg:hidden lg:items-center"
-            }>
-            <Link
-              className="block rounded-md px-3 py-2 font-medium"
-              href="/login">
-              Sign In
-            </Link>
-          </li>
-          <li
-            className={
-              "flex justify-center rounded-md bg-secondary text-secondary-foreground lg:hidden lg:items-center"
-            }>
-            <Link
-              className="block rounded-md px-3 py-2 font-medium"
-              href="/register">
-              Sign Up
-            </Link>
-          </li>
+          {user && (
+            <Fragment>
+              <li
+                className={
+                  "flex justify-center whitespace-nowrap rounded-md bg-primary text-primary-foreground lg:hidden lg:items-center"
+                }>
+                <Link
+                  className="block rounded-md px-3 py-2 font-medium"
+                  href="/login">
+                  Sign In
+                </Link>
+              </li>
+              <li
+                className={
+                  "flex justify-center rounded-md bg-secondary text-secondary-foreground lg:hidden lg:items-center"
+                }>
+                <Link
+                  className="block rounded-md px-3 py-2 font-medium"
+                  href="/register">
+                  Sign Up
+                </Link>
+              </li>
+            </Fragment>
+          )}
         </ul>
       </div>
     </header>

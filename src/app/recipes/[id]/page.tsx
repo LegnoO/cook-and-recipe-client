@@ -85,28 +85,28 @@ export default async function RecipeDetailPage({
   //     { name: "Milk", quantity: 0.75, measurement: "cup" },
   //     { name: "Vanilla extract", quantity: 1, measurement: "teaspoon" },
   //   ],
-    // instructionSections: [
-    //   {
-    //     title: "Prepare the ingredients",
-    //     instructions: [
-    //       { step: 1, description: "Cut the lamb into bite-sized pieces" },
-    //       { step: 2, description: "Dice the onion and carrots" },
-    //       { step: 3, description: "Mince the garlic" },
-    //     ],
-    //   },
-    //   {
-    //     title: "Cook the soup",
-    //     instructions: [
-    //       { step: 1, description: "Brown the lamb in a large pot" },
-    //       { step: 2, description: "Add vegetables and sauté until soft" },
-    //       { step: 3, description: "Add spices and rice" },
-    //       {
-    //         step: 4,
-    //         description: "Pour in broth and simmer until meat is tender",
-    //       },
-    //     ],
-    //   },
-    // ],
+  // instructionSections: [
+  //   {
+  //     title: "Prepare the ingredients",
+  //     instructions: [
+  //       { step: 1, description: "Cut the lamb into bite-sized pieces" },
+  //       { step: 2, description: "Dice the onion and carrots" },
+  //       { step: 3, description: "Mince the garlic" },
+  //     ],
+  //   },
+  //   {
+  //     title: "Cook the soup",
+  //     instructions: [
+  //       { step: 1, description: "Brown the lamb in a large pot" },
+  //       { step: 2, description: "Add vegetables and sauté until soft" },
+  //       { step: 3, description: "Add spices and rice" },
+  //       {
+  //         step: 4,
+  //         description: "Pour in broth and simmer until meat is tender",
+  //       },
+  //     ],
+  //   },
+  // ],
   //   createdBy: {
   //     id: "670d73f1beeeb06c352ab012",
   //     avatar:
@@ -294,16 +294,10 @@ export default async function RecipeDetailPage({
         </div>
       </section>
 
-      <section className="section-spacing bg-background">
-        <div className="container">
-          <Comment commentIndex={Number(commentIndex) || 1} />
-        </div>
-      </section>
-
       <section className="bg-background">
         <div className="container pb-32 pt-[75px]">
           <h2 className="lgtext-3xl mb-6 flex items-center gap-2 text-2xl font-bold tracking-wider">
-            RECIPE SUBMITTED BY
+            SUBMITTED BY
           </h2>
           <div className="flex w-full items-stretch gap-4">
             <div className="w-full">
@@ -324,7 +318,7 @@ export default async function RecipeDetailPage({
                           {recipeDetail.createdBy.userInfo.fullName}
                         </h4>
                         <i className="font-medium text-primary">
-                          Chef {recipeDetail.createdBy.level}
+                          {recipeDetail.createdBy.level} Chef
                         </i>
                         <p className="text-muted-foreground">
                           {recipeDetail.createdBy.description} A passionate chef
@@ -344,6 +338,12 @@ export default async function RecipeDetailPage({
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section-spacing bg-background">
+        <div className="container">
+          <Comment commentIndex={Number(commentIndex) || 1} />
         </div>
       </section>
 

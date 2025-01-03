@@ -82,7 +82,6 @@ const LoginForm = ({ isModal }: Props) => {
         sameSite: "none",
       });
       const userDetails = await fetchUserInfo();
-      console.log("🚀 ~ onSubmit ~ userDetails:", userDetails);
       setUser(userDetails);
       const redirectUrl = getDecodedParam("returnTo");
       if (redirectUrl) {

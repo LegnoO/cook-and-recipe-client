@@ -8,7 +8,9 @@ import ChefCard from "./ChefCard";
 import serverFetch from "@/lib/serverFetch";
 
 async function getChefList() {
-  const response = await serverFetch(`/chefs/public/find?index=1&size=10`);
+  const response = await serverFetch(
+    `/chefs/public/find?index=1&size=10&sortOrder=asc`,
+  );
 
   const recipeData: ChefListResponse = await response.json();
   return recipeData;

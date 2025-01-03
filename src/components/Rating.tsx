@@ -1,8 +1,7 @@
 "use client";
+
 // ** React Imports
 import { useState } from "react";
-
-// ** Components
 
 // ** Icons
 import { Star } from "lucide-react";
@@ -13,10 +12,11 @@ import { cn } from "@/lib/utils";
 // ** Types
 type Props = {
   disableSelect?: boolean;
-  defaultValue?: number;
+  defaultValue?: number | null;
   readOnly?: boolean;
   max?: number;
 };
+
 const Rating = ({
   max = 5,
   defaultValue = 0,
@@ -24,17 +24,9 @@ const Rating = ({
   readOnly = false,
 }: Props) => {
   const [hoveredRating, setHoveredRating] = useState(0);
-  const [selectedRating, setSelectedRating] = useState(defaultValue);
+  const [selectedRating, setSelectedRating] = useState(defaultValue || 0);
 
-  function getStarColor(star: number) {
-    if (star <= selectedRating || star <= hoveredRating) {
-      return "fill-primary stroke-primary";
-    }
-
-    return "fill-muted-foreground stroke-muted-foreground";
-  }
-
-  function handleClick(star: number) {
+  function handleRatingChange(star: number) {
     if (!readOnly && !disableSelect) {
       setSelectedRating(star);
     }
@@ -42,15 +34,39 @@ const Rating = ({
   return (
     <div className="flex items-center gap-1">
       {Array.from({ length: max }, (_, index) => index + 1).map((star) => (
-        <Star
-          key={star}
-          onMouseEnter={() => !readOnly && setHoveredRating(star)}
-          onMouseLeave={() => !readOnly && setHoveredRating(0)}
-          onClick={() => handleClick(star)}
-          className={cn("h-4 w-4 transition-colors", getStarColor(star), {
-            "cursor-pointer": !readOnly,
-          })}
-        />
+        <span key={`star ${star}`} className="relative">
+          <label
+            className={cn(
+              "absolute w-1/2 overflow-hidden text-muted-foreground transition-colors",
+              {
+                "cursor-pointer": !readOnly,
+                "text-primary":
+                  star - 0.5 <= selectedRating || star - 0.5 <= hoveredRating,
+              },
+            )}>
+            <Star
+              key={star}
+              onMouseEnter={() => !readOnly && setHoveredRating(star - 0.5)}
+              onMouseLeave={() => !readOnly && setHoveredRating(0)}
+              onClick={() => handleRatingChange(star - 0.5)}
+              className="select-none fill-current stroke-current"
+            />
+          </label>
+
+          <label
+            className={cn("h-4 w-4 text-muted-foreground transition-colors", {
+              "cursor-pointer": !readOnly,
+              "text-primary": star <= selectedRating || star <= hoveredRating,
+            })}>
+            <Star
+              key={star}
+              onMouseEnter={() => !readOnly && setHoveredRating(star)}
+              onMouseLeave={() => !readOnly && setHoveredRating(0)}
+              onClick={() => handleRatingChange(star)}
+              className="select-none fill-current stroke-current"
+            />
+          </label>
+        </span>
       ))}
     </div>
   );

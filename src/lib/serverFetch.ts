@@ -32,6 +32,7 @@ export default async function serverFetch(
     const response = await fetch(fullUrl, options);
 
     if (!response.ok) {
+      console.log({ fullUrl, error: await response.json() });
       if (response.status === 401) {
         redirect("/session");
       }

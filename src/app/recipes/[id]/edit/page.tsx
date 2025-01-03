@@ -150,7 +150,7 @@ export default function UpdateRecipePage({ params }: Props) {
     }
     if (
       recipeStatus === "public" &&
-      recipeDetail.verifyStatus === "unverified"
+      ["unverified", "rejected"].includes(recipeDetail.verifyStatus)
     ) {
       await requestVerifyRecipe(recipeDetail.id);
     }
@@ -165,17 +165,6 @@ export default function UpdateRecipePage({ params }: Props) {
   }
 
   async function onSubmit(dataSubmit: FormValues) {
-    console.log({
-      dataSubmit,
-      images,
-      newImages: images
-        .filter((image) => image.file !== null)
-        .map((x) => x.file) as File[],
-      oldImageUrls: images
-        .filter((image) => image.file === null)
-        .map((x) => x.url),
-    });
-
     setLoading(true);
     toast({
       title: "Loading...",
@@ -197,7 +186,11 @@ export default function UpdateRecipePage({ params }: Props) {
 
     try {
       await updateRecipe(formData, recipeDetail!.id);
-      await handleRequestRecipeStatus();
+
+      if ((recipeStatus === "public") !== recipeDetail?.status) {
+        await handleRequestRecipeStatus();
+      }
+
       toast({
         title: "Success!",
         description: "Your recipe has been updated successfully.",
@@ -442,8 +435,11 @@ export default function UpdateRecipePage({ params }: Props) {
                 </CardContent>
               </Card>
               <div className="flex items-center justify-end gap-4">
-                <Button type="button" variant="outline">
-                  Save as Draft
+                <Button
+                  onClick={() => router.push("/profile")}
+                  type="button"
+                  variant="outline">
+                  Cancel
                 </Button>
                 <Button disabled={isLoading} type="submit">
                   Publish Recipe

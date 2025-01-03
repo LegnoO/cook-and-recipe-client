@@ -1,11 +1,21 @@
+// ** Next Imports
+import Link from "next/link";
+
 // ** Components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getCharInitials } from "@/lib/utils";
-import React from "react";
 
-const Comment = () => {
+// ** Components
+import { getCharInitials } from "@/lib/utils";
+
+// ** Types
+type Props = {
+  commentIndex: number;
+};
+const Comment = ({ commentIndex }: Props) => {
+  // const commentLength = 4;
+
   const CommentForm = () => {
     return (
       <Card className="bg-secondary p-4">
@@ -47,7 +57,7 @@ const Comment = () => {
 
   const CommentList = () => {
     return (
-      <div className="mt-6 flex gap-4 rounded-lg bg-secondary p-4">
+      <div className="mt-6 flex gap-4 rounded-lg border p-4">
         <Avatar className="h-10 w-10">
           <AvatarImage
             className="object-cover"
@@ -87,7 +97,7 @@ const Comment = () => {
   };
 
   return (
-    <Card className="p-6">
+    <Card className="border-none p-0 shadow-none">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-semibold">Reviews & Comments</h2>
         <div className="flex items-center gap-2">
@@ -109,6 +119,11 @@ const Comment = () => {
 
       <CommentForm />
       <CommentList />
+      <Link href={`?comment=${commentIndex + 1}`} scroll={false}>
+        <Button className="mt-4" variant="secondary">
+          Load More Comments...
+        </Button>
+      </Link>
     </Card>
   );
 };

@@ -40,6 +40,7 @@ type Props = {
 };
 
 const OwnRecipeCard = ({ recipe, refetch }: Props) => {
+  console.log("🚀 ~ OwnRecipeCard ~ recipe:", recipe);
   const infoContact = [
     {
       icon: <Clock className="h-4 w-4" />,
@@ -62,18 +63,16 @@ const OwnRecipeCard = ({ recipe, refetch }: Props) => {
 
   return (
     <Card className="overflow-hidden">
-      <CardHeader className="p-0">
-        <div className="relative aspect-[1/0.65] w-full">
-          <Image
-            className="object-cover"
-            fill
-            src={
-              recipe.imageUrls[0] ||
-              "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg"
-            }
-            alt="card"
-          />
-        </div>
+      <CardHeader className="relative aspect-[1/0.65] p-0">
+        <Image
+          className="object-cover"
+          fill
+          src={
+            recipe.imageUrls[0] ||
+            "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg"
+          }
+          alt="card"
+        />
       </CardHeader>
       <div className="p-4">
         <div className="flex items-center justify-between">
@@ -86,7 +85,7 @@ const OwnRecipeCard = ({ recipe, refetch }: Props) => {
         <h3 className="mb-2 line-clamp-1 text-xl font-semibold">
           {recipe.name}
         </h3>
-        <p className="mb-4 line-clamp-2 h-10 text-sm text-muted-foreground">
+        <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">
           {recipe.description}
         </p>
         <div className="flex flex-wrap justify-between gap-2">

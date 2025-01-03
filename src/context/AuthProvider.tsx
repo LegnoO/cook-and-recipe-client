@@ -41,10 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
-  console.log({
-    serverSide: process.env.DATABASE_URL,
-    clientSide: process.env.NEXT_PUBLIC_DATABASE_URL,
-  });
+  
   async function handleLogout() {
     try {
       setUser(null);

@@ -31,7 +31,7 @@ import { calculateDaysAgo, getCharInitials } from "@/lib/utils";
 // ** Types
 type Props = {
   params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: SearchParams;
 };
 
 async function getRecipeDetails(id: string): Promise<RecipeDetails> {
@@ -50,9 +50,14 @@ async function getRecipeList(): Promise<RecipeListResponse> {
   return recipeData;
 }
 
-export default async function RecipeDetailPage({ params }: Props) {
+export default async function RecipeDetailPage({
+  params,
+  searchParams,
+}: Props) {
   const { data: recipes } = await getRecipeList();
   const recipeDetail = await getRecipeDetails(params.id);
+  console.log("🚀 ~ recipeDetail:", recipeDetail);
+  const commentIndex = searchParams.comment;
 
   // const _s = {
   //   id: "670ed5fe95ce989ba6a00276",
@@ -80,28 +85,28 @@ export default async function RecipeDetailPage({ params }: Props) {
   //     { name: "Milk", quantity: 0.75, measurement: "cup" },
   //     { name: "Vanilla extract", quantity: 1, measurement: "teaspoon" },
   //   ],
-  //   instructionSections: [
-  //     {
-  //       title: "Prepare the ingredients",
-  //       instructions: [
-  //         { step: 1, description: "Cut the lamb into bite-sized pieces" },
-  //         { step: 2, description: "Dice the onion and carrots" },
-  //         { step: 3, description: "Mince the garlic" },
-  //       ],
-  //     },
-  //     {
-  //       title: "Cook the soup",
-  //       instructions: [
-  //         { step: 1, description: "Brown the lamb in a large pot" },
-  //         { step: 2, description: "Add vegetables and sauté until soft" },
-  //         { step: 3, description: "Add spices and rice" },
-  //         {
-  //           step: 4,
-  //           description: "Pour in broth and simmer until meat is tender",
-  //         },
-  //       ],
-  //     },
-  //   ],
+    // instructionSections: [
+    //   {
+    //     title: "Prepare the ingredients",
+    //     instructions: [
+    //       { step: 1, description: "Cut the lamb into bite-sized pieces" },
+    //       { step: 2, description: "Dice the onion and carrots" },
+    //       { step: 3, description: "Mince the garlic" },
+    //     ],
+    //   },
+    //   {
+    //     title: "Cook the soup",
+    //     instructions: [
+    //       { step: 1, description: "Brown the lamb in a large pot" },
+    //       { step: 2, description: "Add vegetables and sauté until soft" },
+    //       { step: 3, description: "Add spices and rice" },
+    //       {
+    //         step: 4,
+    //         description: "Pour in broth and simmer until meat is tender",
+    //       },
+    //     ],
+    //   },
+    // ],
   //   createdBy: {
   //     id: "670d73f1beeeb06c352ab012",
   //     avatar:
@@ -143,13 +148,13 @@ export default async function RecipeDetailPage({ params }: Props) {
 
   return (
     <Fragment>
-      <section className="bg-secondary pb-20 pt-12">
+      <section className="bg-background pb-20 pt-12">
         <div className="container flex flex-col lg:flex-row">
           <div className="w-full lg:w-1/2">
             <ImageGallery images={recipeDetail.imageUrls} />
           </div>
           <div className="w-full lg:w-1/2">
-            <div className="flex h-full flex-col justify-center gap-3 p-12">
+            <div className="flex h-full flex-col gap-3 p-8">
               <h6 className="mb-2 font-medium uppercase tracking-wider text-primary">
                 {recipeDetail.category.name}
               </h6>
@@ -188,7 +193,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                 </div>
               </div>
 
-              <ul className="grid-cols-3-res mt-2 grid place-items-center items-center rounded-lg bg-background p-4">
+              <ul className="grid-cols-3-res mt-2 grid place-items-center items-center rounded-lg bg-background p-4 shadow">
                 <li className="flex flex-col px-6 py-2">
                   <div className="flex items-center gap-1">
                     <UtensilsCrossed className="h-4 w-4" />
@@ -289,10 +294,16 @@ export default async function RecipeDetailPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-secondary">
+      <section className="section-spacing bg-background">
+        <div className="container">
+          <Comment commentIndex={Number(commentIndex) || 1} />
+        </div>
+      </section>
+
+      <section className="bg-background">
         <div className="container pb-32 pt-[75px]">
-          <h2 className="mb-6 flex items-center gap-2 text-4xl font-bold tracking-wider">
-            Chef Info
+          <h2 className="lgtext-3xl mb-6 flex items-center gap-2 text-2xl font-bold tracking-wider">
+            RECIPE SUBMITTED BY
           </h2>
           <div className="flex w-full items-stretch gap-4">
             <div className="w-full">
@@ -350,12 +361,6 @@ export default async function RecipeDetailPage({ params }: Props) {
               <RecipeCard recipe={recipe} key={index} />
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="section-spacing bg-background">
-        <div className="container">
-          <Comment />
         </div>
       </section>
     </Fragment>

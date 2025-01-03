@@ -160,7 +160,7 @@ const UserRecipeCollection = () => {
                 No matching recipes found.
               </p>
             )}
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               {chefRecipe.map((recipe, index) => (
                 <OwnRecipeCard recipe={recipe} refetch={refetch} key={index} />
               ))}

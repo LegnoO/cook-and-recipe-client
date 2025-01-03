@@ -48,7 +48,11 @@ import { getDecodedParam, getItemLocalStorage } from "@/lib/utils";
 // ** Schema
 import { LoginFormValues, loginFormSchema } from "@/schemas/loginFormSchema";
 
-const LoginForm = () => {
+// ** Types
+type Props = {
+  isModal: boolean;
+};
+const LoginForm = ({ isModal }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
   const { setUser } = useAuthContext();
@@ -86,7 +90,7 @@ const LoginForm = () => {
         return;
       }
 
-      if (pathname === "/login") {
+      if (!isModal || pathname === "/login") {
         router.push("/");
       } else {
         router.back();

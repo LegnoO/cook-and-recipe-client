@@ -30,7 +30,7 @@ export default function SessionPage() {
         await refreshUser();
         router.back();
       } catch {
-        router.push("/");
+        router.push("/login");
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",

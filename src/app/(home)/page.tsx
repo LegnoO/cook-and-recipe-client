@@ -19,7 +19,7 @@ import serverFetch from "@/lib/serverFetch";
 
 async function getRecipeList(): Promise<RecipeListResponse> {
   const response = await serverFetch(
-    `/recipe/public/find?index=1&size=10&sortOrder=desc`,
+    `/recipe/public/find?index=1&size=4&sortOrder=desc`,
   );
 
   const recipeData = await response.json();
@@ -63,11 +63,12 @@ export default async function Home() {
           <div className="flex flex-col items-center gap-8 lg:flex-row lg:gap-12">
             <div className="pointer-events-none relative aspect-square w-full max-w-md overflow-hidden rounded-md shadow lg:aspect-[5/6]">
               <Image
-                className="dev object-cover"
+                className="object-cover"
                 src="https://res.cloudinary.com/dzyqhkgxy/image/upload/v1733823949/iq6wdoaqeji7esbwndmr.jpg"
                 alt="Recipe Slide"
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority
               />
             </div>
             <div className="flex-1">

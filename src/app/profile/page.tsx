@@ -26,10 +26,7 @@ async function getUserProfile() {
 
 export default async function Profile() {
   const userProfile = await getUserProfile();
-  console.log({
-    serverSide: process.env.DATABASE_URL,
-    clientSide: process.env.NEXT_PUBLIC_DATABASE_URL,
-  });
+
   return (
     <div className="container my-[35px] space-y-8 p-4">
       <div className="flex flex-col items-stretch gap-8 md:flex-row">

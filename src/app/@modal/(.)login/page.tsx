@@ -8,7 +8,7 @@ export default function LoginModal() {
     <Modal>
       <Scroll>
         <div className="max-h-[calc(100dvh-30px)]">
-          <LoginForm />
+          <LoginForm isModal={false} />
         </div>
       </Scroll>
     </Modal>

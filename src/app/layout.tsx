@@ -42,10 +42,12 @@ export default function RootLayout({
         <Toaster />
         <ReactQueryProvider>
           <AuthProvider>
-            <Navbar />
-            {modal}
-            {children}
-            <Footer />
+            <div className="flex flex-col">
+              <Navbar />
+              {modal}
+              <div className="dev flex-1">{children}</div>
+              <Footer />
+            </div>
           </AuthProvider>
         </ReactQueryProvider>
       </body>

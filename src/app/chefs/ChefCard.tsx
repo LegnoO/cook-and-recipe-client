@@ -1,4 +1,5 @@
 // ** Next Imports
+import Link from "next/link";
 import Image from "next/image";
 
 // ** Components
@@ -19,10 +20,10 @@ type Props = { chef: Chef };
 
 const ChefCard = ({ chef }: Props) => {
   return (
-    <Card className="w-full max-w-sm border-none shadow-none">
+    <Card className="border-none shadow-none">
       <CardHeader className="p-0">
         <Image
-          className="mx-auto aspect-square h-[200px] rounded-full object-cover"
+          className="mx-auto aspect-square w-full rounded-md object-cover"
           width={200}
           height={200}
           src={
@@ -32,13 +33,15 @@ const ChefCard = ({ chef }: Props) => {
           alt={chef.userInfo.fullName}
         />
       </CardHeader>
-      <CardContent className="mt-6 text-center">
-        <CardTitle className="mb-4 text-base font-semibold uppercase tracking-widest">
-          {chef.userInfo.fullName}
-        </CardTitle>
-        <CardDescription className="font-medium uppercase tracking-widest">
-          {chef.level}
-        </CardDescription>
+      <CardContent className="mt-6 p-0 text-center">
+        <Link href={`/chefs/${chef.id}`}>
+          <CardTitle className="mb-4 text-base font-semibold uppercase tracking-widest">
+            {chef.userInfo.fullName}
+          </CardTitle>
+          <CardDescription className="font-medium uppercase tracking-widest">
+            {chef.level}
+          </CardDescription>
+        </Link>
         <p className="mt-5 text-center text-sm font-normal leading-6 tracking-normal text-muted-foreground">
           {chef.description}
         </p>

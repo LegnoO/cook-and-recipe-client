@@ -59,15 +59,10 @@ import { useToast } from "@/hooks/useToast";
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Lib
-import {
-  appendFormData,
-  cn,
-  convertMBToBytes,
-  getCharInitials,
-} from "@/lib/utils";
+import { appendFormData, cn, convertMBToBytes, getCharInitials } from "@/utils";
 
 // ** Services
-import { updateInfo } from "@/services/chefService";
+import { updateInfo } from "@/services/client/chefService";
 
 // ** Types
 type Props = { userProfile: UserProfile };

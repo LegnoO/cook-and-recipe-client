@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Bookmark } from "lucide-react";
 
 // ** Lib
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 const BookMarkButton = () => {
   return (

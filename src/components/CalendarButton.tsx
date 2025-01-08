@@ -13,7 +13,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
 // ** Lib
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 // ** Types
 type Props = {

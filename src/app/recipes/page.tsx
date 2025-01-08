@@ -1,68 +1,24 @@
-// ** Next Imports
+// ** React Imports
+import { Fragment } from "react";
 
 // ** Components
 import QueryRecipe from "./QueryRecipe";
 import RecipeCard from "@/components/RecipeCard";
 import PaginationServer from "@/components/Pagination/PaginationServer";
 import Repeat from "@/components/Repeat";
+import Breadcrumb from "@/components/Breadcrumb";
 
-// ** Lib
-import serverFetch from "@/lib/serverFetch";
+// ** Services
+import { getRecipeList } from "@/services/server/recipeService";
 
 // ** Types
 type Props = {
   searchParams: SearchParams;
 };
 
-// async function fakeApiCall() {
-//   return new Promise<Omit<Recipe[], "createdBy">>((resolve) => {
-//     setTimeout(() => {
-//       resolve([
-//         {
-//           imageUrls: [
-//             "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg",
-//           ],
-//           name: "Salmon Pasta Pomodoro",
-//           category: "Drink Recipes",
-//           description:
-//             "A handful of simple ingredients typify the fresh, vibrant flavors of Greek cooking",
-//         },
-//         {
-//           imageUrls: [
-//             "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg",
-//           ],
-//           name: "Salmon Pasta Pomodoro",
-
-//           category: "Drink Recipes",
-//           description:
-//             "A handful of simple ingredients typify the fresh, vibrant flavors of Greek cooking",
-//         },
-//       ]);
-//     }, 1000); // Simulate a 1-second delay
-//   });
-// }
-
-async function getRecipeList() {
-  const response = await serverFetch(
-    `/recipe/public/find?index=1&size=10&sortOrder=desc`,
-  );
-
-  const recipeData: RecipeListResponse = await response.json();
-  return recipeData;
-}
-
-async function getCategories() {
-  const response = await serverFetch(`/category/public/find`);
-
-  const categoryData: Category[] = await response.json();
-  return categoryData;
-}
-
 export default async function RecipesListPage({ searchParams }: Props) {
   const { data: recipes, paginate } = await getRecipeList();
-  const categories = await getCategories();
-
-  console.log("🚀 ~ RecipesListPage ~ searchParams:", searchParams);
+  console.log("🚀 ~ RecipesListPage ~ recipes:", recipes);
 
   // const recipes = [
   //   {
@@ -101,14 +57,14 @@ export default async function RecipesListPage({ searchParams }: Props) {
   // ];
 
   return (
-    <>
+    <Fragment>
       <section className="relative max-w-full bg-recipes-banner bg-cover bg-center bg-no-repeat">
         <div className="container">
           <div className="flex min-h-screen flex-col items-center justify-center">
             <div className="mt-16 w-full text-center text-background">
-              <h2 className="title-slider-responsive mb-6 uppercase">
+              <h1 className="title-slider-responsive mb-6 uppercase">
                 Recipes
-              </h2>
+              </h1>
               <div className="mx-auto mb-4 h-[2px] w-[4%] bg-primary" />
               <h3 className="description-slider-responsive">
                 Complete atmosphere in your home
@@ -119,8 +75,16 @@ export default async function RecipesListPage({ searchParams }: Props) {
       </section>
       <main className="bg-background py-12">
         <div className="container">
+          <div className="mb-4">
+            <Breadcrumb
+              items={[
+                { title: "Home", href: "/" },
+                { title: "Recipes", href: "/recipes" },
+              ]}
+            />
+          </div>
           <div className="mb-6 py-4 pt-3">
-            <QueryRecipe categories={categories} />
+            <QueryRecipe />
           </div>
           <div className="grid-cols-3-res grid gap-8">
             {/* {recipes.map((recipe, index) => (
@@ -138,6 +102,6 @@ export default async function RecipesListPage({ searchParams }: Props) {
           </div>
         </div>
       </main>
-    </>
+    </Fragment>
   );
 }

@@ -20,7 +20,7 @@ import { LogOut, Settings, User } from "lucide-react";
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Lib
-import { getCharInitials } from "@/lib/utils/helpers";
+import { getCharInitials } from "@/utils/helpers";
 
 // ** Types
 type Props = { user: User };

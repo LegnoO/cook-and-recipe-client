@@ -20,10 +20,10 @@ import { useRouter } from "nextjs-toploader/app";
 import { useToast } from "@/hooks/useToast";
 
 // ** Services
-import { fetchUserInfo, logout } from "@/services/authService";
+import { fetchUserInfo, logout } from "@/services/client/authService";
 
 // ** Lib
-import { deleteCookie } from "@/lib/utils/cookies";
+import { deleteCookie } from "@/utils/cookies";
 
 // ** Types
 interface AuthContext {
@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
-  
+
   async function handleLogout() {
     try {
       setUser(null);

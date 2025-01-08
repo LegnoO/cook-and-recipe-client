@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 // ** Components
-import { getCharInitials } from "@/lib/utils";
+import { getCharInitials } from "@/utils";
 
 // ** Types
 type Props = {
@@ -22,7 +22,6 @@ const Comment = ({ commentIndex }: Props) => {
         <h3 className="mb-4 font-medium">Add Your Review</h3>
         <form className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Your Rating</label>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((rating) => (
                 <button
@@ -99,7 +98,7 @@ const Comment = ({ commentIndex }: Props) => {
   return (
     <Card className="border-none p-0 shadow-none">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Reviews & Comments</h2>
+        <h2 className="text-2xl font-semibold">Comments</h2>
         <div className="flex items-center gap-2">
           <div className="flex">
             {[1, 2, 3, 4, 5].map((star) => (

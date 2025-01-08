@@ -26,7 +26,7 @@ import { Logo, Menu, Close } from "@/components/ui/icons";
 import { idStore } from "@/store/idStore";
 
 // ** Lib
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 const Navbar = () => {
   const animatedNavbarPaths = ["/", "/recipes", "/chefs", "/contact", "/about"];
@@ -133,7 +133,7 @@ const Navbar = () => {
     <header className={getNavbarClasses()}>
       <nav className={cn("container flex h-full items-center justify-between")}>
         <Link
-          href="/test"
+          href="/wishlist"
           className="flex items-center gap-2 whitespace-nowrap">
           <Logo
             className={cn("text-background", {

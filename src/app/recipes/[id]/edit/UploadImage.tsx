@@ -16,7 +16,7 @@ import { UseFormReturn } from "react-hook-form";
 import { Trash2, Upload, Plus } from "lucide-react";
 
 // ** Lib
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 // ** Types
 import { FormValues } from "./page";

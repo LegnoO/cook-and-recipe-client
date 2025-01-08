@@ -14,24 +14,9 @@ import RecipeCard from "@/components/RecipeCard";
 // ** Icons
 import { MoveUpRight } from "lucide-react";
 
-// ** Lib
-import serverFetch from "@/lib/serverFetch";
-
-async function getRecipeList(): Promise<RecipeListResponse> {
-  const response = await serverFetch(
-    `/recipe/public/find?index=1&size=4&sortOrder=desc`,
-  );
-
-  const recipeData = await response.json();
-  return recipeData;
-}
-
-async function getCategories(): Promise<Category[]> {
-  const response = await serverFetch(`/category/public/find`);
-
-  const categoryData = await response.json();
-  return categoryData;
-}
+// ** Services
+import { getCategories } from "@/services/server/categoryService";
+import { getRecipeList } from "@/services/server/recipeService";
 
 export default async function Home() {
   const { data: recipes } = await getRecipeList();
@@ -51,9 +36,6 @@ export default async function Home() {
               <h3 className="description-slider-responsive mb-4">
                 Take a slice of our perfect culinary heaven!
               </h3>
-              <Button className="rounded-sm p-4 font-playfair text-sm font-medium uppercase tracking-widest md:p-6 md:text-base">
-                See Menu
-              </Button>
             </div>
           </div>
         </div>

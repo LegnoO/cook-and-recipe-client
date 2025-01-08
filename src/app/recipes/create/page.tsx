@@ -36,10 +36,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "nextjs-toploader/app";
 
 // ** Services
-import { createRecipe, requestVerifyRecipe } from "@/services/recipeService";
+import {
+  createRecipe,
+  requestVerifyRecipe,
+} from "@/services/client/recipeService";
 
 // ** Lib
-import { appendFormData, convertMBToBytes } from "@/lib/utils";
+import { appendFormData, convertMBToBytes } from "@/utils";
 
 // ** Schema
 const formSchema = z.object({
@@ -121,7 +124,6 @@ export default function CreateRecipePage() {
   }
 
   async function onSubmit(dataSubmit: FormValues) {
-    console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
     setLoading(true);
     toast({
       title: "Loading...",

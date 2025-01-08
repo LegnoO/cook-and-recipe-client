@@ -36,7 +36,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { Eye, EyeOff } from "lucide-react";
 
 // ** Services
-import { register } from "@/services/authService";
+import { register } from "@/services/client/authService";
 
 // ** Schema
 const formSchema = z

@@ -38,7 +38,7 @@ import { Plus, Loader2 } from "lucide-react";
 import { queryOptionsConfig } from "@/config/useQueryOptions";
 
 // ** Services
-import { getRecipeOwned } from "@/services/chefService";
+import { getRecipeOwned } from "@/services/client/chefService";
 
 const UserRecipeCollection = () => {
   const defaultQueryOptions: QueryOptions<{ name: string }> = {

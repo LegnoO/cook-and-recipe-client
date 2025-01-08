@@ -4,7 +4,7 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 // ** Helpers
-import { isSSR } from "@/lib/utils/helpers";
+import { isSSR } from "@/utils/helpers";
 
 const useLocalStorage = <T>(
   key: string,

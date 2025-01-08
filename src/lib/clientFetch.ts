@@ -1,8 +1,8 @@
 // ** Services
-import { refreshUser } from "@/services/authService";
+import { refreshUser } from "@/services/client/authService";
 
 // ** Lib
-import { getCookieValue } from "@/lib/utils/cookies";
+import { getCookieValue } from "@/utils/cookies";
 
 // ** Types
 type Headers = Record<string, string>;

@@ -4,7 +4,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // ** Lib
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 type Props = {
   onPageChange: (page: number) => void;

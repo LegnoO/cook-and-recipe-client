@@ -42,18 +42,13 @@ import {
   privateRecipe,
   publicRecipe,
   requestVerifyRecipe,
-} from "@/services/recipeService";
+} from "@/services/client/recipeService";
 
 // ** Library Imports
 import { useRouter } from "nextjs-toploader/app";
 
 // ** Lib
-import {
-  cn,
-  appendFormData,
-  convertMBToBytes,
-  isEmptyObject,
-} from "@/lib/utils";
+import { cn, appendFormData, convertMBToBytes, isEmptyObject } from "@/utils";
 
 // ** Config
 import { queryOptionsConfig } from "@/config/useQueryOptions";
@@ -442,7 +437,7 @@ export default function UpdateRecipePage({ params }: Props) {
                   Cancel
                 </Button>
                 <Button disabled={isLoading} type="submit">
-                  Publish Recipe
+                  Save
                 </Button>
               </div>
             </div>

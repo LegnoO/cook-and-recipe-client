@@ -1,5 +1,8 @@
 "use client";
 
+// ** React Imports
+import { useEffect } from "react";
+
 // ** Components
 import { Button } from "@/components/ui/button";
 
@@ -54,6 +57,16 @@ const Notification = () => {
   //     },
   //   });
   // }, []);
+
+  useEffect(() => {
+    const idTimeout = setInterval(() => {
+      // console.log("ok");
+    }, 2000);
+
+    return () => {
+      clearTimeout(idTimeout);
+    };
+  }, []);
 
   const MessageItem = () => {
     return (

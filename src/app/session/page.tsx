@@ -17,7 +17,7 @@ import { useToast } from "@/hooks/useToast";
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Services
-import { refreshUser } from "@/services/authService";
+import { refreshUser } from "@/services/client/authService";
 
 export default function SessionPage() {
   const {} = useAuthContext();

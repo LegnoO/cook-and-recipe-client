@@ -1,7 +1,7 @@
 "use client";
 
 // ** React Imports
-import { useState, useCallback, ChangeEvent } from "react";
+import { useState, useCallback, ChangeEvent, useEffect } from "react";
 
 // ** Next Imports
 import { useSearchParams } from "next/navigation";
@@ -23,18 +23,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 // ** Library Imports
-import { useDebouncedCallback } from "use-debounce";
 import { useRouter } from "nextjs-toploader/app";
+import { useDebouncedCallback } from "use-debounce";
 
 // ** Icons
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 
-// ** Types
-type Props = {
-  categories: Category[];
-};
+// ** Services
+import { getCategories } from "@/services/client/recipeService";
 
-const QueryRecipe = ({ categories }: Props) => {
+const QueryRecipe = () => {
+  const [categories, setCategories] = useState<Category[]>();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -100,11 +99,14 @@ const QueryRecipe = ({ categories }: Props) => {
     });
   }
 
-  console.log({
-    category: getQueryValue("category"),
-    sort: getQueryValue("sort"),
-  });
+  useEffect(() => {
+    async function fetchCategories() {
+      const categories = await getCategories();
+      if (categories) setCategories(categories);
+    }
 
+    fetchCategories();
+  }, []);
   return (
     <div className="flex w-full items-center justify-between gap-2">
       <div className="relative">
@@ -160,29 +162,31 @@ const QueryRecipe = ({ categories }: Props) => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <h4 className="font-medium leading-none">Category</h4>
-              <Select
-                value={getQueryValue("category")}
-                open={isSelectOpen.category}
-                onOpenChange={(open) => {
-                  handleToggleSelect(open, "category");
-                }}
-                defaultValue={getQueryValue("category")}
-                onValueChange={(value) => handleQuery(value, "category")}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {categories && (
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Category</h4>
+                <Select
+                  value={getQueryValue("category")}
+                  open={isSelectOpen.category}
+                  onOpenChange={(open) => {
+                    handleToggleSelect(open, "category");
+                  }}
+                  defaultValue={getQueryValue("category")}
+                  onValueChange={(value) => handleQuery(value, "category")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
         </PopoverContent>
       </Popover>

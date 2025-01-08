@@ -53,3 +53,10 @@ export async function privateRecipe(id: string) {
 
   return await response.json();
 }
+
+export async function getCategories() {
+  const response = await clientFetch(`/category/public/find`);
+
+  const categoryData: Category[] = await response.json();
+  return categoryData;
+}

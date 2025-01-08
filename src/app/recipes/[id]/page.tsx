@@ -25,30 +25,19 @@ import {
 } from "lucide-react";
 
 // ** Lib
-import serverFetch from "@/lib/serverFetch";
-import { calculateDaysAgo, getCharInitials } from "@/lib/utils";
+import { calculateDaysAgo, getCharInitials } from "@/utils";
+
+// ** Services
+import {
+  getRecipeDetails,
+  getRecipeList,
+} from "@/services/server/recipeService";
 
 // ** Types
 type Props = {
   params: { id: string };
   searchParams: SearchParams;
 };
-
-async function getRecipeDetails(id: string): Promise<RecipeDetails> {
-  const response = await serverFetch(`/recipe/public/find/${id}`);
-
-  const recipeDetails = await response.json();
-  return recipeDetails;
-}
-
-async function getRecipeList(): Promise<RecipeListResponse> {
-  const response = await serverFetch(
-    `/recipe/public/find?index=1&size=10&sortOrder=desc`,
-  );
-
-  const recipeData = await response.json();
-  return recipeData;
-}
 
 export default async function RecipeDetailPage({
   params,

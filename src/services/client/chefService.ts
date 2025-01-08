@@ -1,6 +1,6 @@
 // ** Lib
 import clientFetch from "@/lib/clientFetch";
-import { createSearchParams } from "@/lib/utils";
+import { createSearchParams } from "@/utils";
 
 export async function getRecipeOwned(
   queryOptions: QueryOptions<{ name: string }>,

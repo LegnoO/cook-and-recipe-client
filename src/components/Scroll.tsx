@@ -2,7 +2,7 @@
 import { ReactNode } from "react";
 
 // ** Lib
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 type Props = { children: ReactNode; className?: string };
 

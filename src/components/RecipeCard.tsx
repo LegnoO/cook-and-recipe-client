@@ -72,7 +72,11 @@ export default function RecipeCard({ recipe }: Props) {
                 {recipe.name}
               </h3>
 
-              <Rating defaultValue={recipe.rating || 0} />
+              <Rating
+                defaultValue={recipe.rating || 0}
+                disableSelect
+                readOnly
+              />
             </div>
             <p className="text-sm font-medium text-primary lg:text-base">
               {recipe.category.name}

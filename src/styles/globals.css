@@ -52,13 +52,29 @@
     @apply border-border;
   }
 
+  html,
   body {
-    @apply overflow-auto bg-background-body font-raleway text-foreground;
+    overflow-x: hidden;
+  }
+  body {
+    @apply overflow-auto bg-background font-raleway text-foreground;
   }
 
   body:has(.loading-screen),
   body:has([role="dialog"]) {
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
+  }
+
+  p,
+  span,
+  i,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    word-wrap: break-word;
   }
 
   .navbar-height {

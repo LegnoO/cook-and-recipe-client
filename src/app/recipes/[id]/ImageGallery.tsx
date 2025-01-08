@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/carousel";
 
 // ** Lib
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 // ** Types
 type Props = {

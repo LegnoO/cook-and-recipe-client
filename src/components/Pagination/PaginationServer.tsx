@@ -8,7 +8,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // ** Lib
-import { cn, createSearchParams } from "@/lib/utils";
+import { cn, createSearchParams } from "@/utils";
 
 type Props = {
   totalPages: number;

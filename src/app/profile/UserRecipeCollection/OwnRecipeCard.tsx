@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 
 // ** Services
-import { requestVerifyRecipe } from "@/services/recipeService";
+import { requestVerifyRecipe } from "@/services/client/recipeService";
 
 // ** Types
 type Props = {

@@ -74,7 +74,7 @@ const config: Config = {
           body: "hsl(var(--background-body))",
         },
         divider: "hsl(var(--divider))",
-        foreground: "hsl(var(--fg-primary))",
+        foreground: "hsl(var(--foreground))",
         placeholder: "hsl(var(--placeholder))",
         disabled: "hsl(var(--disabled))",
         card: {

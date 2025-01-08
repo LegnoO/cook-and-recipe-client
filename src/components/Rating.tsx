@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Star } from "lucide-react";
 
 // ** Lib
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 // ** Types
 type Props = {
@@ -49,7 +49,7 @@ const Rating = ({
               onMouseEnter={() => !readOnly && setHoveredRating(star - 0.5)}
               onMouseLeave={() => !readOnly && setHoveredRating(0)}
               onClick={() => handleRatingChange(star - 0.5)}
-              className="select-none fill-current stroke-current"
+              className="h-4 w-4 select-none fill-current stroke-current"
             />
           </label>
 
@@ -63,7 +63,7 @@ const Rating = ({
               onMouseEnter={() => !readOnly && setHoveredRating(star)}
               onMouseLeave={() => !readOnly && setHoveredRating(0)}
               onClick={() => handleRatingChange(star)}
-              className="select-none fill-current stroke-current"
+              className="h-4 w-4 select-none fill-current stroke-current"
             />
           </label>
         </span>

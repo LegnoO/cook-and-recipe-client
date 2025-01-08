@@ -1,6 +1,6 @@
 // ** Lib
 import clientFetch from "@/lib/clientFetch";
-import { setCookie } from "@/lib/utils/cookies";
+import { setCookie } from "@/utils/cookies";
 
 export async function login({ email, password, rememberMe }: LoginCredentials) {
   const response = await clientFetch(`/auth/public/login`, {

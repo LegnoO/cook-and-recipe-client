@@ -13,7 +13,7 @@ import {
 
 // ** Types
 type Props = {
-  items: { title: string; href: string }[];
+  items: { title: string; href?: string }[];
 };
 
 const Breadcrumb = ({ items }: Props) => {

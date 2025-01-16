@@ -235,7 +235,7 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
         title: "Uh oh! Something went wrong.",
         description:
           error instanceof Error ? error.message : "An error has occurred",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
+        action: <ToastAction altText="close">Close</ToastAction>,
       });
     } finally {
       setLoading(false);

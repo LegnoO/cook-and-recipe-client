@@ -1,50 +1,37 @@
-// ** Next Imports
+"use client";
 
 // ** Components
-import QueryRecipeBookmarks from "./QueryRecipeBookmarks";
+import QueryRecipe from "../QueryRecipe";
 import RecipeCard from "@/components/RecipeCard";
-import PaginationServer from "@/components/Pagination/PaginationServer";
-import Repeat from "@/components/Repeat";
+import Pagination from "@/components/Pagination";
 import Breadcrumb from "@/components/Breadcrumb";
 
+// ** Library Imports
+import { useQuery } from "@tanstack/react-query";
+
 // ** Services
-import { getRecipeList } from "@/services/server/recipeService";
+import { getRecipeBookmarkList } from "@/services/client/recipeService";
+
+// ** Config
+import { queryOptionsConfig } from "@/config/useQueryOptions";
 
 // ** Types
 type Props = {
   searchParams: SearchParams;
 };
 
-// async function fakeApiCall() {
-//   return new Promise<Omit<Recipe[], "createdBy">>((resolve) => {
-//     setTimeout(() => {
-//       resolve([
-//         {
-//           imageUrls: [
-//             "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg",
-//           ],
-//           name: "Salmon Pasta Pomodoro",
-//           category: "Drink Recipes",
-//           description:
-//             "A handful of simple ingredients typify the fresh, vibrant flavors of Greek cooking",
-//         },
-//         {
-//           imageUrls: [
-//             "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg",
-//           ],
-//           name: "Salmon Pasta Pomodoro",
+export default function RecipeBookmarksPage({ searchParams }: Props) {
+  const { index = "1", size = "10", sortOrder = "desc" } = searchParams;
+  const pageIndex = Number(index);
 
-//           category: "Drink Recipes",
-//           description:
-//             "A handful of simple ingredients typify the fresh, vibrant flavors of Greek cooking",
-//         },
-//       ]);
-//     }, 1000); // Simulate a 1-second delay
-//   });
-// }
+  const { data: recipeResponse, isLoading } = useQuery({
+    queryKey: ["recipeBookmarks", searchParams],
+    queryFn: () => getRecipeBookmarkList({ index, size, sortOrder }),
+    ...queryOptionsConfig,
+  });
 
-export default async function RecipesListPage({ searchParams }: Props) {
-  const { data: recipes, paginate } = await getRecipeList();
+  const recipes = recipeResponse?.data ?? [];
+  const totalPages = recipeResponse?.paginate.total || 1;
 
   return (
     <>
@@ -60,21 +47,23 @@ export default async function RecipesListPage({ searchParams }: Props) {
             />
           </div>
           <div className="mb-6 py-4 pt-3">
-            <QueryRecipeBookmarks />
+            <QueryRecipe />
           </div>
-          <div className="grid-cols-4-res grid gap-8">
-            {/* {recipes.map((recipe, index) => (
-            
-            ))} */}
-            <Repeat times={6}>
-              <RecipeCard recipe={recipes[0]} />
-            </Repeat>
-          </div>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : recipes.length > 0 ? (
+            <div className="grid-cols-4-res grid gap-8">
+              {recipes.map((recipe, index) => (
+                <RecipeCard recipe={recipe} key={recipe.id || index} />
+              ))}
+            </div>
+          ) : (
+            <div className="py-12 text-center">
+              <h2 className="mb-2 text-2xl font-semibold">No recipes found</h2>
+            </div>
+          )}
           <div className="mt-20">
-            <PaginationServer
-              totalPages={paginate.total}
-              currentPage={Number(searchParams.index) || 1}
-            />
+            <Pagination totalPages={totalPages} currentPage={pageIndex} />
           </div>
         </div>
       </main>

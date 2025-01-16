@@ -4,8 +4,7 @@ import { Fragment } from "react";
 // ** Components
 import QueryRecipe from "./QueryRecipe";
 import RecipeCard from "@/components/RecipeCard";
-import PaginationServer from "@/components/Pagination/PaginationServer";
-import Repeat from "@/components/Repeat";
+import Pagination from "@/components/Pagination";
 import Breadcrumb from "@/components/Breadcrumb";
 
 // ** Services
@@ -17,8 +16,27 @@ type Props = {
 };
 
 export default async function RecipesListPage({ searchParams }: Props) {
-  const { data: recipes, paginate } = await getRecipeList();
-  console.log("🚀 ~ RecipesListPage ~ recipes:", recipes);
+  const breadcrumbItems: {
+    title: string;
+    href?: string;
+  }[] = [
+    { title: "Home", href: "/" },
+    { title: "Recipes", href: "/recipes" },
+  ];
+
+  if (searchParams.chefId && searchParams.chefName) {
+    breadcrumbItems.push({
+      title: `${searchParams.chefName}'s Recipe`,
+    });
+  }
+
+  const pageIndex = Number(searchParams.index);
+  const { data: recipes, paginate } = await getRecipeList({
+    index: searchParams.index || "1",
+    sortOrder: searchParams.sortOrder || "desc",
+    size: "9",
+    ...searchParams,
+  });
 
   // const recipes = [
   //   {
@@ -56,6 +74,7 @@ export default async function RecipesListPage({ searchParams }: Props) {
   //   },
   // ];
 
+  console.log("🚀 ~ RecipesListPage ~ recipes:", recipes);
   return (
     <Fragment>
       <section className="relative max-w-full bg-recipes-banner bg-cover bg-center bg-no-repeat">
@@ -73,32 +92,22 @@ export default async function RecipesListPage({ searchParams }: Props) {
           </div>
         </div>
       </section>
+
       <main className="bg-background py-12">
         <div className="container">
           <div className="mb-4">
-            <Breadcrumb
-              items={[
-                { title: "Home", href: "/" },
-                { title: "Recipes", href: "/recipes" },
-              ]}
-            />
+            <Breadcrumb items={breadcrumbItems} />
           </div>
           <div className="mb-6 py-4 pt-3">
             <QueryRecipe />
           </div>
           <div className="grid-cols-3-res grid gap-8">
-            {/* {recipes.map((recipe, index) => (
-            
-            ))} */}
-            <Repeat times={6}>
-              <RecipeCard recipe={recipes[0]} />
-            </Repeat>
+            {recipes.map((recipe, index) => (
+              <RecipeCard recipe={recipe} key={index} />
+            ))}
           </div>
           <div className="mt-20">
-            <PaginationServer
-              totalPages={paginate.total}
-              currentPage={Number(searchParams.index) || 1}
-            />
+            <Pagination totalPages={paginate.total} currentPage={pageIndex} />
           </div>
         </div>
       </main>

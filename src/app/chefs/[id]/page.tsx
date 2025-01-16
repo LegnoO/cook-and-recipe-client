@@ -10,30 +10,39 @@ import RecipeCard from "@/components/RecipeCard";
 import { Button } from "@/components/ui/button";
 
 // ** Icons
-import { Facebook, Instagram, Linkedin } from "@/components/ui/icons";
 import { MoveUpRight } from "lucide-react";
-import { getChefDetail, getOwnRecipe } from "@/services/server/chefService";
+import { Facebook, Instagram, Linkedin } from "@/components/ui/icons";
+
+// ** Services
+import {
+  getChefDetail,
+  // getChefList,
+  getOwnRecipe,
+} from "@/services/server/chefService";
 
 // ** Types
 type Props = {
   params: { id: string };
 };
 
-export async function generateStaticParams() {
-  console.log("generateStaticParams");
-  return [
-    {
-      id: "test",
-    },
-  ];
-}
+// export async function generateStaticParams() {
+//   const { data: chefs } = await getChefList({
+//     index: "1",
+//     sortOrder: "desc",
+//     size: "100000",
+//   });
+
+//   return chefs.map((chef) => ({
+//     id: chef.id,
+//   }));
+// }
 
 export async function generateMetadata({ params }: Props) {
   const chef = await getChefDetail(params.id);
 
   if (!chef) {
     return {
-      title: "Chef Not Found",
+      title: "Chef not found",
     };
   }
 
@@ -47,7 +56,6 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function SingleChefPage({ params }: Props) {
-  console.log("🚀 ~ SingleChefPage ~ params:", params);
   const chef = await getChefDetail(params.id);
   const { data: recipes } = await getOwnRecipe(params.id);
 
@@ -109,15 +117,16 @@ export default async function SingleChefPage({ params }: Props) {
             <h2 className="text-4xl font-bold tracking-wider lg:text-3xl">
               {`${chef.userInfo.fullName}'s`} Recipes
             </h2>
-            <Link href="/chefs">
+            <Link
+              href={`/recipes?chefId=${params.id}&chefName=${chef.userInfo.fullName}`}>
               <Button>
                 View more
                 <MoveUpRight />
               </Button>
             </Link>
           </div>
-          <div className="grid-cols-3-res gap-8">
-            {(recipes as Recipe[]).map((recipe, index) => (
+          <div className="grid-cols-4-res gap-6">
+            {recipes.map((recipe, index) => (
               <RecipeCard recipe={recipe} key={index} />
             ))}
           </div>

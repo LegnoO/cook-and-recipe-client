@@ -15,7 +15,7 @@ type Props = {
   currentPage: number;
 };
 
-const PaginationServer = ({ totalPages, currentPage }: Props) => {
+const Pagination = ({ totalPages, currentPage }: Props) => {
   const firstPage = 1;
   const maxVisiblePages = 7;
   const linkClass =
@@ -137,6 +137,6 @@ const PaginationServer = ({ totalPages, currentPage }: Props) => {
     </nav>
   );
 };
-export default PaginationServer;
+export default Pagination;
 
-PaginationServer.displayName = "Pagination Server";
+Pagination.displayName = "Pagination Server";

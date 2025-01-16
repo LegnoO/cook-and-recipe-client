@@ -1,6 +1,9 @@
 // ** Lib
 import clientFetch from "@/lib/clientFetch";
 
+// **  Utils
+import { createSearchParams, getTruthyObject } from "@/utils";
+
 export async function createRecipe(formData: FormData) {
   const response = await clientFetch("/recipe/owned", {
     method: "POST",
@@ -59,4 +62,39 @@ export async function getCategories() {
 
   const categoryData: Category[] = await response.json();
   return categoryData;
+}
+
+export async function getRecipeBookmarkList(
+  searchParams: SearchParams,
+): Promise<RecipeListResponse> {
+  const params = createSearchParams(getTruthyObject(searchParams || {}));
+
+  const response = await clientFetch(
+    // `/recipe/public/find/bookmarked?${params.toString()}`,
+    `/recipe/public/find/bookmarked?index=1&size=10&sortOrder=desc`,
+  );
+
+  const recipeData = await response.json();
+  return recipeData;
+}
+
+export async function getPublicRecipes(
+  params: string,
+): Promise<RecipeListResponse> {
+  // const params = createSearchParams(getTruthyObject(searchParams || {}));
+
+  const response = await clientFetch(`/recipe/public/find?${params}`);
+  const recipeData = await response.json();
+  return recipeData;
+}
+
+export async function toggleRecipeBookmark(recipeId: string) {
+  const response = await clientFetch(
+    `/recipe/public/find/${recipeId}/bookmark`,
+    {
+      method: "PATCH",
+    },
+  );
+
+  return await response.json();
 }

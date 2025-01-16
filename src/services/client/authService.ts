@@ -2,6 +2,13 @@
 import clientFetch from "@/lib/clientFetch";
 import { setCookie } from "@/utils/cookies";
 
+export async function getUserProfile() {
+  const response = await clientFetch(`/users/owned/profile`, { method: "GET" });
+
+  const userInfo = await response.json();
+  return userInfo;
+}
+
 export async function login({ email, password, rememberMe }: LoginCredentials) {
   const response = await clientFetch(`/auth/public/login`, {
     method: "POST",

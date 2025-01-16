@@ -1,36 +1,65 @@
-// ** Lib
-import serverFetch from "@/lib/serverFetch";
+// ** Next Imports
+import { notFound } from "next/navigation";
 
-export async function getChefDetail(id: string): Promise<Chef> {
-  const response = await serverFetch(`/chefs/public/find/${id}`);
+// ** Utils
+import { createSearchParams, getTruthyObject } from "@/utils";
 
-  const recipeData = await response.json();
-  return recipeData;
+// ** Config
+import { API_BASE_URL } from "@/config/endpoint";
+
+export async function getChefDetail(chefId: string) {
+  const res = await fetch(`${API_BASE_URL}/chefs/public/find/${chefId}`);
+
+  if (!res.ok) {
+    const error = await res.json();
+
+    throw new Error(
+      `Failed to fetch recipe: ${error.statusCode}. ${error.error}. ${error.message}`,
+    );
+  }
+
+  const data: Chef = await res.json();
+  if (!data) notFound();
+
+  return data;
 }
 
-export async function getChefList(): Promise<ChefListResponse> {
-  const response = await serverFetch(
-    `/chefs/public/find?index=1&size=10&sortOrder=asc`,
+export async function getChefList(searchParams: SearchParams) {
+  const params = createSearchParams(getTruthyObject(searchParams || {}));
+
+  const res = await fetch(
+    `${API_BASE_URL}/chefs/public/find?${params.toString()}`,
   );
 
-  const recipeData = await response.json();
-  return recipeData;
+  if (!res.ok) {
+    const error = await res.json();
+
+    throw new Error(
+      `Failed to fetch chefs: ${error.statusCode}. ${error.error}. ${error.message}`,
+    );
+  }
+
+  const data: ChefListResponse = await res.json();
+  if (!data) notFound();
+
+  return data;
 }
 
-export async function getAllChef(): Promise<ChefListResponse> {
-  const response = await serverFetch(
-    `/chefs/public/find?index=1&size=10000&sortOrder=asc`,
+export async function getAllChef() {
+  const res = await fetch(
+    `${API_BASE_URL}/chefs/public/find?index=1&size=10000&sortOrder=asc`,
   );
 
-  const recipeData = await response.json();
-  return recipeData;
-}
+  if (!res.ok) {
+    const error = await res.json();
 
-export async function getOwnRecipe(id: string): Promise<RecipeListResponse> {
-  const response = await serverFetch(
-    `/recipe/public/find?index=1&size=10&sortOrder=desc&chefId=${id}`,
-  );
+    throw new Error(
+      `Failed to fetch chefs: ${error.statusCode}. ${error.error}. ${error.message}`,
+    );
+  }
 
-  const recipeData = await response.json();
-  return recipeData;
+  const data: ChefListResponse = await res.json();
+  if (!data) notFound();
+
+  return data;
 }

@@ -1,3 +1,8 @@
+"use client";
+
+// ** React Imports
+import { useState, startTransition, useRef } from "react";
+
 // ** Next Imports
 import Link from "next/link";
 
@@ -8,48 +13,88 @@ import { Card } from "@/components/ui/card";
 
 // ** Components
 import { getCharInitials } from "@/utils";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import Rating from "@/components/Rating";
+
+// ** Hooks
+import { useToast } from "@/hooks/useToast";
+
+// ** Actions
+import { postReviewAction } from "@/app/actions";
 
 // ** Types
 type Props = {
+  recipeDetail: RecipeDetails;
   commentIndex: number;
 };
-const Comment = ({ commentIndex }: Props) => {
-  // const commentLength = 4;
+const Comment = ({ recipeDetail, commentIndex }: Props) => {
+  const commentRef = useRef<HTMLTextAreaElement>(null);
+  const [rating, setRating] = useState<number | null>(null);
+
+  const { toast } = useToast();
+  const commentLength = 4;
+
+  async function handlePostReview() {
+    if (!rating || !commentRef.current!.value) {
+      toast({
+        variant: "destructive",
+        title: "Incomplete Information!",
+        description:
+          "Please select a rating and write a review before submitting.",
+      });
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await postReviewAction(
+        {
+          recipeId: recipeDetail.id,
+          message: commentRef.current!.value,
+          rating,
+        },
+        "/",
+      );
+      if (result.success) {
+        toast({
+          variant: "successful",
+          title: "Review submitted successfully!",
+          description: "Thank you for your feedback.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: result.message || "An error has occurred",
+        });
+      }
+    });
+  }
 
   const CommentForm = () => {
     return (
       <Card className="bg-secondary p-4">
-        <h3 className="mb-4 font-medium">Add Your Review</h3>
-        <form className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex gap-1">
-              {[1, 2, 3, 4, 5].map((rating) => (
-                <button
-                  key={rating}
-                  type="button"
-                  className="text-muted-foreground transition-colors hover:text-primary">
-                  <svg
-                    className="h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor">
-                    <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
-                  </svg>
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="space-y-4">
+          <Rating defaultValue={rating} onChange={setRating} />
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Your Comment</label>
-            <textarea
-              className="min-h-[100px] w-full rounded-md border bg-background p-3"
+            <Label htmlFor="comment">Your Comment</Label>
+            <Textarea
+              id="comment"
+              ref={commentRef}
               placeholder="Share your experience with this recipe..."
+              className="min-h-[100px] resize-none bg-background"
+              rows={4}
+              maxLength={500}
             />
           </div>
-
-          <Button className="w-full sm:w-auto">Submit Review</Button>
-        </form>
+          <Button
+            type="button"
+            onClick={handlePostReview}
+            className="w-full sm:w-auto">
+            Submit Review
+          </Button>
+        </div>
       </Card>
     );
   };
@@ -97,22 +142,14 @@ const Comment = ({ commentIndex }: Props) => {
 
   return (
     <Card className="border-none p-0 shadow-none">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl font-semibold">Comments</h2>
         <div className="flex items-center gap-2">
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <svg
-                key={star}
-                className="h-5 w-5 fill-primary"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
-                <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
-              </svg>
-            ))}
-          </div>
-          <span className="text-lg font-medium">4.8</span>
-          <span className="text-muted-foreground">(124 reviews)</span>
+          <Rating defaultValue={recipeDetail.rating} disableSelect readOnly />
+          <span className="text-lg font-medium">
+            {`(${recipeDetail.rating || 0})`}
+          </span>
+          {/* <span className="text-muted-foreground">(124 reviews)</span> */}
         </div>
       </div>
 

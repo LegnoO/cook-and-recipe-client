@@ -1,13 +1,16 @@
 "use client";
 
 // ** React Imports
-import { Fragment } from "react";
+import { useState, Fragment } from "react";
 
 // ** Next Imports
 import Image from "next/image";
 import Link from "next/link";
 
 // ** Components
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { ToastAction } from "@/components/ui/toast";
 import { Card, CardHeader } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -28,10 +31,18 @@ import {
   MoreHorizontal,
   Pencil,
   Trash,
+  Loader2,
 } from "lucide-react";
 
+// ** Hooks
+import { useToast } from "@/hooks/useToast";
+
 // ** Services
-import { requestVerifyRecipe } from "@/services/client/recipeService";
+import {
+  requestVerifyRecipe,
+  toggleRecipeBookmark,
+} from "@/services/client/recipeService";
+import Rating from "@/components/Rating";
 
 // ** Types
 type Props = {
@@ -39,9 +50,11 @@ type Props = {
   refetch: () => void;
 };
 
-const OwnRecipeCard = ({ recipe, refetch }: Props) => {
+const OwnRecipeCard = ({ refetch, recipe }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
   console.log("🚀 ~ OwnRecipeCard ~ recipe:", recipe);
-  const infoContact = [
+  const contactInfo = [
     {
       icon: <Clock className="h-4 w-4" />,
       value: <span>{recipe.timeToCook} mins</span>,
@@ -57,8 +70,20 @@ const OwnRecipeCard = ({ recipe, refetch }: Props) => {
   ];
 
   async function togglePublish() {
-    await requestVerifyRecipe(recipe.id);
-    refetch();
+    try {
+      setIsLoading(true);
+      // await requestVerifyRecipe(recipe.id);
+      refetch();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          error instanceof Error ? error.message : "An error has occurred",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -77,10 +102,7 @@ const OwnRecipeCard = ({ recipe, refetch }: Props) => {
       <div className="p-4">
         <div className="flex items-center justify-between">
           <p className="mb-1 text-sm font-medium text-primary">Beverages</p>
-          <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
-            <span className="text-sm font-medium">4.5</span>
-          </div>
+          <Rating disableSelect defaultValue={recipe.rating} readOnly />
         </div>
         <h3 className="mb-2 line-clamp-1 text-xl font-semibold">
           {recipe.name}
@@ -88,8 +110,8 @@ const OwnRecipeCard = ({ recipe, refetch }: Props) => {
         <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">
           {recipe.description}
         </p>
-        <div className="flex flex-wrap justify-between gap-2">
-          {infoContact.map((item, index) => (
+        <div className="flex flex-wrap gap-4.5">
+          {contactInfo.map((item, index) => (
             <div
               key={index}
               className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -98,15 +120,22 @@ const OwnRecipeCard = ({ recipe, refetch }: Props) => {
             </div>
           ))}
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <StatusAction
-            togglePublish={togglePublish}
-            verifyStatus={recipe.verifyStatus}
-            status={recipe.status}
-          />
+        <div className="mt-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Switch
+              disabled={isLoading}
+              checked={recipe.status}
+              onCheckedChange={togglePublish}
+            />
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            ) : (
+              <Label>{recipe.status ? "Public" : "Private"}</Label>
+            )}
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <MoreHorizontal className="h-6 w-6" />
+              <MoreHorizontal className="h-5 w-5 cursor-pointer text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <Link href={`/recipes/${recipe.id}/edit`}>

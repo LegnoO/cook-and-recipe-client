@@ -1,11 +1,8 @@
 // ** Lib
 import clientFetch from "@/lib/clientFetch";
-import { createSearchParams } from "@/utils";
 
-export async function getRecipeOwned(
-  queryOptions: QueryOptions<{ name: string }>,
-) {
-  const params = createSearchParams(queryOptions);
+export async function getRecipeOwned(params: string) {
+  console.log("🚀 ~ getRecipeOwned ~ params:", params);
   const response = await clientFetch(`/recipe/owned/find?${params}`);
   return await response.json();
 }

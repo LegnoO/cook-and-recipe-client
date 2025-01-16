@@ -48,7 +48,9 @@ export default async function clientFetch(
           await refreshUser();
           return await performFetch();
         } catch {
-          window.location.replace("/login");
+          if (window.location.pathname !== "/login") {
+            window.location.replace("/login");
+          }
         }
       }
 

@@ -19,8 +19,12 @@ import { getCategories } from "@/services/server/categoryService";
 import { getRecipeList } from "@/services/server/recipeService";
 
 export default async function Home() {
-  const { data: recipes } = await getRecipeList();
   const categories = await getCategories();
+  const { data: recipes } = await getRecipeList({
+    index: "1",
+    size: "4",
+    sortOrder: "desc",
+  });
 
   return (
     <Fragment>
@@ -66,7 +70,7 @@ export default async function Home() {
                   family recipes to modern fusion dishes, every meal has a story
                   to tell.
                 </p>
-                <Button>Create new Recipe</Button>
+                <Button size="lg">Create new Recipe</Button>
               </div>
             </div>
           </div>
@@ -101,7 +105,7 @@ export default async function Home() {
             </Link>
           </div>
           <div className="grid-cols-3-res gap-8">
-            {(recipes as Recipe[]).map((recipe, index) => (
+            {recipes.map((recipe, index) => (
               <RecipeCard recipe={recipe} key={index} />
             ))}
           </div>

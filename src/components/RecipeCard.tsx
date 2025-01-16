@@ -1,3 +1,8 @@
+"use client";
+
+// ** React Imports
+import { useState, useTransition } from "react";
+
 // ** Next Imports
 import Image from "next/image";
 import Link from "next/link";
@@ -5,14 +10,37 @@ import Link from "next/link";
 // ** Components
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import BookMarkButton from "./BookMarkButton";
-
-// ** Icons
 import Rating from "./Rating";
+
+// ** Actions
+import { toggleRecipeBookmarkAction } from "@/app/actions";
+
+// ** Hooks
+import { useToast } from "@/hooks/useToast";
 
 // ** Types
 type Props = { recipe: Recipe | RecipeDetails };
 
 export default function RecipeCard({ recipe }: Props) {
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  const [isBookmarked, setIsBookmarked] = useState(recipe.bookmarked);
+
+  async function handleToggleBookmark() {
+    startTransition(async () => {
+      const result = await toggleRecipeBookmarkAction(recipe.id, "/");
+      if (result.success) {
+        setIsBookmarked((prev) => !prev);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: result.message || "An error has occurred",
+        });
+      }
+    });
+  }
+
   // const fake_data = [
   //   {
   //     name: "Quick Chicken Piccata",
@@ -49,9 +77,11 @@ export default function RecipeCard({ recipe }: Props) {
   // ];
 
   return (
-    <Link href={`/recipes/${recipe.id}`} className="group">
-      <Card className="overflow-hidden rounded-none border-none shadow-none">
-        <CardHeader className="relative aspect-[1/0.68] overflow-hidden rounded-lg p-0">
+    <Card className="overflow-hidden rounded-none border-none shadow-none">
+      <CardHeader className="relative rounded-lg p-0">
+        <Link
+          className="relative aspect-[1/0.68] overflow-hidden"
+          href={`/recipes/${recipe.id}`}>
           <Image
             className="h-full w-full rounded-lg object-cover transition-transform duration-300 ease-in-out hover:scale-105"
             width={384}
@@ -62,10 +92,16 @@ export default function RecipeCard({ recipe }: Props) {
             }
             alt={recipe.name}
           />
+        </Link>
 
-          <BookMarkButton />
-        </CardHeader>
-        <CardContent className="px-0 pb-4 pt-5">
+        <BookMarkButton
+          isLoading={isPending}
+          onClick={handleToggleBookmark}
+          bookmarked={isBookmarked}
+        />
+      </CardHeader>
+      <CardContent className="px-0 pb-4 pt-5">
+        <Link href={`/recipes/${recipe.id}`}>
           <div className="flex flex-col">
             <div className="mb-2 flex items-center justify-between">
               <h3 className="line-clamp-1 w-full text-sm font-semibold uppercase tracking-[1.90px] lg:text-base">
@@ -82,8 +118,8 @@ export default function RecipeCard({ recipe }: Props) {
               {recipe.category.name}
             </p>
           </div>
-        </CardContent>
-      </Card>
-    </Link>
+        </Link>
+      </CardContent>
+    </Card>
   );
 }

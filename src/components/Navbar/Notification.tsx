@@ -16,7 +16,7 @@ import Repeat from "@/components/Repeat";
 import { Scroll } from "@/components/Scroll";
 
 // ** Icons
-import { Bell, CheckCheck } from "lucide-react";
+import { Bell } from "lucide-react";
 
 // ** Config
 
@@ -70,15 +70,18 @@ const Notification = () => {
 
   const MessageItem = () => {
     return (
-      <div className="cursor-pointer border-b border-l-3 border-l-primary p-3 transition-colors hover:bg-secondary/80">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-medium leading-none">Meeting reminder</p>
-            <p className="text-xs text-muted-foreground">1 hour ago</p>
+      <div className="cursor-pointer p-3 transition-colors hover:bg-secondary/80 [&:not(:last-child)]:border-b">
+        <div className="relative flex flex-col gap-1">
+          <div className="flex flex-col">
+            <p className="mb-1 text-sm font-medium leading-none">
+              Meeting reminder
+            </p>
+            <p className="mb-2 text-sm text-muted-foreground">
+              Team meeting in 30 minutes
+            </p>
+            <p className="text-sm text-placeholder">1 hour ago</p>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Team meeting in 30 minutes
-          </p>
+          <div className="absolute right-0 top-0 h-2 w-2 rounded-full bg-primary" />
         </div>
       </div>
     );
@@ -93,18 +96,19 @@ const Notification = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0">
-        <div className="border-b px-3 py-2">
-          <h3 className="text-base font-semibold lg:text-lg">Notifications</h3>
-        </div>
-        <Scroll className="max-h-[calc(100vh-200px)]">
-          <Repeat times={20}>
-            <MessageItem />
-          </Repeat>
-        </Scroll>
-        <div className="px-4 py-2">
-          <div className="flex cursor-pointer items-center justify-end gap-2">
-            <CheckCheck className="h-4 w-4 text-primary" />
-            <span className="text-sm">Mark all as read</span>
+        <div className="min-w-72">
+          <div className="border-b px-3.5 py-3">
+            <h3 className="text-sm font-medium lg:text-base">Notifications</h3>
+          </div>
+          <Scroll className="max-h-[calc(100vh-200px)]">
+            <Repeat times={4}>
+              <MessageItem />
+            </Repeat>
+          </Scroll>
+          <div className="border-t p-3.5">
+            <Button className="h-7 w-full px-3.5 py-1.5">
+              View All Notifications
+            </Button>
           </div>
         </div>
       </PopoverContent>

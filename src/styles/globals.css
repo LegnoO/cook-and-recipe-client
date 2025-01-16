@@ -34,6 +34,7 @@
     --info: 199 88.7% 48.4%;
     --info-foreground: 0 0% 98%;
 
+    --placeholder: 220 6% 47%;
     --border: 0 0% 88%;
     --input: 0 0% 88%;
     --ring: 0 0% 0%;
@@ -52,17 +53,12 @@
     @apply border-border;
   }
 
-  html,
-  body {
+  html {
     overflow-x: hidden;
   }
+
   body {
     @apply overflow-auto bg-background font-raleway text-foreground;
-  }
-
-  body:has(.loading-screen),
-  body:has([role="dialog"]) {
-    /* overflow-y: hidden; */
   }
 
   p,
@@ -138,6 +134,9 @@
     @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3;
   }
 
+  .grid-cols-2-res {
+    @apply grid grid-cols-1 sm:grid-cols-2;
+  }
   .rounded-inherit {
     border-radius: inherit;
   }

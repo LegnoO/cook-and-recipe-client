@@ -21,33 +21,31 @@ export default async function serverFetch(
     ...(options.headers || undefined),
   };
 
-  async function performFetch() {
-    const cookieStore = cookies();
+  const cookieStore = cookies();
 
-    const accessToken = cookieStore.get("accessToken")?.value;
+  const accessToken = cookieStore.get("accessToken")?.value;
 
-    if (accessToken)
-      options.headers!["Authorization"] = `Bearer ${accessToken}`;
+  if (accessToken) options.headers!["Authorization"] = `Bearer ${accessToken}`;
 
-    const response = await fetch(fullUrl, options);
+  const response = await fetch(fullUrl, options);
 
-    if (!response.ok) {
-      console.log({ fullUrl, error: await response.json() });
-      if (response.status === 401) {
-        redirect("/session");
-      }
-
-      if (response.status === 404 || response.status === 500) {
-        notFound();
-      }
+  if (!response.ok) {
+    console.log({ accessToken, fullUrl, error: await response.json() });
+    if (response.status === 401) {
+      redirect("/session");
     }
 
-    return response;
+    if (response.status === 404 || response.status === 500) {
+      notFound();
+    }
   }
 
-  try {
-    return await performFetch();
-  } catch (error) {
-    throw error;
-  }
+  return response;
+
+  // try {
+  //   console.log("alo alo");
+  //   return await performFetch();
+  // } catch (error) {
+  //   throw error;
+  // }
 }

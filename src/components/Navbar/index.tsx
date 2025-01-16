@@ -133,7 +133,7 @@ const Navbar = () => {
     <header className={getNavbarClasses()}>
       <nav className={cn("container flex h-full items-center justify-between")}>
         <Link
-          href="/wishlist"
+          href="/recipes/bookmark"
           className="flex items-center gap-2 whitespace-nowrap">
           <Logo
             className={cn("text-background", {

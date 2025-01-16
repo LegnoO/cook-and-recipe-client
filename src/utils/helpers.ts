@@ -111,3 +111,16 @@ export function calculateDaysAgo(dateString: string) {
   const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));
   return differenceInDays;
 }
+
+export function getTruthyObject(obj: Record<string, unknown>) {
+  const result: Record<string, unknown> = {};
+
+  Object.keys(obj).forEach((key) => {
+    const value = obj[key];
+    if (value) {
+      result[key] = value;
+    }
+  });
+
+  return result;
+}

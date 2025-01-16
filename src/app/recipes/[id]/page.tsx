@@ -2,14 +2,16 @@
 import { Fragment } from "react";
 
 // ** Next Imports
+import { cookies } from "next/headers";
 import Image from "next/image";
+import Link from "next/link";
 
 // ** Components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import ImageGallery from "./ImageGallery";
 import { Label } from "@/components/ui/label";
+import ImageGallery from "./ImageGallery";
 import RecipeCard from "@/components/RecipeCard";
 import Comment from "./Comment";
 
@@ -39,14 +41,54 @@ type Props = {
   searchParams: SearchParams;
 };
 
+// export async function generateStaticParams() {
+//   const { data: recipes } = await getRecipeList({
+//     index: "1",
+//     sortOrder: "desc",
+//     size: "100000",
+//   });
+
+//   return recipes.map((recipe) => ({
+//     id: recipe.id,
+//   }));
+// }
+
+export async function generateMetadata({ params }: Props) {
+  const recipe = await getRecipeDetails(params.id);
+
+  if (!recipe) {
+    return {
+      title: "Recipe not found",
+    };
+  }
+
+  return {
+    title: `${recipe.name}`,
+    description: recipe.description,
+    openGraph: {
+      images: [{ url: recipe.imageUrls[0] }],
+    },
+  };
+}
+
 export default async function RecipeDetailPage({
   params,
   searchParams,
 }: Props) {
-  const { data: recipes } = await getRecipeList();
-  const recipeDetail = await getRecipeDetails(params.id);
-  console.log("🚀 ~ recipeDetail:", recipeDetail);
-  const commentIndex = searchParams.comment;
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const recipeDetail = await getRecipeDetails(params.id, accessToken);
+  // console.log("🚀 ~ recipeDetail:", recipeDetail);
+  console.log("RecipeDetailPage");
+  const { data: recipesResponse } = await getRecipeList({
+    index: "1",
+    size: "3",
+    sortOrder: "desc",
+    chefId: recipeDetail.createdBy.id,
+  });
+
+  const recipes = recipesResponse.filter((recipe) => recipe.id !== params.id);
+  const commentIndex = Number(searchParams.comment);
 
   // const _s = {
   //   id: "670ed5fe95ce989ba6a00276",
@@ -221,38 +263,57 @@ export default async function RecipeDetailPage({
       <section className="bg-background pb-28 pt-12">
         <div className="container flex flex-col gap-20 lg:flex-row">
           <div className="w-full lg:w-[65%]">
-            <div className="lined-paper-background rounded-lg px-6 pb-8 pt-5 shadow-md">
+            <div className="lined-paper-background flex h-full flex-col rounded-lg px-6 pb-8 pt-5 shadow-md">
               <h2 className="mb-4.5 flex items-center gap-2 text-2xl font-semibold">
                 <span>
                   <ChefHat />
                 </span>
                 <span>Cooking Instructions</span>
               </h2>
-              <div className="flex flex-col pb-10 [&:has(p.a)]:bg-red-500">
-                {recipeDetail.instructionSections.map(
-                  (instructionSection, index) => (
-                    <div className="mb-5" key={index}>
-                      <h5 className="flex items-center gap-2 text-lg font-medium text-primary">
-                        {index + 1}.<span>{instructionSection.title}</span>
-                      </h5>
-                      <div className="ml-5 flex flex-col">
-                        {instructionSection.instructions.map(
-                          (instruction, index) => (
-                            <p
-                              key={index}
-                              className="flex gap-2 text-muted-foreground">
-                              <span className="whitespace-nowrap font-medium">
-                                Step {instruction.step}:
-                              </span>
-                              <span>{instruction.description}</span>
-                            </p>
-                          ),
-                        )}
+
+              {recipeDetail.instructionSections ? (
+                <div className="flex flex-col pb-8">
+                  {recipeDetail.instructionSections.map(
+                    (instructionSection, index) => (
+                      <div className="mb-5" key={index}>
+                        <h5 className="flex items-center gap-2 text-lg font-medium text-primary">
+                          {index + 1}.<span>{instructionSection.title}</span>
+                        </h5>
+                        <div className="ml-5 flex flex-col">
+                          {instructionSection.instructions.map(
+                            (instruction, index) => (
+                              <p
+                                key={index}
+                                className="flex gap-2 text-muted-foreground">
+                                <span className="whitespace-nowrap font-medium">
+                                  Step {instruction.step}:
+                                </span>
+                                <span>{instruction.description}</span>
+                              </p>
+                            ),
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ),
-                )}
-              </div>
+                    ),
+                  )}
+                </div>
+              ) : (
+                <div className="flex h-full items-center justify-center">
+                  <div className="space-y-4 text-center">
+                    <p className="text-muted-foreground">
+                      Please login to view the cooking instructions
+                    </p>
+                    <Link href="/login">
+                      <Button
+                        variant="default"
+                        size="lg"
+                        className="font-medium">
+                        Login to read
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="w-full lg:w-[35%]">
@@ -285,7 +346,7 @@ export default async function RecipeDetailPage({
 
       <section className="bg-background">
         <div className="container pb-32 pt-[75px]">
-          <h2 className="lgtext-3xl mb-6 flex items-center gap-2 text-2xl font-bold tracking-wider">
+          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold tracking-wider lg:text-3xl">
             SUBMITTED BY
           </h2>
           <div className="flex w-full items-stretch gap-4">
@@ -316,10 +377,12 @@ export default async function RecipeDetailPage({
                           innovative dishes that blend traditional techniques
                           with modern presentation.
                         </p>
-                        <Button className="mt-auto max-w-36">
-                          Read More
-                          <ChevronsRight className="ml-1 h-4 w-4" />
-                        </Button>
+                        <Link href={`/chefs/${recipeDetail.createdBy.id}`}>
+                          <Button className="mt-auto max-w-36">
+                            Read More
+                            <ChevronsRight className="ml-1 h-4 w-4" />
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -332,7 +395,10 @@ export default async function RecipeDetailPage({
 
       <section className="section-spacing bg-background">
         <div className="container">
-          <Comment commentIndex={Number(commentIndex) || 1} />
+          <Comment
+            recipeDetail={recipeDetail}
+            commentIndex={commentIndex || 1}
+          />
         </div>
       </section>
 
@@ -345,11 +411,17 @@ export default async function RecipeDetailPage({
             </span>
           </h3>
 
-          <div className="grid-cols-3-res gap-8">
-            {recipes.map((recipe, index) => (
-              <RecipeCard recipe={recipe} key={index} />
-            ))}
-          </div>
+          {recipes.length > 0 ? (
+            <div className="grid-cols-4-res gap-6">
+              {recipes.map((recipe, index) => (
+                <RecipeCard recipe={recipe} key={index} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-muted-foreground">
+              {"This chef hasn't published any other recipes yet."}
+            </p>
+          )}
         </div>
       </section>
     </Fragment>

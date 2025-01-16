@@ -70,7 +70,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userData = await fetchUserInfo();
         setUser(userData);
       } catch {
-        router.push("/");
+        if (window.location.pathname !== "/login") {
+          router.push("/");
+        }
         setUser(null);
       } finally {
         setAuthLoading(false);

@@ -1,12 +1,8 @@
-type RecipeListResponse = {
-  data: Recipe[];
-  paginate: Pagination;
-};
-
 type Recipe = {
   id: string;
   name: string;
   category: Category;
+  bookmarked: boolean;
   timeToCook: number;
   difficulty: RecipeDifficultyEnum;
   serves: number;
@@ -32,12 +28,14 @@ type RecipeDetails = {
   timeToCook: number;
   difficulty: string;
   serves: number;
+  bookmarked: boolean;
   imageUrls: string[];
   createdDate: string;
   description: string;
   ingredients: ingredients[];
-  instructionSections: Instruction[];
+  instructionSections?: Instruction[];
   createdBy: {
+    id: string;
     level: ChefLevel;
     startedDate: string;
     description: string;
@@ -61,6 +59,11 @@ type Instruction = {
     step: number;
     description: string;
   }[];
+};
+
+type RecipeListResponse = {
+  data: Recipe[];
+  paginate: Pagination;
 };
 
 type RecipeStatus = "public" | "private";

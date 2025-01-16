@@ -145,6 +145,7 @@ const config: Config = {
         "chefs-banner": "url('/images/chefs-banner.jpg')",
         footer:
           "url('https://res.cloudinary.com/dzl5ur69n/image/upload/v1728650985/fyvykb7kphju47xee51a.jpg')",
+        "404": "url('/images/404.jpg')",
       },
     },
   },

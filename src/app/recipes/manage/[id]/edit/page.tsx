@@ -3,6 +3,9 @@
 // ** React Imports
 import { useState, useEffect } from "react";
 
+// ** Next Imports
+import { notFound } from "next/navigation";
+
 // ** Components
 import {
   Form,
@@ -115,7 +118,11 @@ type ListImage = {
 export default function UpdateRecipePage({ params }: Props) {
   const router = useRouter();
   const [recipeStatus, setRecipeStatus] = useState<RecipeStatus>("private");
-  const { data: recipeDetail } = useQuery({
+  const {
+    isLoading: fetchLoading,
+    data: recipeDetail,
+    isError,
+  } = useQuery({
     queryKey: ["recipe-detail-edit"],
     queryFn: () => fetchRecipeDetail(params.id),
     ...queryOptionsConfig,
@@ -138,7 +145,7 @@ export default function UpdateRecipePage({ params }: Props) {
   function handleRecipeStatusChange(value: RecipeStatus) {
     setRecipeStatus(value);
   }
-
+  console.log("🚀 ~ UpdateRecipePage ~ isError:", isError);
   async function handleRequestRecipeStatus() {
     if (!recipeDetail) {
       return;
@@ -207,6 +214,12 @@ export default function UpdateRecipePage({ params }: Props) {
   }
 
   useEffect(() => {
+    if (!recipeDetail && !fetchLoading && isError) {
+      router.push("/not-found");
+    }
+  }, [isError]);
+
+  useEffect(() => {
     if (recipeDetail) {
       form.reset({
         ...recipeDetail,
@@ -226,7 +239,7 @@ export default function UpdateRecipePage({ params }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipeDetail]);
 
-  if (!recipeDetail || isEmptyObject(form.getValues())) {
+  if (!recipeDetail || fetchLoading) {
     return (
       <div className="bg-background">
         <div className="container py-[calc(72px+30px)]">Load</div>

@@ -29,7 +29,14 @@ import { idStore } from "@/store/idStore";
 import { cn } from "@/utils";
 
 const Navbar = () => {
-  const animatedNavbarPaths = ["/", "/recipes", "/chefs", "/contact", "/about"];
+  const animatedNavbarPaths = [
+    "/",
+    "/recipes",
+    "/chefs",
+    "/contact",
+    "/about",
+    "/not-found",
+  ];
   const menuItems = [
     {
       label: "Home",

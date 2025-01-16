@@ -46,6 +46,7 @@ export async function getRecipeDetails(recipeId: string, accessToken?: string) {
 
   if (!res.ok) {
     const error = await res.json();
+    console.log("🚀 ~ getRecipeDetails ~ error:", error);
 
     throw new Error(
       `Failed to fetch recipes: ${error.statusCode}. ${error.error}. ${error.message}`,

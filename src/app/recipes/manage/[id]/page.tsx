@@ -31,6 +31,7 @@ export default async function RecipeDetailPage({ params }: Props) {
   if (!accessToken || !recipeDetail) {
     notFound();
   }
+
   const ImagePreview = ({ index, image }: { index: number; image: string }) => {
     return (
       <div className="relative h-[220px] w-full overflow-hidden rounded-lg border-2 border-dashed">

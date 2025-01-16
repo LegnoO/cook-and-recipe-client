@@ -11,6 +11,7 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 // ** Icons
 import { Facebook, Instagram, Linkedin } from "@/components/ui/icons";
@@ -19,11 +20,26 @@ import { Facebook, Instagram, Linkedin } from "@/components/ui/icons";
 type Props = { chef: Chef };
 
 const ChefCard = ({ chef }: Props) => {
+  const socialIcons = [
+    {
+      icon: <Facebook className="h-4 w-4" />,
+      href: "#",
+    },
+    {
+      icon: <Instagram className="h-4 w-4" />,
+      href: "#",
+    },
+    {
+      icon: <Linkedin className="h-4 w-4" />,
+      href: "#",
+    },
+  ];
+
   return (
     <Card className="border-none shadow-none">
       <CardHeader className="p-0">
         <Image
-          className="mx-auto aspect-square w-full rounded-md object-cover"
+          className="mx-auto aspect-square w-full rounded-full object-cover"
           width={200}
           height={200}
           src={
@@ -46,10 +62,21 @@ const ChefCard = ({ chef }: Props) => {
           {chef.description}
         </p>
       </CardContent>
-      <CardFooter className="justify-center gap-3 p-0 text-muted-foreground">
-        <Facebook size={18} />
-        <Instagram size={18} />
-        <Linkedin size={18} />
+      <CardFooter className="justify-center p-0">
+        <div className="flex gap-2">
+          {socialIcons.map((item, index) => (
+            <Button
+              key={index}
+              variant="outline"
+              size="icon"
+              asChild
+              className="hover:bg-background">
+              <Link scroll={false} href={item.href}>
+                {item.icon}
+              </Link>
+            </Button>
+          ))}
+        </div>
       </CardFooter>
     </Card>
   );

@@ -29,7 +29,7 @@ const Notification = () => {
   //   const accessToken = getCookieValue("accessToken");
 
   //   async function test() {
-  //     const testRes = await clientFetch("/notification/check-notification", {
+  //     const testRes = await fetcher("/notification/check-notification", {
   //       method: "GET",
   //     });
   //     console.log("🚀 ~ useEffect ~ test:", await testRes.json());

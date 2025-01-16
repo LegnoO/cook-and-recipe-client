@@ -132,7 +132,7 @@ export async function postReview({ recipeId, message, rating }: ReviewPayload) {
   return { rating: ratingData, feedback: feedbackData };
 }
 
-export async function getOwnRecipe(chefId: string) {
+export async function getOwnRecipes(chefId: string) {
   const res = await fetch(
     `${API_BASE_URL}/recipe/public/find?index=1&size=10&sortOrder=desc&chefId=${chefId}`,
   );

@@ -15,22 +15,24 @@ type Props = {
   searchParams: SearchParams;
 };
 
+interface BreadcrumbLinks {
+  title: string;
+  href?: string;
+}
+
 export default async function RecipesListPage({ searchParams }: Props) {
-  const breadcrumbItems: {
-    title: string;
-    href?: string;
-  }[] = [
+  const breadcrumbLinks: BreadcrumbLinks[] = [
     { title: "Home", href: "/" },
     { title: "Recipes", href: "/recipes" },
   ];
 
   if (searchParams.chefId && searchParams.chefName) {
-    breadcrumbItems.push({
+    breadcrumbLinks.push({
       title: `${searchParams.chefName}'s Recipe`,
     });
   }
 
-  const pageIndex = Number(searchParams.index);
+  const pageIndex = Number(searchParams.index) || 1;
   const { data: recipes, paginate } = await getRecipeList({
     index: searchParams.index || "1",
     sortOrder: searchParams.sortOrder || "desc",
@@ -93,24 +95,32 @@ export default async function RecipesListPage({ searchParams }: Props) {
         </div>
       </section>
 
-      <main className="bg-background py-12">
-        <div className="container">
-          <div className="mb-4">
-            <Breadcrumb items={breadcrumbItems} />
+      <section className="flex h-full min-h-screen flex-col bg-background py-16">
+        <div className="container flex flex-1 flex-col justify-between">
+          <div className="flex flex-1 flex-col">
+            <div className="mb-6">
+              <Breadcrumb items={breadcrumbLinks} />
+            </div>
+            <div className="mb-12 py-4 pt-3">
+              <QueryRecipe />
+            </div>
+            <div className="flex flex-1 items-center justify-center">
+              {recipes.length > 0 ? (
+                <div className="grid-cols-3-res grid gap-8">
+                  {recipes.map((recipe, index) => (
+                    <RecipeCard recipe={recipe} key={index} />
+                  ))}
+                </div>
+              ) : (
+                <p className="font-medium">No recipes found</p>
+              )}
+            </div>
           </div>
-          <div className="mb-6 py-4 pt-3">
-            <QueryRecipe />
-          </div>
-          <div className="grid-cols-3-res grid gap-8">
-            {recipes.map((recipe, index) => (
-              <RecipeCard recipe={recipe} key={index} />
-            ))}
-          </div>
-          <div className="mt-20">
+          <div className="mt-24">
             <Pagination totalPages={paginate.total} currentPage={pageIndex} />
           </div>
         </div>
-      </main>
+      </section>
     </Fragment>
   );
 }

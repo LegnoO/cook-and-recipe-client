@@ -14,28 +14,16 @@ import { MoveUpRight } from "lucide-react";
 import { Facebook, Instagram, Linkedin } from "@/components/ui/icons";
 
 // ** Services
-import {
-  getChefDetail,
-  // getChefList,
-  getOwnRecipe,
-} from "@/services/server/chefService";
+import { getChefDetail } from "@/services/server/chefService";
+
+import { getOwnRecipes } from "@/services/server/recipeService";
+import Breadcrumb from "@/components/Breadcrumb";
+import { Badge } from "@/components/ui/badge";
 
 // ** Types
 type Props = {
   params: { id: string };
 };
-
-// export async function generateStaticParams() {
-//   const { data: chefs } = await getChefList({
-//     index: "1",
-//     sortOrder: "desc",
-//     size: "100000",
-//   });
-
-//   return chefs.map((chef) => ({
-//     id: chef.id,
-//   }));
-// }
 
 export async function generateMetadata({ params }: Props) {
   const chef = await getChefDetail(params.id);
@@ -57,46 +45,84 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function SingleChefPage({ params }: Props) {
   const chef = await getChefDetail(params.id);
-  const { data: recipes } = await getOwnRecipe(params.id);
+  const { data: recipes } = await getOwnRecipes(params.id);
+
+  const socialIcons = [
+    {
+      icon: <Facebook className="h-4 w-4" />,
+      href: "#",
+    },
+    {
+      icon: <Instagram className="h-4 w-4" />,
+      href: "#",
+    },
+    {
+      icon: <Linkedin className="h-4 w-4" />,
+      href: "#",
+    },
+  ];
 
   return (
     <Fragment>
       <section className="py-16">
-        <div className="container flex flex-col items-center justify-center md:flex-row md:items-start md:gap-12">
-          <div className="mb-8">
-            <Image
-              className="mx-auto aspect-square h-[192px] rounded-lg object-cover"
-              width={192}
-              height={192}
-              src={
-                chef.userInfo.avatar ||
-                "https://res.cloudinary.com/dzl5ur69n/image/upload/v1733600651/yyhtnniclx0ja0n2pjhq.jpg"
-              }
-              alt={chef.userInfo.fullName}
+        <div className="container">
+          <div className="mb-6">
+            <Breadcrumb
+              items={[
+                { title: "Home", href: "/" },
+                { title: "Chefs", href: "/chefs" },
+                { title: `${chef.userInfo.fullName} Chef Information` },
+              ]}
             />
           </div>
+          <h1 className="mb-8 text-2xl font-bold md:text-3xl lg:text-4xl">
+            Chef Information
+          </h1>
 
-          <div className="flex flex-1 flex-col">
-            <div className="mb-5 flex-1 text-center md:text-left">
-              <h1 className="mb-4 text-4xl font-bold">
-                {chef.userInfo.fullName}
-              </h1>
-              <div className="mb-6 text-lg text-muted-foreground">
-                {chef.level}
-              </div>
+          <div className="flex flex-col lg:flex-row">
+            <div className="relative aspect-square w-[260px] lg:w-[340px]">
+              <Image
+                className="absolute h-full w-full rounded-lg object-cover"
+                fill
+                priority
+                src={
+                  chef.userInfo.avatar ||
+                  "https://res.cloudinary.com/dzl5ur69n/image/upload/v1733600651/yyhtnniclx0ja0n2pjhq.jpg"
+                }
+                alt={chef.userInfo.fullName}
+              />
             </div>
 
-            <div className="mb-8 flex gap-3 p-0 text-muted-foreground">
-              <Facebook size={18} />
-              <Instagram size={18} />
-              <Linkedin size={18} />
-            </div>
-            <div className="max-w-2xl">
-              <h2 className="mb-2 text-base font-medium tracking-widest lg:text-lg">
-                About me
-              </h2>
-              <p className="text-sm tracking-wider text-muted-foreground lg:text-base">
-                {`Lorem Ipsum is simply dummy text of the printing and typesetting
+            <div className="flex-1 p-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-3xl font-bold">
+                    {chef.userInfo.fullName}
+                  </h2>
+                  <Badge className="font-semibold" variant="secondary">
+                    {chef.level}
+                  </Badge>
+                </div>
+                <div className="flex gap-2">
+                  {socialIcons.map((item, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="icon"
+                      asChild
+                      className="hover:bg-background">
+                      <Link scroll={false} href={item.href}>
+                        {item.icon}
+                      </Link>
+                    </Button>
+                  ))}
+                </div>
+                <div className="space-y-2">
+                  <h2 className="text-base font-semibold tracking-widest lg:text-xl">
+                    About me
+                  </h2>
+                  <p className="text-sm leading-relaxed tracking-wider text-muted-foreground lg:text-base">
+                    {`Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley
                 of type and scrambled it to make a type specimen book. It has
@@ -106,7 +132,9 @@ export default async function SingleChefPage({ params }: Props) {
                 containing Lorem Ipsum passages, and more recently with desktop
                 publishing software like Aldus PageMaker including versions of
                 Lorem Ipsum.`}
-              </p>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -125,11 +153,17 @@ export default async function SingleChefPage({ params }: Props) {
               </Button>
             </Link>
           </div>
-          <div className="grid-cols-4-res gap-6">
-            {recipes.map((recipe, index) => (
-              <RecipeCard recipe={recipe} key={index} />
-            ))}
-          </div>
+          {recipes.length > 0 ? (
+            <div className="grid-cols-4-res gap-6">
+              {recipes.map((recipe, index) => (
+                <RecipeCard recipe={recipe} key={index} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-muted-foreground">
+              This chef hasn't published any other recipes yet.
+            </p>
+          )}
         </div>
       </section>
     </Fragment>

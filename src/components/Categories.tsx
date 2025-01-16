@@ -7,7 +7,7 @@ type Props = { category: Category };
 
 export default function RecipeCategories({ category }: Props) {
   return (
-    <Link href={`/recipes/category?=${category.id}`}>
+    <Link href={`/recipes/?categoryId=${category.id}`}>
       <div className="group flex flex-col items-center gap-8">
         <div className="aspect-square">
           <Image

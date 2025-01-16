@@ -17,7 +17,7 @@ import {
 import { UseFormReturn } from "react-hook-form";
 
 // ** Lib
-import clientFetch from "@/lib/clientFetch";
+import fetcher from "@/lib/fetcher";
 
 // ** Types
 import { FormValues } from "./page";
@@ -41,7 +41,7 @@ const CategorySelect = ({ form, onChange }: Props) => {
     async function fetchCategories() {
       try {
         setLoading(true);
-        const response = await clientFetch("/category/public/find", {
+        const response = await fetcher("/category/public/find", {
           method: "GET",
         });
         const data: Category[] = await response.json();

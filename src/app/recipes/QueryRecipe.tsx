@@ -84,7 +84,11 @@ const QueryRecipe = () => {
     }
 
     if (field === "categoryId") {
-      params.set("categoryId", value);
+      if (value === "all") {
+        params.delete("categoryId");
+      } else {
+        params.set("categoryId", value);
+      }
     }
     router.push(`?${params.toString()}`, {
       scroll: false,

@@ -1,6 +1,9 @@
 // ** React Imports
 import { Fragment } from "react";
 
+// ** Next Imports
+import Link from "next/link";
+
 // ** Components
 import {
   Breadcrumb as BreadcrumbComponent,
@@ -24,7 +27,7 @@ const Breadcrumb = ({ items }: Props) => {
           items.length !== index + 1 ? (
             <Fragment key={index}>
               <BreadcrumbItem>
-                <BreadcrumbLink href={item.href}>{item.title}</BreadcrumbLink>
+                <Link href={item.href || "#"}>{item.title}</Link>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
             </Fragment>

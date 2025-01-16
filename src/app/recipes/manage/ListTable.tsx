@@ -1,11 +1,11 @@
 "use client";
 
 // ** React Imports
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // ** Next Imports
-import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 // ** Components
 import {
@@ -29,7 +29,7 @@ import Rating from "@/components/Rating";
 import { queryOptionsConfig } from "@/config/useQueryOptions";
 
 // ** Services
-import { getOwnRecipe } from "@/services/server/chefService";
+import { getOwnRecipes } from "@/services/server/recipeService";
 
 const ListTable = () => {
   const [chefRecipe, setChefRecipe] = useState<Recipe[] | null>(null);
@@ -53,7 +53,7 @@ const ListTable = () => {
     refetch,
   } = useQuery({
     queryKey: ["recipe-owned", searchParams.toString()],
-    queryFn: () => getOwnRecipe(queryParams()),
+    queryFn: () => getOwnRecipes(queryParams()),
     ...queryOptionsConfig,
   });
 

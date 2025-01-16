@@ -351,10 +351,7 @@ export default function UpdateRecipePage({ params }: Props) {
                 </CardContent>
               </Card>
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Recipe Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-6 pt-6">
                   <AddIngredient form={form} />
                   <Separator />
                   <AddInstruction form={form} />

@@ -1,16 +1,16 @@
 // ** Lib
-import clientFetch from "@/lib/clientFetch";
+import fetcher from "@/lib/fetcher";
 import { setCookie } from "@/utils/cookies";
 
 export async function getUserProfile() {
-  const response = await clientFetch(`/users/owned/profile`, { method: "GET" });
+  const response = await fetcher(`/users/owned/profile`, { method: "GET" });
 
   const userInfo = await response.json();
   return userInfo;
 }
 
 export async function login({ email, password, rememberMe }: LoginCredentials) {
-  const response = await clientFetch(`/auth/public/login`, {
+  const response = await fetcher(`/auth/public/login`, {
     method: "POST",
     body: JSON.stringify({
       email,
@@ -24,7 +24,7 @@ export async function login({ email, password, rememberMe }: LoginCredentials) {
 }
 
 export async function logout() {
-  const response = await clientFetch(`/auth/logout`, {
+  const response = await fetcher(`/auth/logout`, {
     method: "POST",
     credentials: "include",
   });
@@ -38,7 +38,7 @@ export async function register(newCredentials: {
   confirmPassword: string;
   fullName: string;
 }) {
-  const response = await clientFetch(`/auth/register`, {
+  const response = await fetcher(`/auth/register`, {
     method: "POST",
     body: JSON.stringify(newCredentials),
     credentials: "include",
@@ -48,7 +48,7 @@ export async function register(newCredentials: {
 }
 
 export async function fetchUserInfo() {
-  const response = await clientFetch("/users/owned/info", { method: "GET" });
+  const response = await fetcher("/users/owned/info", { method: "GET" });
 
   const userInfo = await response.json();
 
@@ -56,7 +56,7 @@ export async function fetchUserInfo() {
 }
 
 export async function requestReset(email: string) {
-  const response = await clientFetch("/auth/request-reset-password", {
+  const response = await fetcher("/auth/request-reset-password", {
     method: "POST",
     body: JSON.stringify({
       email,
@@ -67,7 +67,7 @@ export async function requestReset(email: string) {
 }
 
 export async function sendOtp(otp: string) {
-  const response = await clientFetch(`/auth/verify-otp/${otp}`, {
+  const response = await fetcher(`/auth/verify-otp/${otp}`, {
     method: "POST",
   });
 
@@ -83,7 +83,7 @@ export async function resetPassword({
   password: string;
   confirmPassword: string;
 }) {
-  const response = await clientFetch("/auth/reset-password", {
+  const response = await fetcher("/auth/reset-password", {
     method: "POST",
     body: JSON.stringify({ codeId, password, confirmPassword }),
   });
@@ -96,7 +96,7 @@ export async function refreshUser() {
     ? JSON.parse(localStorage.getItem("rememberMe")!)
     : false;
 
-  const response = await clientFetch(`/auth/refresh`, {
+  const response = await fetcher(`/auth/refresh`, {
     method: "POST",
     body: JSON.stringify({
       rememberMe,

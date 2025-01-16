@@ -16,13 +16,15 @@ type Props = {
 };
 
 export default async function ChefsPage({ searchParams }: Props) {
-  const pageIndex = Number(searchParams.index);
+  const pageIndex = Number(searchParams.index) || 1;
   const { data: chefs, paginate } = await getChefList({
     index: searchParams.index || "1",
     sortOrder: searchParams.sortOrder || "asc",
     size: "8",
     ...searchParams,
   });
+
+  const breadcrumbLinks = [{ title: "Home", href: "/" }, { title: "Chefs" }];
 
   return (
     <Fragment>
@@ -41,44 +43,30 @@ export default async function ChefsPage({ searchParams }: Props) {
           </div>
         </div>
       </section>
-      <section className="bg-background">
-        <div className="flex h-full min-h-screen flex-col py-16">
-          <div className="container flex flex-1 flex-col justify-between">
-            <div className="flex flex-1 flex-col">
-              <div className="mb-4">
-                <Breadcrumb
-                  items={[
-                    { title: "Home", href: "/" },
-                    { title: "Chefs", href: "/chefs" },
-                  ]}
-                />
-              </div>
-              <h1 className="mb-6 text-4xl font-semibold">Chefs</h1>
-              <div className="mb-6 py-4 pt-3">
-                <QueryChef />
-              </div>
-              <div className="flex flex-1 items-center justify-center">
-                {chefs.length > 0 ? (
-                  <div className="grid-cols-4-res gap-20">
-                    {chefs.map((chef, index) => (
-                      <ChefCard key={index} chef={chef} />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="font-medium text-muted-foreground">
-                    No chefs found
-                  </p>
-                )}
-              </div>
+      <section className="flex h-full min-h-screen flex-col bg-background py-16">
+        <div className="container flex flex-1 flex-col justify-between">
+          <div className="flex flex-1 flex-col">
+            <div className="mb-6">
+              <Breadcrumb items={breadcrumbLinks} />
             </div>
-            {/* <h1 className="mb-4 text-center text-4xl uppercase tracking-widest">
-            Chefs
-          </h1>
-          <div className="mx-auto mb-24 h-[2px] w-[4%] bg-primary" /> */}
+            <div className="mb-12 py-4 pt-3">
+              <QueryChef />
+            </div>
+            <div className="flex flex-1 items-center justify-center">
+              {chefs.length > 0 ? (
+                <div className="grid-cols-4-res gap-20">
+                  {chefs.map((chef, index) => (
+                    <ChefCard key={index} chef={chef} />
+                  ))}
+                </div>
+              ) : (
+                <p className="font-medium">No chefs found</p>
+              )}
+            </div>
+          </div>
 
-            <div className="mt-24">
-              <Pagination totalPages={paginate.total} currentPage={pageIndex} />
-            </div>
+          <div className="mt-24">
+            <Pagination totalPages={paginate.total} currentPage={pageIndex} />
           </div>
         </div>
       </section>

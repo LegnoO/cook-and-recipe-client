@@ -13,10 +13,7 @@ import {
 // ** Components
 import LoadingScreen from "@/components/LoadingScreen";
 
-// ** Library Imports
-import { useRouter } from "nextjs-toploader/app";
-
-//** Hooks
+// ** Hooks
 import { useToast } from "@/hooks/useToast";
 
 // ** Services
@@ -37,7 +34,6 @@ interface AuthContext {
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -70,9 +66,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userData = await fetchUserInfo();
         setUser(userData);
       } catch {
-        if (window.location.pathname !== "/login") {
-          router.push("/");
-        }
         setUser(null);
       } finally {
         setAuthLoading(false);

@@ -42,6 +42,7 @@ const Pagination = ({ totalPages, currentPage }: Props) => {
         className={cn(linkClass, "cursor-pointer", {
           "pointer-events-none opacity-50":
             currentPage === (direction === "left" ? firstPage : totalPages),
+          hidden: totalPages <= 0,
         })}>
         {direction === "left" ? (
           <ChevronLeft className="h-4 w-4" />

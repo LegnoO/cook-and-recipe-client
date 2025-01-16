@@ -10,7 +10,7 @@ type CustomRequestInit = RequestInit & {
   headers?: Headers;
 };
 
-export default async function clientFetch(
+export default async function fetcher(
   endpoint: string | URL,
   options: CustomRequestInit = {},
 ): Promise<Response> {
@@ -35,7 +35,7 @@ export default async function clientFetch(
 
     if (!response.ok) {
       const excludedUrls = [
-        // "/users/owned/info",
+        "/users/owned/info",
         "/auth/refresh",
         "/auth/public/login",
       ];
@@ -48,9 +48,7 @@ export default async function clientFetch(
           await refreshUser();
           return await performFetch();
         } catch {
-          if (window.location.pathname !== "/login") {
-            window.location.replace("/login");
-          }
+          window.location.replace("/login");
         }
       }
 

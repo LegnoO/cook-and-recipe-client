@@ -1,9 +1,9 @@
 // ** Lib
-import clientFetch from "@/lib/clientFetch";
+import fetcher from "@/lib/fetcher";
 
 export async function getRecipeOwned(params: string) {
   console.log("🚀 ~ getRecipeOwned ~ params:", params);
-  const response = await clientFetch(`/recipe/owned/find?${params}`);
+  const response = await fetcher(`/recipe/owned/find?${params}`);
   return await response.json();
 }
 
@@ -11,7 +11,7 @@ export async function requestBecomeChef(requestInfo: {
   level: string;
   description: string;
 }) {
-  const response = await clientFetch("/chefs/owned/register", {
+  const response = await fetcher("/chefs/owned/register", {
     method: "POST",
     body: JSON.stringify({
       requestInfo,
@@ -22,7 +22,7 @@ export async function requestBecomeChef(requestInfo: {
 }
 
 export async function updateInfo(formData: FormData) {
-  const response = await clientFetch("/users/owned/profile/edit", {
+  const response = await fetcher("/users/owned/profile/edit", {
     method: "PUT",
     body: formData,
   });

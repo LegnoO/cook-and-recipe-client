@@ -69,7 +69,11 @@ const QueryChef = () => {
     }
 
     if (field === "level") {
-      params.set("level", value);
+      if (value === "all") {
+        params.delete("level");
+      } else {
+        params.set("level", value);
+      }
     }
     router.push(`?${params.toString()}`, {
       scroll: false,

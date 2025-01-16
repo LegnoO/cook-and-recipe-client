@@ -32,7 +32,7 @@ type RecipeDetails = {
   imageUrls: string[];
   createdDate: string;
   description: string;
-  ingredients: ingredients[];
+  ingredients: Ingredients[];
   instructionSections?: Instruction[];
   createdBy: {
     id: string;

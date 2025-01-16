@@ -78,6 +78,7 @@ export default async function RecipeDetailPage({
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   const recipeDetail = await getRecipeDetails(params.id, accessToken);
+
   // console.log("🚀 ~ recipeDetail:", recipeDetail);
   console.log("RecipeDetailPage");
   const { data: recipesResponse } = await getRecipeList({
@@ -404,7 +405,7 @@ export default async function RecipeDetailPage({
 
       <section className="section-spacing bg-background">
         <div className="container">
-          <h3 className="mb-8 text-4xl font-bold tracking-wider lg:text-3xl">
+          <h3 className="mb-8 text-2xl font-bold tracking-wider md:text-3xl lg:text-3xl lg:text-4xl">
             More Recipes by Chef{" "}
             <span className="text-primary">
               {recipeDetail.createdBy.userInfo.fullName}
@@ -419,7 +420,7 @@ export default async function RecipeDetailPage({
             </div>
           ) : (
             <p className="text-muted-foreground">
-              {"This chef hasn't published any other recipes yet."}
+              This chef hasn't published any other recipes yet.
             </p>
           )}
         </div>

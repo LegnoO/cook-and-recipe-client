@@ -36,11 +36,9 @@ const AddIngredient = ({ form }: Props) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold">Ingredients</h3>
-        <h4 className="text-sm text-muted-foreground">
-          List all ingredients needed for your recipe.
-        </h4>
+        <h2 className="text-xl font-semibold">Ingredients</h2>
       </div>
+
       {ingredientFields.map((field, index) => (
         <div key={field.id} className="grid grid-cols-[2fr,1fr,1fr,auto] gap-2">
           <FormField

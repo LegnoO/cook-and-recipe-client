@@ -162,8 +162,8 @@ export default function CreateRecipePage() {
   }
 
   return (
-    <div className="bg-secondary">
-      <div className="container py-16">
+    <section className="py-16">
+      <div className="container">
         <Form {...form}>
           <form
             noValidate
@@ -182,7 +182,7 @@ export default function CreateRecipePage() {
             <div className="space-y-8">
               <Card>
                 <CardHeader>
-                  <CardTitle>Recipe General Information</CardTitle>
+                  <CardTitle>General Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <ImageUpload form={form} />
@@ -276,13 +276,12 @@ export default function CreateRecipePage() {
                 </CardContent>
               </Card>
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Recipe Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="pt-6">
                   <AddIngredient form={form} />
-
-                  <Separator />
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
                   <AddInstruction form={form} />
                 </CardContent>
               </Card>
@@ -345,6 +344,6 @@ export default function CreateRecipePage() {
           </form>
         </Form>
       </div>
-    </div>
+    </section>
   );
 }

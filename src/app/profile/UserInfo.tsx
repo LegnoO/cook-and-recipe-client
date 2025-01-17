@@ -8,9 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import ButtonRequestChef from "./ButtonRequestChef";
 import ButtonEditProfile from "./ButtonEditProfile";
-import { Skeleton } from "@/components/ui/skeleton";
 import Repeat from "@/components/Repeat";
 
 // ** Library Imports
@@ -84,7 +84,7 @@ const UserInfo = () => {
             <Badge
               variant={userProfile?.chefInfo ? "default" : "secondary"}
               className="absolute -right-4 -top-4">
-              {!userProfile?.chefInfo ? (
+              {userProfile?.chefInfo ? (
                 <Fragment>
                   <ChefHat className="mr-1 h-4 w-4" /> Chef
                 </Fragment>
@@ -164,9 +164,12 @@ const UserInfo = () => {
           </div>
         </Fragment>
 
-        <Separator className="my-6" />
-
-        {userProfile?.chefInfo && <ButtonRequestChef />}
+        {!userProfile?.chefInfo && (
+          <Fragment>
+            <Separator className="my-6" />
+            <ButtonRequestChef />
+          </Fragment>
+        )}
       </CardContent>
     </Card>
   );

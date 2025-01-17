@@ -132,6 +132,7 @@ export default function UpdateRecipePage({ params }: Props) {
   const [isLoading, setLoading] = useState(false);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+    defaultValues: { name: "", serves: 0, timeToCook: 0, description: "" },
   });
 
   function handleCategoryChange(value: FormValues["categoryId"]) {
@@ -145,7 +146,7 @@ export default function UpdateRecipePage({ params }: Props) {
   function handleRecipeStatusChange(value: RecipeStatus) {
     setRecipeStatus(value);
   }
-  console.log("🚀 ~ UpdateRecipePage ~ isError:", isError);
+
   async function handleRequestRecipeStatus() {
     if (!recipeDetail) {
       return;
@@ -215,7 +216,7 @@ export default function UpdateRecipePage({ params }: Props) {
 
   useEffect(() => {
     if (!recipeDetail && !fetchLoading && isError) {
-      router.push("/not-found");
+      notFound();
     }
   }, [isError]);
 
@@ -266,7 +267,7 @@ export default function UpdateRecipePage({ params }: Props) {
             <div className="space-y-8">
               <Card>
                 <CardHeader>
-                  <CardTitle>Recipe General Information</CardTitle>
+                  <CardTitle>General Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <UploadImage
@@ -363,13 +364,19 @@ export default function UpdateRecipePage({ params }: Props) {
                   />
                 </CardContent>
               </Card>
+
               <Card>
-                <CardContent className="space-y-6 pt-6">
-                  <AddIngredient form={form} />
-                  <Separator />
+                <CardContent className="pt-6">
                   <AddInstruction form={form} />
                 </CardContent>
               </Card>
+
+              <Card>
+                <CardContent className="pt-6">
+                  <AddIngredient form={form} />
+                </CardContent>
+              </Card>
+
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Set Recipe As</CardTitle>

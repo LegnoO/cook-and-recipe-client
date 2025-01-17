@@ -52,7 +52,7 @@ type Props = {
 const OwnRecipeCard = ({ refetch, recipe }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  console.log("🚀 ~ OwnRecipeCard ~ recipe:", recipe);
+
   const contactInfo = [
     {
       icon: <Clock className="h-4 w-4" />,
@@ -137,7 +137,7 @@ const OwnRecipeCard = ({ refetch, recipe }: Props) => {
               <MoreHorizontal className="h-5 w-5 cursor-pointer text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <Link href={`/recipes/${recipe.id}/edit`}>
+              <Link href={`/recipes/manage/${recipe.id}/edit`}>
                 <DropdownMenuItem className="cursor-pointer">
                   <Pencil className="h-4 w-4" />
                   <span>Edit</span>

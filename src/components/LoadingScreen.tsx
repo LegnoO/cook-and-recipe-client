@@ -1,4 +1,6 @@
+// ** Next Imports
 import Image from "next/image";
+
 // ** Components
 import { Logo } from "@/components/ui/icons";
 
@@ -17,6 +19,7 @@ const LoadingScreen = () => {
         alt="loading gif"
         priority
         quality={100}
+        unoptimized
       />
     </div>
   );

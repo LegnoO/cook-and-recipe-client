@@ -2,7 +2,6 @@
 import fetcher from "@/lib/fetcher";
 
 export async function getRecipeOwned(params: string) {
-  console.log("🚀 ~ getRecipeOwned ~ params:", params);
   const response = await fetcher(`/recipe/owned/find?${params}`);
   return await response.json();
 }

@@ -161,7 +161,7 @@ export default async function SingleChefPage({ params }: Props) {
             </div>
           ) : (
             <p className="text-muted-foreground">
-              This chef hasn't published any other recipes yet.
+              {"This chef hasn't published any other recipes yet."}
             </p>
           )}
         </div>

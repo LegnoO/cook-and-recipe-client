@@ -3,6 +3,7 @@ import { Fragment } from "react";
 
 // ** Next Imports
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,7 +32,7 @@ import { calculateDaysAgo, getCharInitials } from "@/utils";
 
 // ** Services
 import {
-  getRecipeDetails,
+  getRecipeDetail,
   getRecipeList,
 } from "@/services/server/recipeService";
 
@@ -41,32 +42,22 @@ type Props = {
   searchParams: SearchParams;
 };
 
-// export async function generateStaticParams() {
-//   const { data: recipes } = await getRecipeList({
-//     index: "1",
-//     sortOrder: "desc",
-//     size: "100000",
-//   });
-
-//   return recipes.map((recipe) => ({
-//     id: recipe.id,
-//   }));
-// }
-
 export async function generateMetadata({ params }: Props) {
-  const recipe = await getRecipeDetails(params.id);
+  const res = await getRecipeDetail(params.id);
 
-  if (!recipe) {
+  if (!res.ok) {
     return {
       title: "Recipe not found",
     };
   }
 
+  const recipeDetail: RecipeDetail = await res.json();
+
   return {
-    title: `${recipe.name}`,
-    description: recipe.description,
+    title: `${recipeDetail.name}`,
+    description: recipeDetail.description,
     openGraph: {
-      images: [{ url: recipe.imageUrls[0] }],
+      images: [{ url: recipeDetail.imageUrls[0] }],
     },
   };
 }
@@ -77,10 +68,14 @@ export default async function RecipeDetailPage({
 }: Props) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-  const recipeDetail = await getRecipeDetails(params.id, accessToken);
+  const recipeDetailResponse = await getRecipeDetail(params.id, accessToken);
 
-  // console.log("🚀 ~ recipeDetail:", recipeDetail);
-  console.log("RecipeDetailPage");
+  if (!recipeDetailResponse.ok) {
+    notFound();
+  }
+
+  const recipeDetail: RecipeDetail = await recipeDetailResponse.json();
+
   const { data: recipesResponse } = await getRecipeList({
     index: "1",
     size: "3",
@@ -405,7 +400,7 @@ export default async function RecipeDetailPage({
 
       <section className="section-spacing bg-background">
         <div className="container">
-          <h3 className="mb-8 text-2xl font-bold tracking-wider md:text-3xl lg:text-3xl lg:text-4xl">
+          <h3 className="mb-8 text-2xl font-bold tracking-wider md:text-3xl lg:text-3xl">
             More Recipes by Chef{" "}
             <span className="text-primary">
               {recipeDetail.createdBy.userInfo.fullName}
@@ -420,7 +415,7 @@ export default async function RecipeDetailPage({
             </div>
           ) : (
             <p className="text-muted-foreground">
-              This chef hasn't published any other recipes yet.
+              {"This chef hasn't published any other recipes yet."}
             </p>
           )}
         </div>

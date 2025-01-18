@@ -10,7 +10,6 @@ import Link from "next/link";
 // ** Components
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { ToastAction } from "@/components/ui/toast";
 import { Card, CardHeader } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -19,17 +18,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import Rating from "@/components/Rating";
+import ButtonDeleteRecipe from "./ButtonDeleteRecipe";
 
 // ** Icons
 import {
-  Star,
   Users,
   GaugeCircle,
   Clock,
   Eye,
   MoreHorizontal,
   Pencil,
-  Trash,
   Loader2,
 } from "lucide-react";
 
@@ -37,11 +36,7 @@ import {
 import { useToast } from "@/hooks/useToast";
 
 // ** Services
-import {
-  requestVerifyRecipe,
-  toggleRecipeBookmark,
-} from "@/services/client/recipeService";
-import Rating from "@/components/Rating";
+import { privateRecipe, publicRecipe } from "@/services/client/recipeService";
 
 // ** Types
 type Props = {
@@ -50,6 +45,7 @@ type Props = {
 };
 
 const OwnRecipeCard = ({ refetch, recipe }: Props) => {
+  const [openDropdown, setOpenDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -68,10 +64,15 @@ const OwnRecipeCard = ({ refetch, recipe }: Props) => {
     },
   ];
 
-  async function togglePublish() {
+  async function handleTogglePublish() {
     try {
       setIsLoading(true);
-      // await requestVerifyRecipe(recipe.id);
+      if (recipe.status) {
+        await privateRecipe(recipe.id);
+      } else {
+        await publicRecipe(recipe.id);
+      }
+
       refetch();
     } catch (error) {
       toast({
@@ -124,7 +125,7 @@ const OwnRecipeCard = ({ refetch, recipe }: Props) => {
             <Switch
               disabled={isLoading}
               checked={recipe.status}
-              onCheckedChange={togglePublish}
+              onCheckedChange={handleTogglePublish}
             />
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
@@ -132,34 +133,37 @@ const OwnRecipeCard = ({ refetch, recipe }: Props) => {
               <Label>{recipe.status ? "Public" : "Private"}</Label>
             )}
           </div>
-          <DropdownMenu>
+          <DropdownMenu
+            modal
+            open={openDropdown}
+            onOpenChange={setOpenDropdown}>
             <DropdownMenuTrigger asChild>
               <MoreHorizontal className="h-5 w-5 cursor-pointer text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <Fragment>
+                <Link href={`/recipes/manage/${recipe.id}`}>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Eye className="h-4 w-4" />
+                    <span>View</span>
+                  </DropdownMenuItem>
+                </Link>
+              </Fragment>
+
+              <DropdownMenuSeparator />
+
               <Link href={`/recipes/manage/${recipe.id}/edit`}>
                 <DropdownMenuItem className="cursor-pointer">
                   <Pencil className="h-4 w-4" />
                   <span>Edit</span>
                 </DropdownMenuItem>
               </Link>
+
               <DropdownMenuSeparator />
-              {recipe.status && (
-                <Fragment>
-                  <Link href={`/recipes/${recipe.id}`}>
-                    <DropdownMenuItem className="cursor-pointer">
-                      <Eye className="h-4 w-4" />
-                      <span>View</span>
-                    </DropdownMenuItem>
-                  </Link>
-                  <DropdownMenuSeparator />
-                </Fragment>
-              )}
-              <DropdownMenuItem className="cursor-pointer">
-                <div className="flex items-center gap-2 text-destructive">
-                  <Trash className="h-4 w-4" />
-                  <span>Delete</span>
-                </div>
+              <DropdownMenuItem
+                onSelect={(event) => event.preventDefault()}
+                className="cursor-pointer">
+                <ButtonDeleteRecipe recipeId={recipe.id} refetch={refetch} />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -22,7 +22,7 @@ type Recipe = {
   verifyStatus: RecipeVerifyStatusEnum;
 };
 
-type RecipeDetails = {
+type RecipeDetail = {
   id: string;
   name: string;
   timeToCook: number;

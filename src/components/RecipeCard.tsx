@@ -19,7 +19,7 @@ import { toggleRecipeBookmarkAction } from "@/app/actions";
 import { useToast } from "@/hooks/useToast";
 
 // ** Types
-type Props = { recipe: Recipe | RecipeDetails };
+type Props = { recipe: Recipe | RecipeDetail };
 
 export default function RecipeCard({ recipe }: Props) {
   const { toast } = useToast();

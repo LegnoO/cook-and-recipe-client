@@ -8,7 +8,6 @@ import Link from "next/link";
 import {
   Breadcrumb as BreadcrumbComponent,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,

@@ -15,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -51,7 +50,7 @@ import {
 import { useRouter } from "nextjs-toploader/app";
 
 // ** Lib
-import { cn, appendFormData, convertMBToBytes, isEmptyObject } from "@/utils";
+import { cn, appendFormData, convertMBToBytes } from "@/utils";
 
 // ** Config
 import { queryOptionsConfig } from "@/config/useQueryOptions";
@@ -215,10 +214,10 @@ export default function UpdateRecipePage({ params }: Props) {
   }
 
   useEffect(() => {
-    if (!recipeDetail && !fetchLoading && isError) {
+    if (!recipeDetail && isError) {
       notFound();
     }
-  }, [isError]);
+  }, [isError, recipeDetail]);
 
   useEffect(() => {
     if (recipeDetail) {
@@ -381,70 +380,55 @@ export default function UpdateRecipePage({ params }: Props) {
                 <CardHeader>
                   <CardTitle className="text-2xl">Set Recipe As</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <RadioGroup
-                    disabled={recipeDetail.verifyStatus === "pending"}
-                    defaultValue={recipeStatus}
-                    onValueChange={handleRecipeStatusChange}>
-                    <div
-                      className={cn(
-                        "mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary",
-                        {
-                          "bg-secondary":
-                            recipeDetail.verifyStatus === "pending",
-                        },
-                      )}>
-                      <RadioGroupItem
-                        value="private"
-                        id="private"
-                        className="mt-1"
-                      />
-                      <div className="grid gap-1.5">
-                        <Label
-                          htmlFor="private"
-                          className="flex flex-col gap-1.5 font-medium">
-                          <span>Private - Only you can see</span>
-                          <span className="text-sm text-muted-foreground">
-                            This recipe will be visible only to you as the
-                            creator
-                          </span>
-                        </Label>
+                {recipeDetail.verifyStatus === "verified" && (
+                  <CardContent className="space-y-6">
+                    <RadioGroup
+                      defaultValue={recipeStatus}
+                      onValueChange={handleRecipeStatusChange}>
+                      <div
+                        className={cn(
+                          "mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary",
+                        )}>
+                        <RadioGroupItem
+                          value="private"
+                          id="private"
+                          className="mt-1"
+                        />
+                        <div className="grid gap-1.5">
+                          <Label
+                            htmlFor="private"
+                            className="flex flex-col gap-1.5 font-medium">
+                            <span>Private - Only you can see</span>
+                            <span className="text-sm text-muted-foreground">
+                              This recipe will be visible only to you as the
+                              creator
+                            </span>
+                          </Label>
+                        </div>
                       </div>
-                    </div>
-                    <div
-                      className={cn(
-                        "mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary",
-                        {
-                          "bg-secondary":
-                            recipeDetail.verifyStatus === "pending",
-                        },
-                      )}>
-                      <RadioGroupItem
-                        value="public"
-                        id="public"
-                        className="mt-1"
-                      />
-                      <div className="grid gap-1.5">
-                        <Label
-                          htmlFor="public"
-                          className="flex flex-col gap-1.5 font-medium">
-                          <span>Public for everyone</span>
-                          <span className="text-sm text-muted-foreground">
-                            Anyone can view this recipe{" "}
-                            {recipeDetail.verifyStatus === "unverified" &&
-                              "after admin approval"}
-                            creator
-                          </span>
-                        </Label>
+                      <div
+                        className={cn(
+                          "mt-2 flex items-start space-x-3 space-y-0 rounded-lg border p-4 has-button-checked:bg-secondary",
+                        )}>
+                        <RadioGroupItem
+                          value="public"
+                          id="public"
+                          className="mt-1"
+                        />
+                        <div className="grid gap-1.5">
+                          <Label
+                            htmlFor="public"
+                            className="flex flex-col gap-1.5 font-medium">
+                            <span>Public for everyone</span>
+                            <span className="text-sm text-muted-foreground">
+                              Anyone can view this recipe creator
+                            </span>
+                          </Label>
+                        </div>
                       </div>
-                    </div>
-                    {recipeDetail.verifyStatus === "pending" && (
-                      <p className="text-nowrap text-muted-foreground">
-                        Waiting for verification
-                      </p>
-                    )}
-                  </RadioGroup>
-                </CardContent>
+                    </RadioGroup>
+                  </CardContent>
+                )}
               </Card>
               <div className="flex items-center justify-end gap-4">
                 <Button

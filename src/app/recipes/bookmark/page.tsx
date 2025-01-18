@@ -21,12 +21,13 @@ type Props = {
 };
 
 export default function RecipeBookmarksPage({ searchParams }: Props) {
-  const { index = "1", size = "10", sortOrder = "desc" } = searchParams;
+  const { index = "1" } = searchParams;
+  // const { index = "1", size = "10", sortOrder = "desc" } = searchParams;
   const pageIndex = Number(index);
 
   const { data: recipeResponse, isLoading } = useQuery({
     queryKey: ["recipeBookmarks", searchParams],
-    queryFn: () => getRecipeBookmarkList({ index, size, sortOrder }),
+    queryFn: () => getRecipeBookmarkList(),
     ...queryOptionsConfig,
   });
 

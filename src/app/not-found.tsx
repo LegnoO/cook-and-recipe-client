@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default function NotFoundPage() {
   return (
-    <section className="bg-404 flex min-h-screen items-center">
+    <section className="flex min-h-screen items-center bg-404">
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
         <div className="mx-auto max-w-screen-sm text-center">
           <h1 className="mb-8 text-7xl font-extrabold tracking-tight text-white/95 lg:text-9xl">
@@ -16,7 +16,7 @@ export default function NotFoundPage() {
             Opps! Page not found.
           </p>
           <p className="mb-4 text-base text-[rgb(209,213,219)] lg:text-lg">
-            We can't find the page. You're looking for.
+            {"We can't find the page. You're looking for."}
           </p>
 
           <Button asChild>

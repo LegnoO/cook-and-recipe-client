@@ -3,14 +3,18 @@
 // ** React Imports
 import { Fragment } from "react";
 
+// ** Next Imports
+import Link from "next/link";
+
 // ** Components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import ButtonRequestChef from "./ButtonRequestChef";
-import ButtonEditProfile from "./ButtonEditProfile";
+import ButtonEditProfile from "../ButtonEditProfile";
 import Repeat from "@/components/Repeat";
 
 // ** Library Imports
@@ -164,11 +168,13 @@ const UserInfo = () => {
           </div>
         </Fragment>
 
-        {!userProfile?.chefInfo && (
-          <Fragment>
-            <Separator className="my-6" />
-            <ButtonRequestChef />
-          </Fragment>
+        <Separator className="my-6" />
+        {!userProfile?.chefInfo ? (
+          <ButtonRequestChef />
+        ) : (
+          <Button variant="secondary" className="w-full" asChild>
+            <Link href="#">Manage All Recipes</Link>
+          </Button>
         )}
       </CardContent>
     </Card>

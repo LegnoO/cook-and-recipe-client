@@ -4,10 +4,7 @@
 import QueryRecipe from "../QueryRecipe";
 import Breadcrumb from "@/components/Breadcrumb";
 
-// ** Type
-type Props = {};
-
-export default async function ManageRecipesPage({}: Props) {
+export default async function ManageRecipesPage() {
   const breadcrumbLinks = [
     { title: "Home", href: "/" },
     { title: "Recipes", href: "/recipes" },

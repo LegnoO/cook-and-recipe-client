@@ -34,29 +34,15 @@ export async function getRecipeList(searchParams: SearchParams) {
   return data;
 }
 
-export async function getRecipeDetails(recipeId: string, accessToken?: string) {
+export async function getRecipeDetail(recipeId: string, accessToken?: string) {
   const headers: HeadersInit = {};
   if (accessToken) {
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  const res = await fetch(`${API_BASE_URL}/recipe/public/find/${recipeId}`, {
+  return await fetch(`${API_BASE_URL}/recipe/public/find/${recipeId}`, {
     headers,
   });
-
-  if (!res.ok) {
-    const error = await res.json();
-    console.log("🚀 ~ getRecipeDetails ~ error:", error);
-
-    throw new Error(
-      `Failed to fetch recipes: ${error.statusCode}. ${error.error}. ${error.message}`,
-    );
-  }
-
-  const data: RecipeDetails = await res.json();
-  if (!data) notFound();
-
-  return data;
 }
 
 export async function toggleRecipeBookmark(recipeId: string) {
@@ -92,7 +78,7 @@ export async function toggleRecipeBookmark(recipeId: string) {
 export async function postReview({ recipeId, message, rating }: ReviewPayload) {
   const headers: HeadersInit = {};
   const cookieStore = cookies();
-
+  console.log(message, rating);
   const accessToken = cookieStore.get("accessToken")?.value;
 
   if (accessToken) {

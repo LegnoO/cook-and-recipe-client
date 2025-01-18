@@ -2,7 +2,7 @@
 import fetcher from "@/lib/fetcher";
 
 // **  Utils
-import { createSearchParams, getTruthyObject } from "@/utils";
+// import { createSearchParams, getTruthyObject } from "@/utils";
 
 export async function createRecipe(formData: FormData) {
   const response = await fetcher("/recipe/owned", {
@@ -38,16 +38,24 @@ export async function requestVerifyRecipe(id: string) {
   return await response.json();
 }
 
-export async function publicRecipe(id: string) {
-  const response = await fetcher(`/recipe/owned/find/${id}/public`, {
+export async function publicRecipe(recipeId: string) {
+  const response = await fetcher(`/recipe/owned/find/${recipeId}/public`, {
     method: "PATCH",
   });
 
   return await response.json();
 }
 
-export async function privateRecipe(id: string) {
-  const response = await fetcher(`/recipe/owned/find/${id}/private`, {
+export async function privateRecipe(recipeId: string) {
+  const response = await fetcher(`/recipe/owned/find/${recipeId}/private`, {
+    method: "PATCH",
+  });
+
+  return await response.json();
+}
+
+export async function deleteRecipe(recipeId: string) {
+  const response = await fetcher(`/recipe/owned/find/${recipeId}/delete`, {
     method: "PATCH",
   });
 
@@ -61,10 +69,9 @@ export async function getCategories() {
   return categoryData;
 }
 
-export async function getRecipeBookmarkList(
-  searchParams: SearchParams,
-): Promise<RecipeListResponse> {
-  const params = createSearchParams(getTruthyObject(searchParams || {}));
+export async function getRecipeBookmarkList(): Promise<RecipeListResponse> {
+// searchParams: SearchParams,
+  // const params = createSearchParams(getTruthyObject(searchParams || {}));
 
   const response = await fetcher(
     // `/recipe/public/find/bookmarked?${params.toString()}`,
@@ -75,12 +82,10 @@ export async function getRecipeBookmarkList(
   return recipeData;
 }
 
-export async function getPublicRecipes(
+export async function getVerifiedRecipes(
   params: string,
 ): Promise<RecipeListResponse> {
-  // const params = createSearchParams(getTruthyObject(searchParams || {}));
-
-  const response = await fetcher(`/recipe/public/find?${params}`);
+  const response = await fetcher(`/recipe/owned/find?${params}`);
   const recipeData = await response.json();
   return recipeData;
 }

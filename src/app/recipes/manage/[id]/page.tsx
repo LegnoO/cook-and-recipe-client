@@ -34,7 +34,7 @@ import {
 } from "lucide-react";
 
 // ** Services
-import { getRecipeDetails } from "@/services/server/recipeService";
+import { getRecipeDetail } from "@/services/server/recipeService";
 
 // ** Types
 type Props = { params: { id: string } };
@@ -42,24 +42,26 @@ type Props = { params: { id: string } };
 export default async function RecipeDetailPage({ params }: Props) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-  const recipeDetail = await getRecipeDetails(params.id, accessToken);
+  const res = await getRecipeDetail(params.id, accessToken);
 
-  if (!accessToken || !recipeDetail) {
+  if (!res.ok) {
     notFound();
   }
 
-  const ImagePreview = ({ index, image }: { index: number; image: string }) => {
-    return (
-      <div className="relative h-[220px] w-full overflow-hidden rounded-lg border-2 border-dashed">
-        <Image
-          src={image}
-          alt={`Recipe image ${index + 1}`}
-          fill
-          className="object-cover"
-        />
-      </div>
-    );
-  };
+  const recipeDetail: RecipeDetail = await res.json();
+
+  // const ImagePreview = ({ index, image }: { index: number; image: string }) => {
+  //   return (
+  //     <div className="relative h-[220px] w-full overflow-hidden rounded-lg border-2 border-dashed">
+  //       <Image
+  //         src={image}
+  //         alt={`Recipe image ${index + 1}`}
+  //         fill
+  //         className="object-cover"
+  //       />
+  //     </div>
+  //   );
+  // };
 
   const Ingredients = () => {
     return (
@@ -131,10 +133,11 @@ export default async function RecipeDetailPage({ params }: Props) {
       </Card>
     );
   };
-  console.log(recipeDetail);
+
+  console.log("RecipeDetailPage ", recipeDetail);
 
   return (
-    <section className="container mx-auto max-w-6xl px-4 py-8">
+    <section className="container mx-auto max-w-6xl py-16">
       <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row">
         <div>
           <h1 className="text-3xl font-bold">{recipeDetail.name}</h1>
@@ -162,7 +165,7 @@ export default async function RecipeDetailPage({ params }: Props) {
             {recipeDetail.viewCount} views
           </Button>
           <Button asChild variant="default">
-            <Link href="#">
+            <Link href={`/recipes/manage/${params.id}/edit`}>
               <Edit className="h-4 w-4" />
               Edit Recipe
             </Link>
@@ -171,11 +174,11 @@ export default async function RecipeDetailPage({ params }: Props) {
       </div>
 
       <div className="mb-8">
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-4">
           {recipeDetail.imageUrls.slice(0, 4).map((url, index) => (
             <div
               key={index}
-              className={`relative aspect-square overflow-hidden rounded-lg ${
+              className={`relative aspect-square overflow-hidden rounded-lg border ${
                 index === 0 && recipeDetail.imageUrls.length === 3
                   ? "col-span-2"
                   : ""
@@ -191,7 +194,6 @@ export default async function RecipeDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Recipe Overview */}
       <Card className="mb-8">
         <CardContent className="pt-6">
           <div className="grid gap-6 md:grid-cols-4">

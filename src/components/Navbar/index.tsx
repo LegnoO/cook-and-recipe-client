@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Fragment, useState, useEffect } from "react";
 
 // ** Components
-import Notification from "./Notification";
+// import Notification from "./Notification";
 import UserMenu from "./UserMenu";
 import { Button } from "@/components/ui/button";
 
@@ -189,7 +189,7 @@ const Navbar = () => {
         <div className={"flex items-center gap-4"}>
           {user ? (
             <Fragment>
-              <Notification />
+              {/* <Notification /> */}
               <UserMenu user={user} />
             </Fragment>
           ) : (

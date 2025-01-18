@@ -1,7 +1,7 @@
 "use client";
 
 // ** React Imports
-import { useState, useEffect, ChangeEvent, Fragment, useCallback } from "react";
+import { useState, useEffect, ChangeEvent, Fragment } from "react";
 
 // ** Next Imports
 import Link from "next/link";
@@ -13,8 +13,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
 
 // ** Components
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -30,22 +28,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import OwnRecipeCard from "./OwnRecipeCard";
 import SearchInput from "@/components/SearchInput";
 import Pagination from "@/components/Pagination";
-// import BookMarkButton from "@/components/BookMarkButton";
 import Repeat from "@/components/Repeat";
-import { Skeleton } from "@/components/ui/skeleton";
 
 // ** Icons
-import { Plus, Loader2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 // ** Config
 import { queryOptionsConfig } from "@/config/useQueryOptions";
 
 // ** Services
-import { getRecipeOwned } from "@/services/client/chefService";
-import { getPublicRecipes } from "@/services/client/recipeService";
+import { getVerifiedRecipes } from "@/services/client/recipeService";
 
 const UserRecipeCollection = () => {
   const router = useRouter();
@@ -53,17 +49,10 @@ const UserRecipeCollection = () => {
   const pageIndex = searchParams.get("index") || "1";
   const sortOrder = searchParams.get("sortOrder") || "asc";
   const sortBy = searchParams.get("sortBy") || "name";
-  const queryParams = useCallback(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("index", pageIndex);
-    params.set("size", searchParams.get("size") || "4");
-    params.set("sortOrder", sortOrder);
-    params.set("sortBy", "name");
-
-    return params.toString();
-  }, [searchParams]);
 
   const [chefRecipe, setChefRecipe] = useState<Recipe[] | null>(null);
+  const [paginate, setPaginate] = useState<Pagination | null>(null);
+
   console.log("🚀 ~ UserRecipeCollection ~ chefRecipe:", chefRecipe);
 
   const {
@@ -72,9 +61,20 @@ const UserRecipeCollection = () => {
     refetch,
   } = useQuery({
     queryKey: ["recipe-collection", searchParams.toString()],
-    queryFn: () => getPublicRecipes(queryParams()),
+    queryFn: () => getVerifiedRecipes(queryParams()),
     ...queryOptionsConfig,
   });
+
+  function queryParams() {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("index", pageIndex);
+    params.set("size", searchParams.get("size") || "4");
+    params.set("sortOrder", sortOrder);
+    params.set("sortBy", "name");
+    params.set("verifyStatus", "verified");
+
+    return params.toString();
+  }
 
   function handleSort(value: string) {
     const [sortBy, sortOrder] = value.split("_");
@@ -105,6 +105,7 @@ const UserRecipeCollection = () => {
   useEffect(() => {
     if (recipeData) {
       setChefRecipe(recipeData.data);
+      setPaginate(recipeData.paginate);
     }
   }, [recipeData]);
 
@@ -169,7 +170,7 @@ const UserRecipeCollection = () => {
     );
   };
 
-  if (!chefRecipe && isLoading) {
+  if ((!chefRecipe && isLoading) || !chefRecipe) {
     return <CollectionSkeleton />;
   }
 
@@ -193,9 +194,9 @@ const UserRecipeCollection = () => {
         </div>
         <div className="flex w-full gap-4 pt-3">
           <SearchInput
+            defaultValue={searchParams.get("name") || ""}
             onSearch={onSearchRecipe}
             placeholder="Search recipes..."
-            isLoading={isLoading}
           />
 
           <Select value={`${sortBy}_${sortOrder}`} onValueChange={handleSort}>
@@ -213,22 +214,24 @@ const UserRecipeCollection = () => {
       <CardContent className="flex flex-1 flex-col justify-between px-6 pb-6">
         <Fragment>
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {chefRecipe && chefRecipe.length > 0 ? (
+            {chefRecipe.length > 0 &&
               chefRecipe?.map((recipe, index) => (
                 <OwnRecipeCard refetch={refetch} recipe={recipe} key={index} />
-              ))
-            ) : (
-              <p className="mt-4 text-center text-muted-foreground">
+              ))}
+          </div>
+          {chefRecipe.length <= 0 && (
+            <div className="flex h-full items-center justify-center">
+              <p className="mt-4 w-full text-center text-muted-foreground">
                 No matching recipes found.
               </p>
-            )}
-          </div>
+            </div>
+          )}
         </Fragment>
       </CardContent>
 
       <CardFooter className="mt-8">
         <Pagination
-          totalPages={recipeData?.paginate.total || 1}
+          totalPages={paginate?.total || 1}
           currentPage={Number(pageIndex)}
         />
       </CardFooter>

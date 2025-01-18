@@ -1,26 +1,37 @@
 "use client";
 
 // ** React Imports
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 // ** Components
 import { Button } from "@/components/ui/button";
-
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 import Repeat from "@/components/Repeat";
 import { Scroll } from "@/components/Scroll";
+
+// ** Library Imports
+import InfiniteScroll from "react-infinite-scroll-component";
 
 // ** Icons
 import { Bell } from "lucide-react";
 
+// ** Services
+import {
+  getNotificationOwned,
+  checkNewNotification,
+} from "@/services/client/notificationService";
+
 // ** Config
 
 const Notification = () => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [index, setIndex] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isAutoFetch, setIsAutoFetch] = useState(false);
   // const [messages, setMessages] = useState<any>(null);
   // console.log("🚀 ~ Notification ~ messages:", messages);
 
@@ -60,7 +71,11 @@ const Notification = () => {
 
   useEffect(() => {
     const idTimeout = setInterval(() => {
-      // console.log("ok");
+      async function check() {
+        // await checkNewNotification();
+        console.log("a");
+      }
+      check();
     }, 2000);
 
     return () => {
@@ -107,7 +122,7 @@ const Notification = () => {
           </Scroll>
           <div className="border-t p-3.5">
             <Button className="h-7 w-full px-3.5 py-1.5">
-              View All Notifications
+              View More Notifications
             </Button>
           </div>
         </div>

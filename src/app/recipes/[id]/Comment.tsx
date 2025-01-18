@@ -25,15 +25,13 @@ import { postReviewAction } from "@/app/actions";
 
 // ** Types
 type Props = {
-  recipeDetail: RecipeDetails;
+  recipeDetail: RecipeDetail;
   commentIndex: number;
 };
 const Comment = ({ recipeDetail, commentIndex }: Props) => {
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const [rating, setRating] = useState<number | null>(null);
-
   const { toast } = useToast();
-  const commentLength = 4;
 
   async function handlePostReview() {
     if (!rating || !commentRef.current!.value) {

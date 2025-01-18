@@ -1,7 +1,7 @@
 "use client";
 
 // ** React Imports
-import { ChangeEvent } from "react";
+import { type ChangeEvent, type InputHTMLAttributes } from "react";
 
 // ** Components
 import { Input } from "@/components/ui/input";
@@ -11,31 +11,29 @@ import { Search, Loader2 } from "lucide-react";
 
 // ** Types
 type Props = {
-  placeholder?: string;
   onSearch?: (event: ChangeEvent<HTMLInputElement>) => void;
-  name?: string;
   isLoading?: boolean;
-};
+} & InputHTMLAttributes<HTMLInputElement>;
 
 const SearchInput = ({
   isLoading,
-  name,
   placeholder = "Search...",
   onSearch,
+  ...props
 }: Props) => {
   return (
     <div className="relative w-full">
       {isLoading ? (
-        <Loader2 className="animate-spin absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Loader2 className="absolute left-2.5 top-2.5 h-4 w-4 animate-spin text-muted-foreground" />
       ) : (
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
       )}
       <Input
-        name={name}
         type="search"
         placeholder={placeholder}
         onChange={onSearch}
         className="pl-8"
+        {...props}
       />
     </div>
   );

@@ -24,7 +24,10 @@ export default async function ChefsPage({ searchParams }: Props) {
     ...searchParams,
   });
 
-  const breadcrumbLinks = [{ title: "Home", href: "/" }, { title: "Chefs" }];
+  const breadcrumbLinks: BreadcrumbLinks = [
+    { title: "Home", href: "/" },
+    { title: "Chefs" },
+  ];
 
   return (
     <Fragment>

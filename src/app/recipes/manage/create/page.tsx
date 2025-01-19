@@ -15,15 +15,14 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ToastAction } from "@/components/ui/toast";
 import ImageUpload from "./ImageUpload";
 import CategorySelect from "./CategorySelect";
 import DifficultySelect from "./DifficultySelect";
 import AddIngredient from "./AddIngredient";
 import AddInstruction from "./AddInstruction";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
@@ -144,7 +143,6 @@ export default function CreateRecipePage() {
         title: "Success!",
         description: "Your recipe has been created successfully.",
         variant: "successful",
-        action: <ToastAction altText="Try again">Close</ToastAction>,
       });
       router.push("/profile");
     } catch (error) {
@@ -153,7 +151,6 @@ export default function CreateRecipePage() {
         title: "Uh oh! Something went wrong.",
         description:
           error instanceof Error ? error.message : "An error has occurred",
-        action: <ToastAction altText="close">Close</ToastAction>,
       });
     } finally {
       setLoading(false);

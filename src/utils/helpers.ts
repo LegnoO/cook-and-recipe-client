@@ -38,11 +38,29 @@ export function formatAddress(
   return formattedAddress;
 }
 
-export function createSearchParams(filter: Record<string, unknown>) {
+// export function parseSearchParams(filter: Record<string, unknown>) {
+//   const params = new URLSearchParams();
+
+//   Object.entries(filter).forEach(([key, value]) => {
+//     if (value) {
+//       params.append(key, String(value));
+//     }
+//   });
+
+//   return params;
+// }
+
+export function parseSearchParams(filter: Record<string, unknown>) {
   const params = new URLSearchParams();
 
   Object.entries(filter).forEach(([key, value]) => {
-    if (value) {
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        if (item != null) {
+          params.append(key, String(item));
+        }
+      });
+    } else if (value != null) {
       params.append(key, String(value));
     }
   });
@@ -123,4 +141,27 @@ export function getTruthyObject(obj: Record<string, unknown>) {
   });
 
   return result;
+}
+
+export function timeAgo(date: Date | string) {
+  const now = new Date();
+  const targetDate = new Date(date);
+  const timeDifference = now.getTime() - targetDate.getTime();
+
+  const seconds = Math.floor(timeDifference / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+  if (seconds < 60) {
+    return rtf.format(-seconds, "second");
+  } else if (minutes < 60) {
+    return rtf.format(-minutes, "minute");
+  } else if (hours < 24) {
+    return rtf.format(-hours, "hour");
+  } else {
+    return rtf.format(-days, "day");
+  }
 }

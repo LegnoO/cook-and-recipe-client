@@ -19,7 +19,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import Rating from "@/components/Rating";
-import ButtonDeleteRecipe from "./ButtonDeleteRecipe";
+import ButtonDeleteRecipe from "@/components/ButtonDeleteRecipe";
 
 // ** Icons
 import {
@@ -45,7 +45,8 @@ type Props = {
 };
 
 const OwnRecipeCard = ({ refetch, recipe }: Props) => {
-  const [openDropdown, setOpenDropdown] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<Record<string, boolean>>({});
+
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -63,6 +64,13 @@ const OwnRecipeCard = ({ refetch, recipe }: Props) => {
       value: <span>Difficulty: {recipe.difficulty}</span>,
     },
   ];
+
+  function handleOpenDropdown(open: boolean, dropdownId: string) {
+    setOpenDropdown((prev) => ({
+      ...prev,
+      [dropdownId]: open,
+    }));
+  }
 
   async function handleTogglePublish() {
     try {
@@ -134,9 +142,8 @@ const OwnRecipeCard = ({ refetch, recipe }: Props) => {
             )}
           </div>
           <DropdownMenu
-            modal
-            open={openDropdown}
-            onOpenChange={setOpenDropdown}>
+            open={openDropdown[recipe.id]}
+            onOpenChange={(open) => handleOpenDropdown(open, recipe.id)}>
             <DropdownMenuTrigger asChild>
               <MoreHorizontal className="h-5 w-5 cursor-pointer text-muted-foreground" />
             </DropdownMenuTrigger>

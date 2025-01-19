@@ -47,6 +47,7 @@ const UserRecipeCollection = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pageIndex = searchParams.get("index") || "1";
+  const pageSize = searchParams.get("size") || "4";
   const sortOrder = searchParams.get("sortOrder") || "asc";
   const sortBy = searchParams.get("sortBy") || "name";
 
@@ -68,7 +69,7 @@ const UserRecipeCollection = () => {
   function queryParams() {
     const params = new URLSearchParams(searchParams.toString());
     params.set("index", pageIndex);
-    params.set("size", searchParams.get("size") || "4");
+    params.set("size", pageSize);
     params.set("sortOrder", sortOrder);
     params.set("sortBy", "name");
     params.set("verifyStatus", "verified");

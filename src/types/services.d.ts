@@ -1,5 +1,5 @@
 type ReviewPayload = {
   recipeId: string;
-  message: string;
+  content: content;
   rating: number | null;
 };

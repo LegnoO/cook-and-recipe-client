@@ -15,7 +15,7 @@ import {
 
 // ** Types
 type Props = {
-  items: { title: string; href?: string }[];
+  items: BreadcrumbLinks;
 };
 
 const Breadcrumb = ({ items }: Props) => {

@@ -1,16 +1,17 @@
 // ** Lib
 import fetcher from "@/lib/fetcher";
+
+// ** Utils
 import { setCookie } from "@/utils/cookies";
 
 export async function getUserProfile() {
-  const response = await fetcher(`/users/owned/profile`, { method: "GET" });
+  const res = await fetcher(`/users/owned/profile`, { method: "GET" });
 
-  const userInfo = await response.json();
-  return userInfo;
+  return await res.json();
 }
 
 export async function login({ email, password, rememberMe }: LoginCredentials) {
-  const response = await fetcher(`/auth/public/login`, {
+  const res = await fetcher(`/auth/public/login`, {
     method: "POST",
     body: JSON.stringify({
       email,
@@ -20,7 +21,7 @@ export async function login({ email, password, rememberMe }: LoginCredentials) {
     credentials: "include",
   });
 
-  return await response.text();
+  return await res.text();
 }
 
 export async function logout() {
@@ -38,40 +39,38 @@ export async function register(newCredentials: {
   confirmPassword: string;
   fullName: string;
 }) {
-  const response = await fetcher(`/auth/register`, {
+  const res = await fetcher(`/auth/register`, {
     method: "POST",
     body: JSON.stringify(newCredentials),
     credentials: "include",
   });
 
-  await response.json();
+  await res.json();
 }
 
 export async function fetchUserInfo() {
-  const response = await fetcher("/users/owned/info", { method: "GET" });
+  const res = await fetcher("/users/owned/info", { method: "GET" });
 
-  const userInfo = await response.json();
-
-  return userInfo;
+  return await res.json();
 }
 
 export async function requestReset(email: string) {
-  const response = await fetcher("/auth/request-reset-password", {
+  const res = await fetcher("/auth/request-reset-password", {
     method: "POST",
     body: JSON.stringify({
       email,
     }),
   });
 
-  return await response.text();
+  return await res.text();
 }
 
 export async function sendOtp(otp: string) {
-  const response = await fetcher(`/auth/verify-otp/${otp}`, {
+  const res = await fetcher(`/auth/verify-otp/${otp}`, {
     method: "POST",
   });
 
-  return await response.text();
+  return await res.text();
 }
 
 export async function resetPassword({
@@ -83,12 +82,12 @@ export async function resetPassword({
   password: string;
   confirmPassword: string;
 }) {
-  const response = await fetcher("/auth/reset-password", {
+  const res = await fetcher("/auth/reset-password", {
     method: "POST",
     body: JSON.stringify({ codeId, password, confirmPassword }),
   });
 
-  return await response.text();
+  return await res.text();
 }
 
 export async function refreshUser() {
@@ -96,7 +95,7 @@ export async function refreshUser() {
     ? JSON.parse(localStorage.getItem("rememberMe")!)
     : false;
 
-  const response = await fetcher(`/auth/refresh`, {
+  const res = await fetcher(`/auth/refresh`, {
     method: "POST",
     body: JSON.stringify({
       rememberMe,
@@ -104,7 +103,7 @@ export async function refreshUser() {
     credentials: "include",
   });
 
-  const newToken = await response.text();
+  const newToken = await res.text();
   setCookie("accessToken", newToken, {
     path: "/",
     secure: true,

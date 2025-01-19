@@ -4,10 +4,8 @@
 import { revalidatePath } from "next/cache";
 
 // ** Services
-import {
-  postReview,
-  toggleRecipeBookmark,
-} from "@/services/server/recipeService";
+import { toggleRecipeBookmark } from "@/services/server/recipeService";
+import { postReview } from "@/services/client/recipeService";
 
 export async function toggleRecipeBookmarkAction(
   recipeId: string,
@@ -20,8 +18,6 @@ export async function toggleRecipeBookmarkAction(
 
     return { success: true };
   } catch (error) {
-    console.error("🚀 ~ toggleRecipeBookmarkAction ~ error:", error);
-
     return {
       success: false,
       message:
@@ -31,11 +27,11 @@ export async function toggleRecipeBookmarkAction(
 }
 
 export async function postReviewAction(
-  { recipeId, message, rating }: ReviewPayload,
+  { recipeId, content, rating }: ReviewPayload,
   pathUrl: string,
 ) {
   try {
-    await postReview({ recipeId, message, rating });
+    await postReview({ recipeId, content, rating });
 
     revalidatePath(pathUrl);
 

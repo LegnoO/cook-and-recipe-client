@@ -12,4 +12,9 @@ type QueryOptions<T> = Pagination &
     sortOrder: SortOrder;
   };
 
-type SearchParams = { [key: string]: string | string[] | undefined };
+type SearchParams = Record<string, string | string[] | undefined>;
+
+type BreadcrumbLinks = {
+  title: string;
+  href?: string;
+}[];

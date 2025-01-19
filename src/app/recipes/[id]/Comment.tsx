@@ -29,6 +29,7 @@ type Props = {
   commentIndex: number;
 };
 const Comment = ({ recipeDetail, commentIndex }: Props) => {
+  console.log("🚀 ~ recipeDetail:", recipeDetail);
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const [rating, setRating] = useState<number | null>(null);
   const { toast } = useToast();
@@ -79,6 +80,7 @@ const Comment = ({ recipeDetail, commentIndex }: Props) => {
             <Label htmlFor="comment">Your Comment</Label>
             <Textarea
               id="comment"
+              defaultValue={commentRef.current ? commentRef.current.value : ""}
               ref={commentRef}
               placeholder="Share your experience with this recipe..."
               className="min-h-[100px] resize-none bg-background"
@@ -147,7 +149,6 @@ const Comment = ({ recipeDetail, commentIndex }: Props) => {
           <span className="text-lg font-medium">
             {`(${recipeDetail.rating || 0})`}
           </span>
-          {/* <span className="text-muted-foreground">(124 reviews)</span> */}
         </div>
       </div>
 

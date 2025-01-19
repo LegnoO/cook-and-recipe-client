@@ -15,15 +15,10 @@ type Props = {
   searchParams: SearchParams;
 };
 
-interface BreadcrumbLinks {
-  title: string;
-  href?: string;
-}
-
 export default async function RecipesListPage({ searchParams }: Props) {
-  const breadcrumbLinks: BreadcrumbLinks[] = [
+  const breadcrumbLinks: BreadcrumbLinks = [
     { title: "Home", href: "/" },
-    { title: "Recipes", href: "/recipes" },
+    { title: "Recipes" },
   ];
 
   if (searchParams.chefId && searchParams.chefName) {

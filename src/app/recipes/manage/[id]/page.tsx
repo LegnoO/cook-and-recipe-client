@@ -1,5 +1,9 @@
+"use client";
+
+// * React Imports
+import { useState, useEffect } from "react";
+
 // ** Next Imports
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +24,7 @@ import { Badge } from "@/components/ui/badge";
 
 // ** Library Imports
 import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 
 // ** Icons
 import {
@@ -33,23 +38,31 @@ import {
   Eye,
 } from "lucide-react";
 
+// ** Config
+import { queryOptionsConfig } from "@/config/useQueryOptions";
+
 // ** Services
-import { getRecipeDetail } from "@/services/server/recipeService";
+import { getRecipesOwnedDetail } from "@/services/client/recipeService";
 
 // ** Types
 type Props = { params: { id: string } };
 
-export default async function RecipeDetailPage({ params }: Props) {
-  const cookieStore = cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
-  const res = await getRecipeDetail(params.id, accessToken);
+export default function RecipesOwnedDetail({ params }: Props) {
+  const [recipe, setRecipe] = useState<RecipeDetail>();
 
-  if (!res.ok) {
+  const {
+    data: recipeDetail,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["recipes-owned-detail", params.id],
+    queryFn: () => getRecipesOwnedDetail(params.id),
+    ...queryOptionsConfig,
+  });
+
+  if (isError) {
     notFound();
   }
-
-  const recipeDetail: RecipeDetail = await res.json();
-
   // const ImagePreview = ({ index, image }: { index: number; image: string }) => {
   //   return (
   //     <div className="relative h-[220px] w-full overflow-hidden rounded-lg border-2 border-dashed">
@@ -79,7 +92,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recipeDetail.ingredients.map((ingredient, index) => (
+                {recipe!.ingredients.map((ingredient, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">
                       {ingredient.name}
@@ -104,29 +117,27 @@ export default async function RecipeDetailPage({ params }: Props) {
             <h2 className="text-lg font-semibold">Instructions</h2>
 
             <div className="flex flex-col">
-              {recipeDetail.instructionSections!.map(
-                (instructionSection, index) => (
-                  <div className="mb-5" key={index}>
-                    <h5 className="flex items-center gap-2 text-lg font-medium text-primary">
-                      {index + 1}.<span>{instructionSection.title}</span>
-                    </h5>
-                    <div className="ml-5 flex flex-col">
-                      {instructionSection.instructions.map(
-                        (instruction, index) => (
-                          <p
-                            key={index}
-                            className="flex gap-2 text-muted-foreground">
-                            <span className="whitespace-nowrap font-medium">
-                              Step {instruction.step}:
-                            </span>
-                            <span>{instruction.description}</span>
-                          </p>
-                        ),
-                      )}
-                    </div>
+              {recipe!.instructionSections!.map((instructionSection, index) => (
+                <div className="mb-5" key={index}>
+                  <h5 className="flex items-center gap-2 text-lg font-medium text-primary">
+                    {index + 1}.<span>{instructionSection.title}</span>
+                  </h5>
+                  <div className="ml-5 flex flex-col">
+                    {instructionSection.instructions.map(
+                      (instruction, index) => (
+                        <p
+                          key={index}
+                          className="flex gap-2 text-muted-foreground">
+                          <span className="whitespace-nowrap font-medium">
+                            Step {instruction.step}:
+                          </span>
+                          <span>{instruction.description}</span>
+                        </p>
+                      ),
+                    )}
                   </div>
-                ),
-              )}
+                </div>
+              ))}
             </div>
           </div>
         </CardContent>
@@ -136,16 +147,25 @@ export default async function RecipeDetailPage({ params }: Props) {
 
   console.log("RecipeDetailPage ", recipeDetail);
 
+  useEffect(() => {
+    if (recipeDetail) {
+      setRecipe(recipeDetail);
+    }
+  }, [recipeDetail]);
+
+  if (!recipe || (isLoading && !recipe)) {
+    return <>loading</>;
+  }
+
   return (
     <section className="container mx-auto max-w-6xl py-16">
       <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row">
         <div>
-          <h1 className="text-3xl font-bold">{recipeDetail.name}</h1>
+          <h1 className="text-3xl font-bold">{recipe.name}</h1>
           <div className="mt-2 flex items-center gap-2">
-            <Badge variant="secondary">{recipeDetail.category.name}</Badge>
+            <Badge variant="secondary">{recipe.category.name}</Badge>
             <span className="text-sm text-muted-foreground">
-              Created on{" "}
-              {format(new Date(recipeDetail.createdDate), "MMMM d, yyyy")}
+              Created on {format(new Date(recipe.createdDate), "MMMM d, yyyy")}
             </span>
             <Badge variant={true ? "default" : "secondary"}>
               {true ? (
@@ -162,7 +182,7 @@ export default async function RecipeDetailPage({ params }: Props) {
             variant="outline"
             className="flex items-center gap-2 hover:bg-secondary hover:text-foreground">
             <Eye className="h-4 w-4" />
-            {recipeDetail.viewCount} views
+            {recipe.viewCount} views
           </Button>
           <Button asChild variant="default">
             <Link href={`/recipes/manage/${params.id}/edit`}>
@@ -175,17 +195,15 @@ export default async function RecipeDetailPage({ params }: Props) {
 
       <div className="mb-8">
         <div className="grid grid-cols-2 gap-4">
-          {recipeDetail.imageUrls.slice(0, 4).map((url, index) => (
+          {recipe.imageUrls.slice(0, 4).map((url, index) => (
             <div
               key={index}
               className={`relative aspect-square overflow-hidden rounded-lg border ${
-                index === 0 && recipeDetail.imageUrls.length === 3
-                  ? "col-span-2"
-                  : ""
+                index === 0 && recipe.imageUrls.length === 3 ? "col-span-2" : ""
               }`}>
               <Image
                 src={url || "/placeholder.svg"}
-                alt={`${recipeDetail.name} ${index + 1}`}
+                alt={`${recipe.name} ${index + 1}`}
                 fill
                 className="object-cover"
               />
@@ -201,21 +219,21 @@ export default async function RecipeDetailPage({ params }: Props) {
               <Clock className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="text-sm text-muted-foreground">Cook Time</p>
-                <p className="font-medium">{recipeDetail.timeToCook} minutes</p>
+                <p className="font-medium">{recipe.timeToCook} minutes</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Users className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="text-sm text-muted-foreground">Servings</p>
-                <p className="font-medium">{recipeDetail.serves} people</p>
+                <p className="font-medium">{recipe.serves} people</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <ChefHat className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="text-sm text-muted-foreground">Difficulty</p>
-                <p className="font-medium">{recipeDetail.difficulty}</p>
+                <p className="font-medium">{recipe.difficulty}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -223,8 +241,8 @@ export default async function RecipeDetailPage({ params }: Props) {
               <div>
                 <p className="text-sm text-muted-foreground">Rating</p>
                 <p className="font-medium">
-                  {recipeDetail.rating
-                    ? `${recipeDetail.rating.toFixed(1)} / 5`
+                  {recipe.rating
+                    ? `${recipe.rating.toFixed(1)} / 5`
                     : "Not rated yet"}
                 </p>
               </div>
@@ -234,7 +252,7 @@ export default async function RecipeDetailPage({ params }: Props) {
             <h4 className="mb-1 text-base font-semibold lg:text-lg">
               Description
             </h4>
-            <p className="text-muted-foreground">{recipeDetail.description}</p>
+            <p className="text-muted-foreground">{recipe.description}</p>
           </div>
         </CardContent>
       </Card>

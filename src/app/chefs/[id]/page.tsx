@@ -6,19 +6,18 @@ import Image from "next/image";
 import Link from "next/link";
 
 // ** Components
-import RecipeCard from "@/components/RecipeCard";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import RecipeCard from "@/components/RecipeCard";
+import Breadcrumb from "@/components/Breadcrumb";
 
 // ** Icons
-import { MoveUpRight } from "lucide-react";
 import { Facebook, Instagram, Linkedin } from "@/components/ui/icons";
+import { MoveUpRight } from "lucide-react";
 
 // ** Services
 import { getChefDetail } from "@/services/server/chefService";
-
 import { getOwnRecipes } from "@/services/server/recipeService";
-import Breadcrumb from "@/components/Breadcrumb";
-import { Badge } from "@/components/ui/badge";
 
 // ** Types
 type Props = {
@@ -26,21 +25,21 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props) {
-  const chef = await getChefDetail(params.id);
-
-  if (!chef) {
+  try {
+    const chefDetail = await getChefDetail(params.id);
     return {
-      title: "Chef not found",
+      title: `${chefDetail.userInfo.fullName}`,
+      description: chefDetail.description,
+      openGraph: {
+        images: [{ url: chefDetail.userInfo.avatar }],
+      },
+    };
+  } catch {
+    return {
+      title: "Chef Not Found",
+      description: "The requested chef could not be found.",
     };
   }
-
-  return {
-    title: `${chef.userInfo.fullName}`,
-    description: chef.description,
-    openGraph: {
-      images: [{ url: chef.userInfo.avatar }],
-    },
-  };
 }
 
 export default async function SingleChefPage({ params }: Props) {

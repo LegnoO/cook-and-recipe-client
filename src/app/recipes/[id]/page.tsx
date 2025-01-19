@@ -3,7 +3,6 @@ import { Fragment } from "react";
 
 // ** Next Imports
 import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -43,23 +42,21 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props) {
-  const res = await getRecipeDetail(params.id);
-
-  if (!res.ok) {
+  try {
+    const recipeDetail = await getRecipeDetail(params.id);
     return {
-      title: "Recipe not found",
+      title: `${recipeDetail.name}`,
+      description: recipeDetail.description,
+      openGraph: {
+        images: [{ url: recipeDetail.imageUrls[0] }],
+      },
+    };
+  } catch {
+    return {
+      title: "Recipe Not Found",
+      description: "The requested recipe could not be found.",
     };
   }
-
-  const recipeDetail: RecipeDetail = await res.json();
-
-  return {
-    title: `${recipeDetail.name}`,
-    description: recipeDetail.description,
-    openGraph: {
-      images: [{ url: recipeDetail.imageUrls[0] }],
-    },
-  };
 }
 
 export default async function RecipeDetailPage({
@@ -68,13 +65,7 @@ export default async function RecipeDetailPage({
 }: Props) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-  const recipeDetailResponse = await getRecipeDetail(params.id, accessToken);
-
-  if (!recipeDetailResponse.ok) {
-    notFound();
-  }
-
-  const recipeDetail: RecipeDetail = await recipeDetailResponse.json();
+  const recipeDetail = await getRecipeDetail(params.id, accessToken);
 
   const { data: recipesResponse } = await getRecipeList({
     index: "1",

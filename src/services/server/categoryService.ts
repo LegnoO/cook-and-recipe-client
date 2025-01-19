@@ -8,15 +8,14 @@ export async function getCategories() {
   const res = await fetch(`${API_BASE_URL}/category/public/find`);
 
   if (!res.ok) {
-    const error = await res.json();
-
-    throw new Error(
-      `Failed to fetch categories: ${error.statusCode}. ${error.error}. ${error.message}`,
-    );
+    if (res.status === 404) {
+      notFound();
+    } else {
+      throw new Error(`Failed to fetch: ${res.statusText}`);
+    }
   }
 
   const data: Category[] = await res.json();
-  if (!data) notFound();
 
   return data;
 }

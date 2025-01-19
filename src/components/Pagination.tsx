@@ -8,7 +8,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // ** Lib
-import { cn, createSearchParams } from "@/utils";
+import { cn, parseSearchParams } from "@/utils";
 
 type Props = {
   totalPages: number;
@@ -22,7 +22,7 @@ const Pagination = ({ totalPages, currentPage }: Props) => {
     "outline-none hover:bg-secondary/80 flex h-9 w-9 items-center justify-center rounded-md border  text-sm font-medium ";
 
   function getHref(index: number) {
-    const params = createSearchParams({ index });
+    const params = parseSearchParams({ index });
     return `?${params}`;
   }
 

@@ -9,9 +9,9 @@ import Link from "next/link";
 import { Fragment, useState, useEffect } from "react";
 
 // ** Components
-// import Notification from "./Notification";
-import UserMenu from "./UserMenu";
 import { Button } from "@/components/ui/button";
+import Notification from "./Notification";
+import UserMenu from "./UserMenu";
 
 // ** Library Imports
 import { useMediaQuery } from "usehooks-ts";
@@ -33,7 +33,7 @@ const Navbar = () => {
   const menuItems = [
     {
       label: "Home",
-      url: "/",
+      url: "/recipes/manage/bookmark",
     },
     {
       label: "Recipes",
@@ -52,6 +52,7 @@ const Navbar = () => {
       url: "/recipes/676d8ebdb442f5f00f27e711",
     },
   ];
+
   const params = useParams();
   const pathname = usePathname();
   const isMediumScreen = useMediaQuery("(min-width: 768px)");
@@ -132,9 +133,7 @@ const Navbar = () => {
   return (
     <header className={getNavbarClasses()}>
       <nav className={cn("container flex h-full items-center justify-between")}>
-        <Link
-          href="/recipes/bookmark"
-          className="flex items-center gap-2 whitespace-nowrap">
+        <Link href="/" className="flex items-center gap-2 whitespace-nowrap">
           <Logo
             className={cn("text-background", {
               "text-foreground":
@@ -189,7 +188,7 @@ const Navbar = () => {
         <div className={"flex items-center gap-4"}>
           {user ? (
             <Fragment>
-              {/* <Notification /> */}
+              <Notification />
               <UserMenu user={user} />
             </Fragment>
           ) : (

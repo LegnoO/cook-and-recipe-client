@@ -2,7 +2,6 @@
 
 // ** Next Imports
 import { useParams, usePathname } from "next/navigation";
-
 import Link from "next/link";
 
 // ** React Imports

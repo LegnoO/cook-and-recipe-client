@@ -3,7 +3,7 @@ import fetcher from "@/lib/fetcher";
 
 export async function getNotificationOwned(
   params: string,
-): Promise<ListNotifications> {
+): Promise<NotificationResponse> {
   const res = await fetcher(`/notification/owned/find?${params}`);
   return await res.json();
 }

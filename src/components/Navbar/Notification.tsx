@@ -37,6 +37,7 @@ import { cn, timeAgo } from "@/utils";
 const Notification = () => {
   const searchParams = useSearchParams();
   const [notifications, setNotifications] = useState<ListNotifications>([]);
+  const [totalMessages, setTotalMessages] = useState<number | null>(null);
   const [index, setIndex] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [isOpenPopover, setIsOpenPopover] = useState(false);
@@ -60,13 +61,14 @@ const Notification = () => {
     setHasMore(true);
   }
 
-  function handleClosePopover(open: boolean) {
-    // || false => fix with total
-    if (!open || false) {
+  function handleTogglePopover(open: boolean) {
+    setIsOpenPopover(open);
+    if (!notificationResponse || !totalMessages) return;
+
+    if (!open || notifications.length >= totalMessages) {
       setIsAutoFetch(false);
       setHasMore(false);
     }
-    setIsOpenPopover(open);
   }
 
   const { data: notificationResponse, isLoading } = useQuery({
@@ -93,14 +95,15 @@ const Notification = () => {
   }, []);
 
   useEffect(() => {
-    if (notificationResponse) {
-      setNotifications(notificationResponse);
-      if (isAutoFetch) setHasMore(notificationResponse.length > 0 || false);
-      // || false => fix with total
-      if (false) {
-        setIsAutoFetch(false);
-      }
-    }
+    if (!notificationResponse) return;
+    setTotalMessages(notificationResponse.paginate.total);
+    setNotifications(notificationResponse.data);
+
+    if (!totalMessages) return;
+    if (isAutoFetch)
+      setHasMore(totalMessages > 0 || notifications.length >= totalMessages);
+
+    if (notifications.length >= totalMessages) setIsAutoFetch(false);
 
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [notificationResponse]);
@@ -138,7 +141,7 @@ const Notification = () => {
   };
 
   return (
-    <Popover open={isOpenPopover} onOpenChange={handleClosePopover}>
+    <Popover open={isOpenPopover} onOpenChange={handleTogglePopover}>
       <PopoverTrigger asChild>
         <Button variant="secondary" className="relative h-10 w-10 rounded-full">
           <Bell className="!h-5 !w-5" />

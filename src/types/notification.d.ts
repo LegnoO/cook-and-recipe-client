@@ -11,3 +11,8 @@ interface NewNotificationMessage extends NotificationMessage {
 }
 
 type ListNotifications = NotificationMessage[];
+
+interface NotificationResponse {
+  data: ListNotifications;
+  paginate: Paginate;
+}

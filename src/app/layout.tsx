@@ -12,6 +12,7 @@ import ReactQueryProvider from "@/context/ReactQueryProvider";
 
 // ** Library Imports
 import NextTopLoader from "nextjs-toploader";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // ** Lib
 import { raleway, playfair } from "@/lib/font";
@@ -66,6 +67,7 @@ export default function RootLayout({
             </div>
           </AuthProvider>
         </ReactQueryProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

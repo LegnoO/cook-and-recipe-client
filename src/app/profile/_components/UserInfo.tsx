@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import ButtonRequestChef from "./ButtonRequestChef";
-import ButtonEditProfile from "../ButtonEditProfile";
+import ButtonEditProfile from "./ButtonEditProfile";
 import Repeat from "@/components/Repeat";
 
 // ** Library Imports

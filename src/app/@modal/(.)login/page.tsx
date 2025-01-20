@@ -1,7 +1,7 @@
 // ** Components
 import { Scroll } from "@/components/Scroll";
-import LoginForm from "@/app/login/LoginForm";
 import Modal from "@/components/Modal";
+import LoginForm from "@/app/login/_components/LoginForm";
 
 export default function LoginModal() {
   return (

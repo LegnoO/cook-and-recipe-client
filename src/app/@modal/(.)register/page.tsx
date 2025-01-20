@@ -1,7 +1,7 @@
 // ** Components
-import RegisterForm from "@/app/register/RegisterForm";
-import Modal from "@/components/Modal";
 import { Scroll } from "@/components/Scroll";
+import Modal from "@/components/Modal";
+import RegisterForm from "@/app/register/_components/RegisterForm";
 
 export default function RegisterModal() {
   return (

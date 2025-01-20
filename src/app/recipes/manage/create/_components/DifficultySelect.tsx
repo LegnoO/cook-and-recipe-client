@@ -14,13 +14,13 @@ import {
 import { UseFormReturn } from "react-hook-form";
 
 // ** Types
-import { FormValues } from "./page";
+import { FormValues } from "../page";
 type Props = {
   form: UseFormReturn<FormValues>;
   onChange: (value: FormValues["difficulty"]) => void;
 };
 
-const SelectDifficulty = ({ onChange, form }: Props) => {
+const DifficultySelect = ({ onChange, form }: Props) => {
   const id = "select-difficulty-create-recipe";
   const difficulties = ["Easy", "Medium", "Hard", "Professional", "Expert"];
 
@@ -43,4 +43,4 @@ const SelectDifficulty = ({ onChange, form }: Props) => {
   );
 };
 
-export default SelectDifficulty;
+export default DifficultySelect;

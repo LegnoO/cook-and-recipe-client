@@ -45,10 +45,29 @@ import { login, fetchUserInfo } from "@/services/client/authService";
 import { setCookie } from "@/utils/cookies";
 import { getDecodedParam, getItemLocalStorage } from "@/utils";
 
+// ** Library Imports
+import { z } from "zod";
+
 // ** Schema
-import { LoginFormValues, loginFormSchema } from "@/schemas/loginFormSchema";
+const loginFormSchema = z.object({
+  email: z
+    .string()
+    .email("Invalid email format")
+    .min(5, "Email must be at least 5 characters long")
+    .max(255, "Email must be at most 255 characters long"),
+  password: z.string(),
+  // password: z.string(),
+  // .min(8, "Password must be at least 8 characters long")
+  // .max(255, "Password must be at most 255 characters long"),
+  // .regex(
+  //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+  //   "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+  // ),
+  rememberMe: z.boolean().default(false),
+});
 
 // ** Types
+type LoginFormValues = z.infer<typeof loginFormSchema>;
 type Props = {
   isModal: boolean;
 };

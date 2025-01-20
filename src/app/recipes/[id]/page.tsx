@@ -11,9 +11,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import ImageGallery from "./ImageGallery";
 import RecipeCard from "@/components/RecipeCard";
-import Comment from "./Comment";
+import ImageGallery from "./_components/ImageGallery";
+import Comment from "./_components/Comment";
 
 // ** Icons
 import {

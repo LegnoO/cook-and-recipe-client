@@ -20,7 +20,7 @@ import { UseFormReturn } from "react-hook-form";
 import fetcher from "@/lib/fetcher";
 
 // ** Types
-import { FormValues } from "./page";
+import { FormValues } from "../page";
 
 interface Category {
   name: string;

@@ -1,7 +1,7 @@
 "use client";
 
 // ** React Imports
-import { useState, ChangeEvent } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 // ** Next Imports
 import Image from "next/image";
@@ -19,43 +19,36 @@ import { Trash2, Upload, Plus } from "lucide-react";
 import { cn } from "@/utils";
 
 // ** Types
-import { FormValues } from "./page";
+import { FormValues } from "../page";
 
-interface Props {
+type ListImage = {
+  file: File | null;
+  url: string;
+}[];
+
+type Props = {
   form: UseFormReturn<FormValues>;
-}
+  setImages: Dispatch<SetStateAction<ListImage>>;
+  images: ListImage;
+};
 
-const ImageUpload = ({ form }: Props) => {
+const UploadImage = ({ form, images, setImages }: Props) => {
   const error = form.formState.errors;
 
-  const [images, setImages] = useState<
-    {
-      file: File;
-      url: string;
-    }[]
-  >([]);
-
-  function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
+  function handleUploadImage(event: ChangeEvent<HTMLInputElement>) {
     const files = event.target.files ? Array.from(event.target.files) : null;
 
     if (files) {
-      if (files?.length < 5) {
+      if (images.length < 5) {
         const newImagesFile = files.map((file) => ({
           url: URL.createObjectURL(file),
           file,
         }));
 
-        setImages((prev) => {
-          const newListImage = [...prev, ...newImagesFile];
-          form.setValue(
-            "images",
-            newListImage.map((image) => image.file),
-          );
-          return newListImage;
-        });
-        form.clearErrors("images");
+        form.clearErrors("newImages");
+        setImages((prev) => [...prev, ...newImagesFile]);
       } else {
-        form.setError("images", {
+        form.setError("newImages", {
           message: "Maximum 4 images are allowed",
         });
       }
@@ -66,14 +59,7 @@ const ImageUpload = ({ form }: Props) => {
   function removeImage(index: number) {
     const currentImagesFile = [...images];
     currentImagesFile.splice(index, 1);
-
-    setImages(() => {
-      form.setValue(
-        "images",
-        currentImagesFile.map((image) => image.file),
-      );
-      return currentImagesFile;
-    });
+    setImages(currentImagesFile);
   }
 
   const ImagePreview = ({ index, image }: { index: number; image: string }) => {
@@ -101,7 +87,7 @@ const ImageUpload = ({ form }: Props) => {
     <div className="flex flex-col gap-1">
       <label
         className={cn("text-sm", {
-          "text-destructive": error.images,
+          "text-destructive": error.newImages,
         })}>
         Recipe Photos {`${images.length}/4`}
       </label>
@@ -119,7 +105,7 @@ const ImageUpload = ({ form }: Props) => {
                 type="file"
                 className="hidden"
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleUploadImage}
               />
             </label>
           </div>
@@ -138,16 +124,16 @@ const ImageUpload = ({ form }: Props) => {
                 type="file"
                 className="hidden"
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleUploadImage}
               />
             </label>
           </div>
         )}
       </div>
-      {error.images && (
-        <p className="text-sm text-destructive">{error.images.message}</p>
+      {error.newImages && (
+        <p className="text-sm text-destructive">{error.newImages.message}</p>
       )}
     </div>
   );
 };
-export default ImageUpload;
+export default UploadImage;

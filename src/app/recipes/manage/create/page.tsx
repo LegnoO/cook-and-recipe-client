@@ -18,20 +18,20 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ImageUpload from "./ImageUpload";
-import CategorySelect from "./CategorySelect";
-import DifficultySelect from "./DifficultySelect";
-import AddIngredient from "./AddIngredient";
-import AddInstruction from "./AddInstruction";
-
-// ** Hooks
-import { useToast } from "@/hooks/useToast";
+import ImageUpload from "./_components/ImageUpload";
+import CategorySelect from "./_components/CategorySelect";
+import DifficultySelect from "./_components/DifficultySelect";
+import AddIngredient from "./_components/AddIngredient";
+import AddInstruction from "./_components/AddInstruction";
 
 // ** Library Imports
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "nextjs-toploader/app";
+
+// ** Hooks
+import { useToast } from "@/hooks/useToast";
 
 // ** Services
 import {

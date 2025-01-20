@@ -26,10 +26,15 @@ import { useRouter } from "nextjs-toploader/app";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 
 const ForgotPasswordForm = () => {
+  const STEP_EMAIL = 1;
+  const STEP_OTP = 2;
+  const STEP_RESET_PASSWORD = 3;
+  const STEP_SUCCESS = 4;
+
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [codeId, setCodeId] = useState("");
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(STEP_EMAIL);
 
   function handleNextStep() {
     setCurrentStep(currentStep + 1);
@@ -41,35 +46,38 @@ const ForgotPasswordForm = () => {
 
   function renderStepContent() {
     switch (currentStep) {
-      case 1:
+      case STEP_EMAIL:
         return (
           <EmailStep
             email={email}
             setEmail={setEmail}
-            onNextStep={handleNextStep}
+            handleNextStep={handleNextStep}
           />
         );
-      case 2:
+      case STEP_OTP:
         return (
           <OTPStep
             setCodeId={setCodeId}
             email={email}
-            onNextStep={handleNextStep}
+            handleNextStep={handleNextStep}
           />
         );
-      case 3:
+      case STEP_RESET_PASSWORD:
         return (
-          <ResetPasswordStep codeId={codeId} onNextStep={handleNextStep} />
+          <ResetPasswordStep codeId={codeId} handleNextStep={handleNextStep} />
         );
-      case 4:
+      case STEP_SUCCESS:
         return (
           <div className="flex max-w-md flex-col gap-4">
             <div className="flex justify-center">
               <ShieldCheck className="h-12 w-12 text-muted-foreground" />
             </div>
-            <h3 className="text-center text-2xl font-bold">All done!</h3>
+            <h3 className="text-center text-2xl font-bold">
+              Password Reset Successful!
+            </h3>
             <p className="text-center text-sm text-gray-500">
-              Your password has been reset.
+              Your password has been reset successfully. You can now log in with
+              your new password.
             </p>
 
             <div className="mt-2 flex flex-col gap-2">
@@ -98,12 +106,12 @@ const ForgotPasswordForm = () => {
       <Card className="rounded-lg border-none px-6 py-8 shadow-md">
         <CardHeader>
           <div className="mb-8">
-            <Stepper currentStep={currentStep} maxStep={4} />
+            <Stepper currentStep={currentStep} maxStep={STEP_SUCCESS} />
           </div>
         </CardHeader>
         <CardContent>{renderStepContent()}</CardContent>
         <CardFooter className="justify-center">
-          {currentStep !== 4 && (
+          {currentStep !== STEP_SUCCESS && (
             <Link
               replace
               href="/login"

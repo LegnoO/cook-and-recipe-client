@@ -23,7 +23,7 @@ import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { Trash2, X, Plus } from "lucide-react";
 
 // ** Types
-import { FormValues } from "./page";
+import { FormValues } from "../page";
 
 type Props = {
   form: UseFormReturn<FormValues>;
@@ -70,7 +70,10 @@ const AddInstruction = ({ form }: Props) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <h3 className="text-xl font-semibold">Instructions</h3>
+        <h3 className="text-lg font-semibold">Instructions</h3>
+        <h4 className="text-sm text-muted-foreground">
+          Add your recipe instructions by sections.
+        </h4>
       </div>
       {sectionFields.map((field, sectionIndex) => (
         <Fragment key={field.id}>

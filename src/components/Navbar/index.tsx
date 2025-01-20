@@ -32,7 +32,7 @@ const Navbar = () => {
   const menuItems = [
     {
       label: "Home",
-      url: "/recipes/manage/bookmark",
+      url: "/",
     },
     {
       label: "Recipes",
@@ -186,10 +186,10 @@ const Navbar = () => {
 
         <div className={"flex items-center gap-4"}>
           {user ? (
-            <Fragment>
+            <div className="hidden items-center gap-4 lg:flex">
               <Notification />
               <UserMenu user={user} />
-            </Fragment>
+            </div>
           ) : (
             <div className="hidden items-center gap-4 lg:flex">
               <Button className="uppercase tracking-widest" variant="secondary">
@@ -259,7 +259,9 @@ const Navbar = () => {
               </li>
             );
           })}
-          {user && (
+          {user ? (
+            <Fragment></Fragment>
+          ) : (
             <Fragment>
               <li
                 className={

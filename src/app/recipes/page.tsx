@@ -2,10 +2,10 @@
 import { Fragment } from "react";
 
 // ** Components
-import QueryRecipe from "./QueryRecipe";
 import RecipeCard from "@/components/RecipeCard";
 import Pagination from "@/components/Pagination";
 import Breadcrumb from "@/components/Breadcrumb";
+import QueryRecipe from "./_components/QueryRecipe";
 
 // ** Services
 import { getRecipeList } from "@/services/server/recipeService";
@@ -71,7 +71,6 @@ export default async function RecipesListPage({ searchParams }: Props) {
   //   },
   // ];
 
-  console.log("🚀 ~ RecipesListPage ~ recipes:", recipes);
   return (
     <Fragment>
       <section className="relative max-w-full bg-recipes-banner bg-cover bg-center bg-no-repeat">

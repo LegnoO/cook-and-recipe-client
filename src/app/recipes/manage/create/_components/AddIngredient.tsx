@@ -17,7 +17,7 @@ import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { X, Plus } from "lucide-react";
 
 // ** Types
-import { FormValues } from "./page";
+import { FormValues } from "../page";
 
 type Props = {
   form: UseFormReturn<FormValues>;
@@ -36,9 +36,11 @@ const AddIngredient = ({ form }: Props) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <h2 className="text-xl font-semibold">Ingredients</h2>
+        <h3 className="text-lg font-semibold">Ingredients</h3>
+        <h4 className="text-sm text-muted-foreground">
+          List all ingredients needed for your recipe.
+        </h4>
       </div>
-
       {ingredientFields.map((field, index) => (
         <div key={field.id} className="grid grid-cols-[2fr,1fr,1fr,auto] gap-2">
           <FormField

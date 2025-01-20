@@ -48,21 +48,21 @@ const UserMenu = ({ user }: Props) => {
 
         <Link href="/recipes/manage">
           <DropdownMenuItem className="cursor-pointer">
-            <ChefHat className="mr-2 h-4 w-4" />
+            <ChefHat className="h-4 w-4" />
             <span>My Recipes</span>
           </DropdownMenuItem>
         </Link>
 
         <Link href="/recipes/manage/bookmark">
           <DropdownMenuItem className="cursor-pointer">
-            <Bookmark className="mr-2 h-4 w-4" />
+            <Bookmark className="h-4 w-4" />
             <span>Bookmarks</span>
           </DropdownMenuItem>
         </Link>
 
         <Link href="/profile">
           <DropdownMenuItem className="cursor-pointer">
-            <UserIcon className="mr-2 h-4 w-4" />
+            <UserIcon className="h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
         </Link>
@@ -72,7 +72,7 @@ const UserMenu = ({ user }: Props) => {
         <DropdownMenuItem
           onClick={logout}
           className="cursor-pointer text-destructive hover:!bg-destructive/80 hover:!text-destructive-foreground">
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="h-4 w-4" />
           <span>Sign out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

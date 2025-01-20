@@ -1,7 +1,7 @@
 "use client";
 
 // ** React Imports
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 
 // ** Next Imports
 import { useSearchParams } from "next/navigation";
@@ -36,8 +36,15 @@ import { cn, timeAgo } from "@/utils";
 
 const Notification = () => {
   const searchParams = useSearchParams();
+  const sortOrder = searchParams.get("sortOrder") || "asc";
+  const sortBy = searchParams.get("sortBy") || "createdDate";
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [notifications, setNotifications] = useState<ListNotifications>([]);
   const [totalMessages, setTotalMessages] = useState<number | null>(null);
+  console.log("🚀 ~ Notification ~ totalMessages:", {
+    totalMessages,
+    notifications: notifications.length,
+  });
   const [index, setIndex] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [isOpenPopover, setIsOpenPopover] = useState(false);
@@ -47,7 +54,8 @@ const Notification = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("index", "1");
     params.set("size", (5 * index).toString());
-
+    params.set("sortOrder", sortOrder);
+    params.set("sortBy", sortBy);
     return params.toString();
   }
 
@@ -62,6 +70,10 @@ const Notification = () => {
   }
 
   function handleTogglePopover(open: boolean) {
+    if (open) {
+      fetchNotifications();
+    }
+
     setIsOpenPopover(open);
     if (!notificationResponse || !totalMessages) return;
 
@@ -77,20 +89,31 @@ const Notification = () => {
     ...queryOptionsConfig,
   });
 
-  useEffect(() => {
-    const idTimeout = setInterval(() => {
-      async function check() {
-        const newMessage = await checkNewNotification();
+  async function fetchNotifications() {
+    const newMessage = await checkNewNotification();
+    setNotifications((prev) =>
+      newMessage.length > 0 ? [...prev, ...newMessage] : prev,
+    );
+    resetInterval();
+  }
 
-        setNotifications((prev) =>
-          newMessage.length > 0 ? [...prev].concat(newMessage) : prev,
-        );
-      }
-      check();
-    }, 10000);
+  function resetInterval() {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      fetchNotifications();
+    }, 150000);
+  }
+
+  useEffect(() => {
+    resetInterval();
 
     return () => {
-      clearTimeout(idTimeout);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
     };
   }, []);
 
@@ -140,10 +163,24 @@ const Notification = () => {
     );
   };
 
+  {
+    /* <Dialog open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
+       <DialogContent>
+         <DialogHeader>
+           <DialogTitle>{selectedMessage?.title}</DialogTitle>
+         </DialogHeader>
+         <div className="space-y-4">
+           <p className="text-gray-600">{selectedMessage?.content}</p>
+           <p className="text-sm text-gray-400">{selectedMessage?.timestamp}</p>
+         </div>
+       </DialogContent>
+     </Dialog> */
+  }
+
   return (
     <Popover open={isOpenPopover} onOpenChange={handleTogglePopover}>
       <PopoverTrigger asChild>
-        <Button variant="secondary" className="relative h-10 w-10 rounded-full">
+        <Button variant="secondary" className="relative h-12 w-12 rounded-full">
           <Bell className="!h-5 !w-5" />
           <span
             className={cn("absolute right-0 top-0 h-2 w-2 rounded-full", {
@@ -170,12 +207,18 @@ const Notification = () => {
               next={fetchMoreData}
               hasMore={hasMore}>
               <Fragment>
-                {notifications.map((notification) => (
-                  <MessageItem
-                    notification={notification}
-                    key={notification.id}
-                  />
-                ))}
+                {notifications
+                  .sort(
+                    (a, b) =>
+                      new Date(b.createdDate).getTime() -
+                      new Date(a.createdDate).getTime(),
+                  )
+                  .map((notification) => (
+                    <MessageItem
+                      notification={notification}
+                      key={notification.id}
+                    />
+                  ))}
                 {isLoading && (
                   <Fragment>
                     <div className="flex flex-col gap-2 p-3">
@@ -193,7 +236,7 @@ const Notification = () => {
             </InfiniteScroll>
           </div>
 
-          {!isAutoFetch && (
+          {!hasMore && (
             <div onClick={autoFetch} className="border-t p-3">
               <Button className="h-7 w-full px-3.5 py-1.5">
                 View More Notifications

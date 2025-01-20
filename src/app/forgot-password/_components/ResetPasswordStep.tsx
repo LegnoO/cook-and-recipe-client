@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 // ** Services
 import { resetPassword } from "@/services/client/authService";
 
-// ** Schemas
+// ** Schema
 const schema = z
   .object({
     password: z
@@ -40,31 +40,33 @@ const schema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-type FormData = z.infer<typeof schema>;
 
 // ** Types
+type FormData = z.infer<typeof schema>;
 type Props = {
-  onNextStep: () => void;
+  handleNextStep: () => void;
   codeId: string;
 };
 
-const ResetPasswordStep = ({ codeId, onNextStep }: Props) => {
+const ResetPasswordStep = ({ codeId, handleNextStep }: Props) => {
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
   });
   const [errorResponse, setErrorResponse] = useState("");
-  const { control, handleSubmit } = form;
-
   const [isLoading, setLoading] = useState(false);
 
   async function onSubmit(data: FormData) {
+    setErrorResponse("");
+    setLoading(true);
     try {
-      setErrorResponse("");
-      setLoading(true);
       await resetPassword({ codeId, ...data });
-      onNextStep();
+      handleNextStep();
     } catch (error) {
-      if (error instanceof Error) setErrorResponse(error.message);
+      setErrorResponse(
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -84,11 +86,11 @@ const ResetPasswordStep = ({ codeId, onNextStep }: Props) => {
         <form
           noValidate
           autoComplete="off"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="mt-4 space-y-6">
           <div className="flex flex-col gap-4">
             <FormField
-              control={control}
+              control={form.control}
               name="password"
               render={({ field }) => {
                 return (
@@ -104,7 +106,7 @@ const ResetPasswordStep = ({ codeId, onNextStep }: Props) => {
             />
 
             <FormField
-              control={control}
+              control={form.control}
               name="confirmPassword"
               render={({ field }) => {
                 return (

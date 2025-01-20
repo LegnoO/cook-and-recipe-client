@@ -42,8 +42,15 @@ import { register } from "@/services/client/authService";
 const formSchema = z
   .object({
     fullName: z.string().min(2, "Full name must be at least 2 characters"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(1, "Password must be at least 8 characters"),
+    email: z
+      .string()
+      .email("Invalid email format")
+      .min(5, "Email must be at least 5 characters long")
+      .max(255, "Email must be at most 255 characters long"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .max(255, "Password must be at most 255 characters long"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -51,26 +58,27 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
+// ** Types
 type FormValues = z.infer<typeof formSchema>;
 
 const RegisterForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errorResponse, setErrorResponse] = useState("");
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
 
   async function onSubmit(dataSubmit: FormValues) {
     setLoading(true);
-    setError("");
+    setErrorResponse("");
 
     try {
       await register(dataSubmit);
       router.push("/login");
     } catch (error) {
-      setError((prev) => (typeof error === "string" ? error : prev));
+      setErrorResponse((prev) => (typeof error === "string" ? error : prev));
     } finally {
       setLoading(false);
     }
@@ -200,7 +208,9 @@ const RegisterForm = () => {
                 disabled={isLoading}
                 className="w-full"
               />
-              {error && <p className="text-destructive">{error}</p>}
+              {errorResponse && (
+                <p className="text-destructive">{errorResponse}</p>
+              )}
               <p className="text-center">
                 Already have an account?{" "}
                 <Link

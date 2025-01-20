@@ -26,44 +26,41 @@ import { useForm } from "react-hook-form";
 // ** Services
 import { requestReset } from "@/services/client/authService";
 
-// ** Schemas
+// ** Schema
 const schema = z.object({
   email: z
     .string({ required_error: "Email is required" })
-    .min(1, {
-      message: "Email is required",
-    })
     .email({ message: "Invalid email address" }),
 });
 
-type FormData = z.infer<typeof schema>;
-
 // ** Types
+type FormData = z.infer<typeof schema>;
 type Props = {
-  onNextStep: () => void;
+  handleNextStep: () => void;
   email: string;
   setEmail: Dispatch<SetStateAction<string>>;
 };
 
-const EmailStep = ({ onNextStep, setEmail }: Props) => {
+const EmailStep = ({ handleNextStep, setEmail }: Props) => {
+  const [isLoading, setLoading] = useState(false);
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      email: "",
-    },
+    defaultValues: { email: "" },
   });
-  const { setError, control, handleSubmit } = form;
-
-  const [isLoading, setLoading] = useState(false);
 
   async function onSubmit({ email }: FormData) {
+    setLoading(true);
     try {
-      setLoading(true);
       setEmail(email);
       await requestReset(email);
-      onNextStep();
+      handleNextStep();
     } catch (error) {
-      if (error instanceof Error) setError("email", { message: error.message });
+      form.setError("email", {
+        message:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -76,45 +73,41 @@ const EmailStep = ({ onNextStep, setEmail }: Props) => {
       </div>
       <h3 className="text-center text-2xl font-bold">Forgot password?</h3>
       <p className="text-center text-sm text-muted-foreground">
-        {"No worries, we'll send you reset instructions."}
+        {"Enter your email below, and we’ll send you instructions to reset it."}
       </p>
 
       <Form {...form}>
         <form
           noValidate
           autoComplete="off"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6">
-          <div className="flex flex-col gap-1.5">
-            <FormField
-              control={control}
-              name="email"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        id="email"
-                        placeholder="Enter your email"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      id="email"
+                      placeholder="Enter your email"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
 
-          <div className="flex flex-col gap-1">
-            <LoadingButton
-              label="Send OTP"
-              type="submit"
-              isLoading={isLoading}
-              disabled={isLoading}
-            />
-          </div>
+          <LoadingButton
+            label="Send OTP"
+            type="submit"
+            isLoading={isLoading}
+            disabled={isLoading}
+          />
         </form>
       </Form>
     </div>

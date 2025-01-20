@@ -22,11 +22,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToastAction } from "@/components/ui/toast";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import UploadImage from "./UploadImage";
-import SelectCategory from "./SelectCategory";
-import SelectDifficulty from "./SelectDifficulty";
-import AddIngredient from "./AddIngredient";
-import AddInstruction from "./AddInstruction";
+import UploadImage from "./_components/UploadImage";
+import SelectCategory from "./_components/SelectCategory";
+import SelectDifficulty from "./_components/SelectDifficulty";
+import AddIngredient from "./_components/AddIngredient";
+import AddInstruction from "./_components/AddInstruction";
 
 // ** Hooks
 import { useToast } from "@/hooks/useToast";

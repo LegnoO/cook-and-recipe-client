@@ -30,23 +30,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // ** Services
 import { sendOtp, requestReset } from "@/services/client/authService";
 
-// ** Schemas
+// ** Schema
 const schema = z.object({
-  otp: z.string({ required_error: "OTP is required" }).min(6, {
-    message: "OTP must be 6 characters",
-  }),
+  otp: z.string().length(6, "OTP must be 6 characters"),
 });
 
-type FormData = z.infer<typeof schema>;
-
 // ** Types
+type FormData = z.infer<typeof schema>;
 type Props = {
-  onNextStep: () => void;
+  handleNextStep: () => void;
   email: string;
   setCodeId: Dispatch<SetStateAction<string>>;
 };
 
-const EmailStep = ({ email, setCodeId, onNextStep }: Props) => {
+const EmailStep = ({ email, setCodeId, handleNextStep }: Props) => {
   const [message, setMessage] = useState(
     "A new verification code has been sent to your email.",
   );
@@ -55,17 +52,10 @@ const EmailStep = ({ email, setCodeId, onNextStep }: Props) => {
     resolver: zodResolver(schema),
   });
 
-  const {
-    control,
-    setError,
-    formState: { errors },
-    handleSubmit,
-  } = form;
-
   async function handleResendRequest() {
+    setMessage("");
+    setLoading(true);
     try {
-      setMessage("");
-      setLoading(true);
       await requestReset(email);
       setMessage("A new verification code has been sent to your email.");
     } finally {
@@ -74,14 +64,19 @@ const EmailStep = ({ email, setCodeId, onNextStep }: Props) => {
   }
 
   async function onSubmit({ otp }: FormData) {
+    setMessage("");
+    setLoading(true);
     try {
-      setMessage("");
-      setLoading(true);
       const codeId = await sendOtp(otp);
       setCodeId(codeId);
-      onNextStep();
+      handleNextStep();
     } catch (error) {
-      if (error instanceof Error) setError("otp", { message: error.message });
+      form.setError("otp", {
+        message:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -100,10 +95,10 @@ const EmailStep = ({ email, setCodeId, onNextStep }: Props) => {
         <form
           noValidate
           autoComplete="off"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6">
           <FormField
-            control={control}
+            control={form.control}
             name="otp"
             render={({ field }) => {
               return (
@@ -132,7 +127,7 @@ const EmailStep = ({ email, setCodeId, onNextStep }: Props) => {
               label="Continue"
               type="submit"
               isLoading={isLoading}
-              disabled={Boolean(errors.otp) || isLoading}
+              disabled={Boolean(form.formState.errors.otp) || isLoading}
             />
           </div>
         </form>

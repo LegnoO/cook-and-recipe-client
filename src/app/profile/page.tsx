@@ -2,8 +2,10 @@
 import type { Metadata } from "next";
 
 // ** Components
-import Collection from "./Collection";
-import UserInfo from "./UserInfo";
+import Collection from "./_components/Collection";
+import UserInfo from "./_components/UserInfo";
+
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -16,10 +18,14 @@ export default async function Profile() {
     <div className="container my-[35px] space-y-8 p-4">
       <div className="flex flex-col items-stretch gap-8 md:flex-row">
         <div className="w-full md:w-[30%]">
-          <UserInfo />
+          <Suspense fallback={<>test UserInfo</>}>
+            <UserInfo />
+          </Suspense>
         </div>
         <div className="w-full md:w-[70%]">
-          <Collection />
+          <Suspense fallback={<>test Collection</>}>
+            <Collection />
+          </Suspense>
         </div>
       </div>
     </div>

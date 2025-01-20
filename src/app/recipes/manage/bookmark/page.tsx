@@ -4,7 +4,7 @@
 import RecipeCard from "@/components/RecipeCard";
 import Pagination from "@/components/Pagination";
 import Breadcrumb from "@/components/Breadcrumb";
-import QueryRecipe from "../../QueryRecipe";
+import QueryRecipe from "../../_components/QueryRecipe";
 
 // ** Library Imports
 import { useQuery } from "@tanstack/react-query";

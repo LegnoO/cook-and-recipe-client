@@ -2,10 +2,10 @@
 import { Fragment } from "react";
 
 // ** Components
-import ChefCard from "./ChefCard";
+import ChefCard from "./_components/ChefCard";
 import Breadcrumb from "@/components/Breadcrumb";
 import Pagination from "@/components/Pagination";
-import QueryChef from "./QueryChef";
+import QueryChef from "./_components/QueryChef";
 
 // ** Services
 import { getChefList } from "@/services/server/chefService";

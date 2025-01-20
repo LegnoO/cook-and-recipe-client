@@ -1,9 +1,7 @@
-// ** Next Imports
-
 // ** Components
-import QueryRecipe from "../QueryRecipe";
 import Breadcrumb from "@/components/Breadcrumb";
-import RecipeList from "./RecipeList";
+import RecipeList from "./_components/RecipeList";
+import QueryRecipe from "../_components/QueryRecipe";
 
 export default function ManageRecipesPage() {
   const breadcrumbLinks: BreadcrumbLinks = [

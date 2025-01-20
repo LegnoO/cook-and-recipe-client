@@ -49,7 +49,7 @@ const Comment = ({ recipeDetail, commentIndex }: Props) => {
       const result = await postReviewAction(
         {
           recipeId: recipeDetail.id,
-          message: commentRef.current!.value,
+          content: commentRef.current!.value,
           rating,
         },
         "/",

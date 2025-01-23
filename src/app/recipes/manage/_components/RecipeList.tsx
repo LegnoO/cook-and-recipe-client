@@ -112,7 +112,7 @@ const RecipeList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {recipes ? (
+            {recipes && recipes.length > 0 ? (
               <Fragment>
                 {recipes?.map((recipe) => (
                   <TableRow key={recipe.id}>

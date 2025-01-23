@@ -41,12 +41,16 @@ type Props = {
   searchParams: SearchParams;
 };
 
+// ** SEO
 export async function generateMetadata({ params }: Props) {
   try {
     const recipeDetail = await getRecipeDetail(params.id);
     return {
       title: `${recipeDetail.name}`,
       description: recipeDetail.description,
+      alternates: {
+        canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/recipes/${params.id}`,
+      },
       openGraph: {
         images: [{ url: recipeDetail.imageUrls[0] }],
       },

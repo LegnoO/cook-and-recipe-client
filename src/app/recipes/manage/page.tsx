@@ -1,7 +1,7 @@
 // ** Components
 import Breadcrumb from "@/components/Breadcrumb";
 import RecipeList from "./_components/RecipeList";
-import QueryRecipe from "../_components/QueryRecipe";
+import QueryRecipeOwn from "../_components/QueryRecipeOwn";
 
 export default function ManageRecipesPage() {
   const breadcrumbLinks: BreadcrumbLinks = [
@@ -18,9 +18,8 @@ export default function ManageRecipesPage() {
             <Breadcrumb items={breadcrumbLinks} />
           </div>
           <div className="mb-8">
-            <QueryRecipe />
+            <QueryRecipeOwn />
           </div>
-
           <RecipeList />
         </div>
       </div>

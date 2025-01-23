@@ -24,12 +24,16 @@ type Props = {
   params: { id: string };
 };
 
+// ** SEO
 export async function generateMetadata({ params }: Props) {
   try {
     const chefDetail = await getChefDetail(params.id);
     return {
       title: `${chefDetail.userInfo.fullName}`,
       description: chefDetail.description,
+      alternates: {
+        canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/chefs/${params.id}`,
+      },
       openGraph: {
         images: [{ url: chefDetail.userInfo.avatar }],
       },

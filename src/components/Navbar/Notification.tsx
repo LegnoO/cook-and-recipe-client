@@ -1,7 +1,7 @@
 "use client";
 
 // ** React Imports
-import { useState, useEffect, useRef, Fragment } from "react";
+import { useState, useEffect, useRef, Fragment, useCallback } from "react";
 
 // ** Next Imports
 import { useSearchParams } from "next/navigation";
@@ -13,6 +13,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // ** Library Imports
@@ -89,6 +96,8 @@ const Notification = () => {
     ...queryOptionsConfig,
   });
 
+  // function openNotificationDetail() {}
+
   async function fetchNotifications() {
     const newMessage = await checkNewNotification();
     setNotifications((prev) =>
@@ -97,7 +106,7 @@ const Notification = () => {
     resetInterval();
   }
 
-  function resetInterval() {
+  const resetInterval = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -105,7 +114,7 @@ const Notification = () => {
     intervalRef.current = setInterval(() => {
       fetchNotifications();
     }, 150000);
-  }
+  }, []);
 
   useEffect(() => {
     resetInterval();
@@ -115,7 +124,7 @@ const Notification = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, []);
+  }, [resetInterval]);
 
   useEffect(() => {
     if (!notificationResponse) return;
@@ -123,8 +132,7 @@ const Notification = () => {
     setNotifications(notificationResponse.data);
 
     if (!totalMessages) return;
-    if (isAutoFetch)
-      setHasMore(totalMessages > 0 || notifications.length >= totalMessages);
+    if (isAutoFetch) setHasMore(notifications.length < totalMessages);
 
     if (notifications.length >= totalMessages) setIsAutoFetch(false);
 
@@ -138,44 +146,51 @@ const Notification = () => {
   }) => {
     return (
       <Fragment>
-        <div className="cursor-pointer p-3 transition-colors hover:bg-secondary/80 [&:not(:last-child)]:border-b">
-          <div
-            className={cn("relative flex flex-col gap-1", {
-              "opacity-50": notification.status === "read",
-            })}>
-            <div className="flex flex-col">
-              <p className="mb-1 text-sm font-medium leading-none">
-                {notification.title}
-              </p>
-              <p className="mb-2 text-sm text-muted-foreground">
-                {notification.message}
-              </p>
-              <p className="text-sm text-placeholder">
-                {timeAgo(notification.createdDate)}
-              </p>
+        <Dialog>
+          <DialogTrigger asChild>
+            <div className="cursor-pointer p-3 transition-colors hover:bg-secondary/80 [&:not(:last-child)]:border-b">
+              <div
+                className={cn("relative flex flex-col gap-1", {
+                  "opacity-50": notification.status === "read",
+                })}>
+                <div>
+                  <p className="mb-1 text-sm font-semibold">
+                    {notification.title}
+                  </p>
+                  <p className="mb-2 text-sm text-muted-foreground">
+                    {notification.message}
+                  </p>
+                  <p className="text-xs text-placeholder">
+                    {timeAgo(notification.createdDate)}
+                  </p>
+                </div>
+                {notification.status === "sent" && (
+                  <div className="absolute right-0 top-0 h-2 w-2 rounded-full bg-primary" />
+                )}
+              </div>
             </div>
-            {notification.status === "sent" && (
-              <div className="absolute right-0 top-0 h-2 w-2 rounded-full bg-primary" />
-            )}
-          </div>
-        </div>
+          </DialogTrigger>
+
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>{notification.title}</DialogTitle>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="col-span-4">{notification.message}</span>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="col-span-4 text-sm text-placeholder">
+                  {timeAgo(notification.createdDate)}
+                </span>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </Fragment>
     );
   };
-
-  {
-    /* <Dialog open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
-       <DialogContent>
-         <DialogHeader>
-           <DialogTitle>{selectedMessage?.title}</DialogTitle>
-         </DialogHeader>
-         <div className="space-y-4">
-           <p className="text-gray-600">{selectedMessage?.content}</p>
-           <p className="text-sm text-gray-400">{selectedMessage?.timestamp}</p>
-         </div>
-       </DialogContent>
-     </Dialog> */
-  }
 
   return (
     <Popover open={isOpenPopover} onOpenChange={handleTogglePopover}>

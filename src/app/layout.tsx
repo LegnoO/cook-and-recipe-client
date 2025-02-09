@@ -2,8 +2,6 @@
 import { Metadata } from "next";
 
 // ** Components
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 
 // ** Context
@@ -18,7 +16,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { raleway, playfair } from "@/lib/font";
 
 // ** CSS
-import "@/styles/globals.css";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
@@ -42,10 +40,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <html className="" lang="en">
@@ -60,10 +56,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           <AuthProvider>
             <div className="flex flex-col">
-              <Navbar />
-              {modal}
               <div className="flex-1">{children}</div>
-              <Footer />
             </div>
           </AuthProvider>
         </ReactQueryProvider>

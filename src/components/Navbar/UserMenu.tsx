@@ -32,7 +32,7 @@ const UserMenu = ({ user }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-12 w-12 cursor-pointer">
+        <Avatar className="h-10 w-10 cursor-pointer">
           <AvatarImage src={user.avatar} alt="User Avatar" />
           <AvatarFallback>{getCharInitials(user.fullName)}</AvatarFallback>
         </Avatar>
@@ -46,24 +46,26 @@ const UserMenu = ({ user }: Props) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <Link href="/recipes/manage">
+        <Link href="/profile">
           <DropdownMenuItem className="cursor-pointer">
-            <ChefHat className="h-4 w-4" />
-            <span>My Recipes</span>
+            <UserIcon className="h-4 w-4" />
+            <span>Profile</span>
           </DropdownMenuItem>
         </Link>
+
+        {user.chefId && (
+          <Link href="/recipes/manage">
+            <DropdownMenuItem className="cursor-pointer">
+              <ChefHat className="h-4 w-4" />
+              <span>My Recipes</span>
+            </DropdownMenuItem>
+          </Link>
+        )}
 
         <Link href="/recipes/manage/bookmark">
           <DropdownMenuItem className="cursor-pointer">
             <Bookmark className="h-4 w-4" />
             <span>Bookmarks</span>
-          </DropdownMenuItem>
-        </Link>
-
-        <Link href="/profile">
-          <DropdownMenuItem className="cursor-pointer">
-            <UserIcon className="h-4 w-4" />
-            <span>Profile</span>
           </DropdownMenuItem>
         </Link>
 

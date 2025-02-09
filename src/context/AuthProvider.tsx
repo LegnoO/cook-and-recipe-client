@@ -41,14 +41,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function handleLogout() {
     try {
       setUser(null);
-      window.location.href = "/";
       await logout();
       deleteCookie("accessToken");
       toast({
+        variant: "successful",
         title: "Logged out successfully",
         description: "You have been logged out of your account.",
         duration: 3000,
       });
+      window.location.href = "/";
     } catch (error) {
       toast({
         title: "Logout failed",

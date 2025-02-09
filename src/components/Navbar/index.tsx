@@ -28,7 +28,6 @@ import { idStore } from "@/store/idStore";
 import { cn } from "@/utils";
 
 const Navbar = () => {
-  const animatedNavbarPaths = ["/", "/recipes", "/chefs", "/contact", "/about"];
   const menuItems = [
     {
       label: "Home",
@@ -46,18 +45,14 @@ const Navbar = () => {
       label: "Contact",
       url: "/contact",
     },
-    {
-      label: "About us",
-      url: "/recipes/676d8ebdb442f5f00f27e711",
-    },
   ];
 
   const params = useParams();
   const pathname = usePathname();
   const isMediumScreen = useMediaQuery("(min-width: 768px)");
 
-  const isAnimatedNavbar = animatedNavbarPaths.some((pattern) =>
-    matchPatternWithParams(pattern),
+  const isAnimatedNavbar = menuItems.some((item) =>
+    matchPatternWithParams(item.url),
   );
 
   function matchPatternWithParams(pattern: string) {

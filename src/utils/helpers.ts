@@ -3,14 +3,7 @@ export const regex = {
 };
 
 export function getCharInitials(name: string) {
-  if (!name) return "";
-
-  const splitName = name.split(" ");
-  if (splitName.length === 1) {
-    return splitName[0].charAt(0);
-  } else {
-    return splitName[0].charAt(0) + splitName[splitName.length - 1].charAt(0);
-  }
+  return name.slice(0, 2).toUpperCase();
 }
 
 export const isSSR = typeof window === "undefined";
@@ -164,4 +157,28 @@ export function timeAgo(date: Date | string) {
   } else {
     return rtf.format(-days, "day");
   }
+}
+
+export function uniqueFromArrays(array1: string[], array2: string[]): string[] {
+  const countMap: Record<string, number> = {};
+  const result: string[] = [];
+
+  function increaseCount(item: string) {
+    if (countMap[item]) {
+      countMap[item] = countMap[item] + 1;
+    } else {
+      countMap[item] = 1;
+    }
+  }
+
+  array1.forEach(increaseCount);
+  array2.forEach(increaseCount);
+
+  for (const item in countMap) {
+    if (countMap[item] === 1) {
+      result.push(item);
+    }
+  }
+
+  return result;
 }

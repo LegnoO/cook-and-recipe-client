@@ -103,7 +103,7 @@ export default function RecipeCard({ recipe }: Props) {
       <CardContent className="px-0 pb-4 pt-5">
         <Link href={`/recipes/${recipe.id}`}>
           <div className="flex flex-col">
-            <div className="mb-2 flex items-center justify-between">
+            <div className="mb-2 flex items-center justify-between gap-4">
               <h3 className="line-clamp-1 w-full text-sm font-semibold uppercase tracking-[1.90px] lg:text-base">
                 {recipe.name}
               </h3>

@@ -48,10 +48,6 @@ const Notification = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [notifications, setNotifications] = useState<ListNotifications>([]);
   const [totalMessages, setTotalMessages] = useState<number | null>(null);
-  console.log("🚀 ~ Notification ~ totalMessages:", {
-    totalMessages,
-    notifications: notifications.length,
-  });
   const [index, setIndex] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [isOpenPopover, setIsOpenPopover] = useState(false);
@@ -84,7 +80,7 @@ const Notification = () => {
     setIsOpenPopover(open);
     if (!notificationResponse || !totalMessages) return;
 
-    if (!open || notifications.length >= totalMessages) {
+    if (!open || totalMessages <= 1) {
       setIsAutoFetch(false);
       setHasMore(false);
     }
@@ -98,13 +94,13 @@ const Notification = () => {
 
   // function openNotificationDetail() {}
 
-  async function fetchNotifications() {
+  const fetchNotifications = useCallback(async () => {
     const newMessage = await checkNewNotification();
     setNotifications((prev) =>
       newMessage.length > 0 ? [...prev, ...newMessage] : prev,
     );
     resetInterval();
-  }
+  }, [checkNewNotification]);
 
   const resetInterval = useCallback(() => {
     if (intervalRef.current) {
@@ -114,7 +110,7 @@ const Notification = () => {
     intervalRef.current = setInterval(() => {
       fetchNotifications();
     }, 150000);
-  }, []);
+  }, [fetchNotifications]);
 
   useEffect(() => {
     resetInterval();
@@ -132,9 +128,9 @@ const Notification = () => {
     setNotifications(notificationResponse.data);
 
     if (!totalMessages) return;
-    if (isAutoFetch) setHasMore(notifications.length < totalMessages);
+    if (isAutoFetch) setHasMore(totalMessages > 1);
 
-    if (notifications.length >= totalMessages) setIsAutoFetch(false);
+    if (totalMessages <= 1) setIsAutoFetch(false);
 
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [notificationResponse]);
@@ -171,20 +167,16 @@ const Notification = () => {
             </div>
           </DialogTrigger>
 
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>{notification.title}</DialogTitle>
             </DialogHeader>
 
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="col-span-4">{notification.message}</span>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="col-span-4 text-sm text-placeholder">
-                  {timeAgo(notification.createdDate)}
-                </span>
-              </div>
+            <div className="grid gap-2">
+              <p className="col-span-4">{notification.message}</p>
+              <p className="col-span-4 text-sm text-placeholder">
+                {timeAgo(notification.createdDate)}
+              </p>
             </div>
           </DialogContent>
         </Dialog>
@@ -195,8 +187,8 @@ const Notification = () => {
   return (
     <Popover open={isOpenPopover} onOpenChange={handleTogglePopover}>
       <PopoverTrigger asChild>
-        <Button variant="secondary" className="relative h-12 w-12 rounded-full">
-          <Bell className="!h-5 !w-5" />
+        <Button variant="secondary" className="relative h-10 w-10 rounded-full">
+          <Bell className="!h-4 !w-4" />
           <span
             className={cn("absolute right-0 top-0 h-2 w-2 rounded-full", {
               "bg-destructive": notifications.some((notification) =>
@@ -207,14 +199,14 @@ const Notification = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0">
-        <div className="min-w-72">
+        <div className="max-w-[280px]">
           <div className="border-b p-3">
             <h3 className="text-sm font-medium lg:text-base">Notifications</h3>
           </div>
 
           <div
             id="scrollableDiv"
-            className="max-h-[calc(100vh-300px)] overflow-auto">
+            className="max-h-[calc(100vh-150px)] overflow-auto">
             <InfiniteScroll
               scrollableTarget="scrollableDiv"
               dataLength={notifications.length}
@@ -247,17 +239,17 @@ const Notification = () => {
                     </div>
                   </Fragment>
                 )}
+                {!hasMore ||
+                  (!isAutoFetch && (
+                    <div onClick={autoFetch} className="border-t p-3">
+                      <Button className="h-7 w-full px-3.5 py-1.5">
+                        View More Notifications
+                      </Button>
+                    </div>
+                  ))}
               </Fragment>
             </InfiniteScroll>
           </div>
-
-          {!hasMore && (
-            <div onClick={autoFetch} className="border-t p-3">
-              <Button className="h-7 w-full px-3.5 py-1.5">
-                View More Notifications
-              </Button>
-            </div>
-          )}
         </div>
       </PopoverContent>
     </Popover>

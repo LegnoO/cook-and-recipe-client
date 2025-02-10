@@ -28,6 +28,7 @@ import SelectDifficulty from "./_components/SelectDifficulty";
 import AddIngredient from "./_components/AddIngredient";
 import AddInstruction from "./_components/AddInstruction";
 import Breadcrumb from "@/components/Breadcrumb";
+import Loading from "@/app/(management)/_components/Loading";
 
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
@@ -242,11 +243,7 @@ export default function UpdateRecipePage({ params }: Props) {
   }, [recipeDetail]);
 
   if (!recipeDetail || fetchLoading) {
-    return (
-      <div className="bg-background">
-        <div className="container py-[calc(72px+30px)]">Load</div>
-      </div>
-    );
+    return <Loading />;
   }
   const breadcrumbLinks: BreadcrumbLinks = [
     { title: "Home", href: "/" },

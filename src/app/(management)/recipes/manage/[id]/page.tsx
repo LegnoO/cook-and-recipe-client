@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Breadcrumb from "@/components/Breadcrumb";
+import Loading from "@/app/(management)/_components/Loading";
 
 // ** Library Imports
 import { format } from "date-fns";
@@ -167,7 +168,7 @@ export default function RecipesOwnedDetail({ params }: Props) {
   }, [recipeDetail]);
 
   if (!recipe || (isLoading && !recipe)) {
-    return <>loading</>;
+    return <Loading />;
   }
 
   return (

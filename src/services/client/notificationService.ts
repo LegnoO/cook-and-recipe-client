@@ -8,6 +8,13 @@ export async function getNotificationOwned(
   return await res.json();
 }
 
+export async function getNotificationDetail(
+  id: string,
+): Promise<NotificationResponse> {
+  const res = await fetcher(`/notification/owned/find?${id}`);
+  return await res.json();
+}
+
 export async function checkNewNotification(): Promise<
   NewNotificationMessage[]
 > {

@@ -18,9 +18,6 @@ import { getRecipeBookmarkList } from "@/services/client/recipeService";
 // ** Config
 import { queryOptionsConfig } from "@/config/useQueryOptions";
 
-// ** Utils
-import { parseSearchParams } from "@/utils";
-
 const ManageRecipeBookmarks = () => {
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);

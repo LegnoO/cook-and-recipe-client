@@ -5,7 +5,7 @@ import { Fragment } from "react";
 
 // ** Library Imports
 import type { DateRange } from "react-day-picker";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 
 // ** Components
 import {

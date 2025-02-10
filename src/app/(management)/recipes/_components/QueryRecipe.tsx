@@ -1,7 +1,7 @@
 "use client";
 
 // ** React Imports
-import { useState, useCallback, ChangeEvent, useEffect } from "react";
+import { useState, useCallback, ChangeEvent } from "react";
 
 // ** Next Imports
 import { useSearchParams } from "next/navigation";

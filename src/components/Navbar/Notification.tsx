@@ -46,6 +46,8 @@ const Notification = () => {
   const sortOrder = searchParams.get("sortOrder") || "asc";
   const sortBy = searchParams.get("sortBy") || "createdDate";
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [notificationDetail, setNotificationDetail] = useState("");
+
   const [notifications, setNotifications] = useState<ListNotifications>([]);
   const [totalMessages, setTotalMessages] = useState<number | null>(null);
   const [index, setIndex] = useState(1);
@@ -92,7 +94,19 @@ const Notification = () => {
     ...queryOptionsConfig,
   });
 
-  // function openNotificationDetail() {}
+  function toggleNotificationDetail(
+    isOpen: boolean,
+    id: string,
+    status: "read" | "sent" | "unread",
+  ) {
+    if (isOpen) {
+      setNotificationDetail(id);
+      if (status !== "read") {
+      }
+      return;
+    }
+    setNotificationDetail("");
+  }
 
   const fetchNotifications = useCallback(async () => {
     const newMessage = await checkNewNotification();
@@ -100,6 +114,8 @@ const Notification = () => {
       newMessage.length > 0 ? [...prev, ...newMessage] : prev,
     );
     resetInterval();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkNewNotification]);
 
   const resetInterval = useCallback(() => {
@@ -142,7 +158,11 @@ const Notification = () => {
   }) => {
     return (
       <Fragment>
-        <Dialog>
+        <Dialog
+          open={notificationDetail === notification.id}
+          onOpenChange={(open) =>
+            toggleNotificationDetail(open, notification.id, notification.status)
+          }>
           <DialogTrigger asChild>
             <div className="cursor-pointer p-3 transition-colors hover:bg-secondary/80 [&:not(:last-child)]:border-b">
               <div
@@ -167,7 +187,7 @@ const Notification = () => {
             </div>
           </DialogTrigger>
 
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>{notification.title}</DialogTitle>
             </DialogHeader>
@@ -199,7 +219,7 @@ const Notification = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0">
-        <div className="max-w-[280px]">
+        <div className="min-w-[240px]">
           <div className="border-b p-3">
             <h3 className="text-sm font-medium lg:text-base">Notifications</h3>
           </div>

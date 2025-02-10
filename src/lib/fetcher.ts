@@ -34,21 +34,17 @@ export default async function fetcher(
     const response = await fetch(fullUrl, options);
 
     if (!response.ok) {
-      const excludedUrls = [
-        "/users/owned/info",
-        "/auth/refresh",
-        "/auth/public/login",
-      ];
-
-      if (
-        response.status === 401 &&
-        !excludedUrls.some((url) => fullUrl.includes(url))
-      ) {
+      if (response.status === 401 && !fullUrl.includes("/auth/refresh")) {
+        console.log("🚀 ~ performFetch ~ fullUrl:", fullUrl);
         try {
           await refreshUser();
           return await performFetch();
         } catch {
-          window.location.replace("/login");
+          const excludedUrls = ["/login", "/register", "/forgot-password"];
+          if (
+            !excludedUrls.some((url) => window.location.pathname.includes(url))
+          )
+            window.location.replace("/login");
         }
       }
 

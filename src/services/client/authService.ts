@@ -1,5 +1,6 @@
 // ** Lib
 import fetcher from "@/lib/fetcher";
+import { deleteCookie } from "@/utils/cookies";
 
 // ** Utils
 import { setCookie } from "@/utils/cookies";
@@ -30,6 +31,8 @@ export async function logout() {
     credentials: "include",
   });
 
+
+  deleteCookie("accessToken");
   await response.text();
 }
 

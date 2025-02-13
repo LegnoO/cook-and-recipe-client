@@ -34,8 +34,9 @@ export default async function fetcher(
     const response = await fetch(fullUrl, options);
 
     if (!response.ok) {
-      if (response.status === 401 && !fullUrl.includes("/auth/refresh")) {
-        console.log("🚀 ~ performFetch ~ fullUrl:", fullUrl);
+      const excludedApiUrls = ["/auth/refresh", "/auth/logout"];
+
+      if (response.status === 401 && !excludedApiUrls.some((url) => fullUrl.includes(url))) {
         try {
           await refreshUser();
           return await performFetch();
@@ -43,8 +44,8 @@ export default async function fetcher(
           const excludedUrls = ["/login", "/register", "/forgot-password"];
           if (
             !excludedUrls.some((url) => window.location.pathname.includes(url))
-          )
-            window.location.replace("/login");
+          ) window.location.replace("/login?session=expired");
+
         }
       }
 

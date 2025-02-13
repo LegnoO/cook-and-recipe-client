@@ -24,6 +24,7 @@ import { getCharInitials } from "@/utils";
 
 // ** Config
 import { navItems } from "@/config/vertical-navbar";
+import Link from "next/link";
 
 const SidebarComponent = () => {
   const { data: userProfile, isLoading } = useQuery({
@@ -39,12 +40,12 @@ const SidebarComponent = () => {
       <div className="fixed inset-0 z-10 w-64 border-r">
         <div className="flex h-full w-full flex-col">
           <div className="border-b p-4">
-            <div className="flex items-center gap-2">
+            <Link href='/'><div className="dev flex items-center gap-2">
               <Logo />
               <span className="whitespace-nowrap font-playfair text-lg font-medium tracking-widest">
                 Cook & Recipe
               </span>
-            </div>
+            </div></Link>
           </div>
 
           <div className="mb-2 flex flex-col items-center border-b p-6">

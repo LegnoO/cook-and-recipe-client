@@ -1,8 +1,11 @@
 "use client";
 
+// ** React Imports
+import { useEffect } from "react";
+
 // ** Next Imports
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 // ** React Imports
 import { useState } from "react";
@@ -40,6 +43,7 @@ import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Services
 import { login, fetchUserInfo } from "@/services/client/authService";
+import { logout } from "@/services/client/authService";
 
 // ** Lib
 import { setCookie } from "@/utils/cookies";
@@ -73,6 +77,7 @@ type Props = {
 };
 const LoginForm = ({ isModal }: Props) => {
   const pathname = usePathname();
+  const searchParams = useSearchParams()
   const router = useRouter();
   const { setUser } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
@@ -125,6 +130,20 @@ const LoginForm = ({ isModal }: Props) => {
   function togglePasswordVisibility() {
     setShowPassword((prev) => !prev);
   }
+
+  useEffect(() => {
+    async function logoutSession() {
+      const sessionExpired = searchParams.get("session")
+
+      if (sessionExpired) {
+        await logout();
+      };
+    }
+
+    logoutSession()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   return (
     <Card className="w-full max-w-lg rounded-lg border-none shadow-md">

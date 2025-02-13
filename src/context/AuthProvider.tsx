@@ -10,6 +10,9 @@ import {
   SetStateAction,
 } from "react";
 
+// ** Next Imports
+import { usePathname, useSearchParams } from "next/navigation";
+
 // ** Components
 import LoadingScreen from "@/components/LoadingScreen";
 
@@ -19,8 +22,6 @@ import { useToast } from "@/hooks/useToast";
 // ** Services
 import { fetchUserInfo, logout } from "@/services/client/authService";
 
-// ** Lib
-import { deleteCookie } from "@/utils/cookies";
 
 // ** Types
 interface AuthContext {
@@ -34,6 +35,8 @@ interface AuthContext {
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams()
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -42,14 +45,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setUser(null);
       await logout();
-      deleteCookie("accessToken");
+
       toast({
         variant: "successful",
         title: "Logged out successfully",
         description: "You have been logged out of your account.",
         duration: 3000,
       });
-      window.location.href = "/";
+
     } catch (error) {
       toast({
         title: "Logout failed",
@@ -63,14 +66,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function checkUserInfo() {
       setAuthLoading(true);
-      try {
-        const userData = await fetchUserInfo();
-        setUser(userData);
-      } catch {
-        setUser(null);
-      } finally {
+      if (pathname !== "/login" && searchParams.get("session")) {
+        try {
+          const userData = await fetchUserInfo();
+          setUser(userData);
+        } catch {
+          setUser(null);
+        } finally {
+          setAuthLoading(false);
+        }
+      } else {
         setAuthLoading(false);
       }
+
     }
     checkUserInfo();
 

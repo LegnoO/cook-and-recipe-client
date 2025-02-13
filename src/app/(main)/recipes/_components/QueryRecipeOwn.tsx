@@ -1,7 +1,7 @@
 "use client";
 
 // ** React Imports
-import { useState, useCallback, ChangeEvent, useEffect } from "react";
+import { useState, useCallback, ChangeEvent } from "react";
 
 // ** Next Imports
 import { useSearchParams } from "next/navigation";
@@ -26,8 +26,6 @@ import { DateRange } from "react-day-picker";
 // ** Icons
 import { Search } from "lucide-react";
 
-// ** Services
-import { getCategories } from "@/services/client/recipeService";
 
 const QueryRecipeOwn = () => {
   const router = useRouter();
@@ -39,7 +37,7 @@ const QueryRecipeOwn = () => {
   const fromDate = fromDateParam ? new Date(fromDateParam) : new Date();
   const toDate = toDateParam ? new Date(toDateParam) : new Date();
 
-  const [categories, setCategories] = useState<Category[]>();
+ // const [categories, setCategories] = useState<Category[]>();
 
   const [isSelectOpen, setSelectOpen] = useState({
     name: false,
@@ -121,14 +119,6 @@ const QueryRecipeOwn = () => {
     });
   }
 
-  useEffect(() => {
-    async function fetchCategories() {
-      const categories = await getCategories();
-      if (categories) setCategories(categories);
-    }
-
-    fetchCategories();
-  }, []);
 
   return (
     <div className="flex flex-col flex-wrap gap-4 sm:flex-row sm:items-center sm:justify-between">

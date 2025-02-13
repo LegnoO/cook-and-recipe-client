@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import RecipeCard from "@/components/RecipeCard";
 import Pagination from "@/components/Pagination";
 import Breadcrumb from "@/components/Breadcrumb";
-import QueryRecipe from "../../../_components/QueryRecipe";
+import QueryRecipe from "../../_components/QueryRecipe";
 
 // ** Library Imports
 import { useQuery } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ import { getRecipeBookmarkList } from "@/services/client/recipeService";
 
 // ** Config
 import { queryOptionsConfig } from "@/config/useQueryOptions";
+
 
 const ManageRecipeBookmarks = () => {
   const searchParams = useSearchParams();

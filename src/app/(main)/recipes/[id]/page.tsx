@@ -290,8 +290,8 @@ export default async function RecipeDetailPage({
                 </div>
               ) : (
                 <div className="flex h-full items-center justify-center">
-                  <div className="space-y-4 text-center">
-                    <p className="text-muted-foreground">
+                  <div className=" text-center">
+                    <p className="mb-4 text-muted-foreground">
                       Please login to view the cooking instructions
                     </p>
                     <Link href="/login">

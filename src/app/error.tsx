@@ -24,13 +24,13 @@ export default function Error({
   }, [error]);
 
   return (
-    <section className="flex min-h-screen items-center bg-404">
+    <section className="flex min-h-screen items-center bg-404 bg-cover bg-no-repeat">
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
         <div className="mx-auto max-w-screen-sm text-center">
-          <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-white/95 lg:text-5xl">
-            Server Error
+          <h1 className="mb-8 text-7xl font-extrabold tracking-tight text-white/95 lg:text-9xl">
+            500
           </h1>
-          <p className="mb-2 text-base font-bold tracking-tight text-[rgb(209,213,219)] lg:text-lg">
+          <p className="mb-2 text-3xl font-bold tracking-tight text-white/95 md:text-4xl">
             Something went wrong!
           </p>
           <p className="mb-4 text-base text-[rgb(209,213,219)] lg:text-lg">

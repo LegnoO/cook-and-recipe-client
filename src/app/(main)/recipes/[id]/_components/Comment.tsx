@@ -5,7 +5,7 @@ import { useState, startTransition, useRef } from "react";
 
 // ** Next Imports
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 
 // ** Components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,11 +18,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Rating from "@/components/Rating";
 
-// ** Library Imports
-import { useQuery } from "@tanstack/react-query";
+// // ** Library Imports
+// import { useQuery } from "@tanstack/react-query";
 
-// ** Config
-import { queryOptionsConfig } from "@/config/useQueryOptions";
+// // ** Config
+// import { queryOptionsConfig } from "@/config/useQueryOptions";
 
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
@@ -37,7 +37,7 @@ type Props = {
 };
 
 const Comment = ({ recipeDetail, commentIndex }: Props) => {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   // const { data: notificationResponse, isLoading } = useQuery({
   //   queryKey: ["notifications", index],
   //   queryFn: () => getFeedback(queryParams()),

@@ -1,4 +1,12 @@
-import { ChefHat, LucideIcon } from "lucide-react";
+import {
+  ChefHat,
+  Contact,
+  MailOpen,
+  UserIcon,
+  Bookmark,
+  BookOpen,
+  LucideIcon,
+} from "lucide-react";
 
 export interface NavItemType {
   isOpen?: boolean;
@@ -10,7 +18,7 @@ export interface NavItemType {
 
 export const navItems: NavItemType[] = [
   {
-    icon: ChefHat,
+    icon: MailOpen,
     path: "/",
     title: "Home",
   },
@@ -20,12 +28,12 @@ export const navItems: NavItemType[] = [
     title: "Chefs",
   },
   {
-    icon: ChefHat,
+    icon: Bookmark,
     path: "/recipes/bookmarks",
     title: "Bookmarks",
   },
   {
-    icon: ChefHat,
+    icon: BookOpen,
     title: "Recipes",
     path: "/recipes",
     children: [
@@ -52,8 +60,13 @@ export const navItems: NavItemType[] = [
     ],
   },
   {
-    icon: ChefHat,
+    icon: Contact,
     path: "/contact",
     title: "Contact",
+  },
+  {
+    icon: UserIcon,
+    path: "/profile",
+    title: "Profile",
   },
 ];

@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { DateRangeCalendar } from "@/app/(management)/recipes/manage/_components/DateRangeCalendar";
+import { DateRangeCalendar } from "@/app/(management)/recipes/(chef)/manage/_components/DateRangeCalendar";
 import SelectCategory from "@/components/SelectCategory";
 
 // ** Library Imports
@@ -25,7 +25,6 @@ import { DateRange } from "react-day-picker";
 
 // ** Icons
 import { Search } from "lucide-react";
-
 
 const QueryRecipeOwn = () => {
   const router = useRouter();
@@ -37,7 +36,7 @@ const QueryRecipeOwn = () => {
   const fromDate = fromDateParam ? new Date(fromDateParam) : new Date();
   const toDate = toDateParam ? new Date(toDateParam) : new Date();
 
- // const [categories, setCategories] = useState<Category[]>();
+  // const [categories, setCategories] = useState<Category[]>();
 
   const [isSelectOpen, setSelectOpen] = useState({
     name: false,
@@ -118,7 +117,6 @@ const QueryRecipeOwn = () => {
       scroll: false,
     });
   }
-
 
   return (
     <div className="flex flex-col flex-wrap gap-4 sm:flex-row sm:items-center sm:justify-between">

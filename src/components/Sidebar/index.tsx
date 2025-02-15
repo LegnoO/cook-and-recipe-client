@@ -19,6 +19,12 @@ import { queryOptionsConfig } from "@/config/useQueryOptions";
 // ** Services
 import { getUserProfile } from "@/services/client/authService";
 
+// ** Library Imports
+import { useRouter } from "nextjs-toploader/app";
+
+// ** Context
+import { useAuthContext } from "@/context/AuthProvider";
+
 // ** Utils
 import { getCharInitials } from "@/utils";
 
@@ -27,11 +33,18 @@ import { navItems } from "@/config/vertical-navbar";
 import Link from "next/link";
 
 const SidebarComponent = () => {
+  const router = useRouter();
+  const { logout } = useAuthContext();
   const { data: userProfile, isLoading } = useQuery({
     queryKey: ["chef-profile"],
     queryFn: () => getUserProfile(),
     ...queryOptionsConfig,
   });
+
+  async function logoutAccess() {
+    await logout();
+    router.push("/");
+  }
 
   if (isLoading) return null;
 
@@ -40,12 +53,14 @@ const SidebarComponent = () => {
       <div className="fixed inset-0 z-10 w-64 border-r">
         <div className="flex h-full w-full flex-col">
           <div className="border-b p-4">
-            <Link href='/'><div className="dev flex items-center gap-2">
-              <Logo />
-              <span className="whitespace-nowrap font-playfair text-lg font-medium tracking-widest">
-                Cook & Recipe
-              </span>
-            </div></Link>
+            <Link href="/">
+              <div className="flex items-center gap-2">
+                <Logo />
+                <span className="whitespace-nowrap font-playfair text-lg font-medium tracking-widest">
+                  Cook & Recipe
+                </span>
+              </div>
+            </Link>
           </div>
 
           <div className="mb-2 flex flex-col items-center border-b p-6">
@@ -81,7 +96,8 @@ const SidebarComponent = () => {
           <div className="w-full border-t p-2">
             <Button
               variant="outline"
-              className="w-full justify-start border-none text-destructive">
+              className="w-full justify-start border-none text-destructive"
+              onClick={logoutAccess}>
               <LogOut className="h-4 w-4" />
               Logout
             </Button>

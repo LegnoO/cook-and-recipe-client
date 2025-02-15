@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { DateRangeCalendar } from "../manage/_components/DateRangeCalendar";
+import { DateRangeCalendar } from "../(chef)/manage/_components/DateRangeCalendar";
 import SelectCategory from "@/components/SelectCategory";
 
 // ** Library Imports
@@ -25,7 +25,6 @@ import { DateRange } from "react-day-picker";
 
 // ** Icons
 import { Search } from "lucide-react";
-
 
 const QueryRecipeOwn = () => {
   const router = useRouter();
@@ -116,7 +115,6 @@ const QueryRecipeOwn = () => {
       scroll: false,
     });
   }
-
 
   return (
     <div className="flex flex-col flex-wrap gap-4 sm:flex-row sm:items-center sm:justify-between">

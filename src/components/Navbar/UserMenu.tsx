@@ -23,18 +23,26 @@ import { useAuthContext } from "@/context/AuthProvider";
 // ** Lib
 import { getCharInitials } from "@/utils/helpers";
 
-// ** Types
-type Props = { user: User };
+// ** Utils
+import { cn } from "@/utils";
 
-const UserMenu = ({ user }: Props) => {
+// ** Types
+type Props = { user: User; isAnimatedNavbar: boolean };
+
+const UserMenu = ({ user, isAnimatedNavbar }: Props) => {
   const { logout } = useAuthContext();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-10 w-10 cursor-pointer">
+        <Avatar className="h-10 w-10 cursor-pointer outline outline-1 outline-muted-foreground">
           <AvatarImage src={user.avatar} alt="User Avatar" />
-          <AvatarFallback>{getCharInitials(user.fullName)}</AvatarFallback>
+          <AvatarFallback
+            className={cn("text-background", {
+              "text-foreground": isAnimatedNavbar,
+            })}>
+            {getCharInitials(user.fullName)}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-56" align="end">

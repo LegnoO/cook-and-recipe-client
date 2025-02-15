@@ -14,6 +14,9 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
+// ** Context
+import { useAuthContext } from "@/context/AuthProvider";
+
 // ** Icons
 import { ChevronDown, Circle } from "lucide-react";
 
@@ -33,6 +36,7 @@ const NavItem = ({
   navParent?: NavItemType;
 }) => {
   const pathname = usePathname();
+  const { user } = useAuthContext();
   const [state, setState] = useState<string[]>([]);
 
   function containsNavLinkPath(navItem: NavItemType, navParent?: NavItemType) {
@@ -124,29 +128,61 @@ const NavItem = ({
     );
   }
 
-  return (
-    <li
-      key={index}
-      className={cn(
-        "rounded-md p-2 hover:bg-secondary hover:text-secondary-foreground",
-        {
-          "bg-primary/80 text-primary-foreground hover:bg-primary hover:text-primary-foreground/80":
-            isPathActive(navItem.path),
-          hidden: !isPathActive(navItem.path) && navItem.path.includes(":"),
-        },
-      )}>
-      <Link
-        className="flex items-center gap-2"
-        href={!navItem.path.includes(":") ? navItem.path : ""}>
-        {navItem.icon ? (
-          <navItem.icon className="h-4 w-4" />
-        ) : (
-          <Circle className="h-2 w-2" />
-        )}
-        <span className="text-sm">{navItem.title}</span>
-      </Link>
-    </li>
-  );
+  if (user) {
+    if (navItem.isChef && user.chefId) {
+      return (
+        <li
+          key={index}
+          className={cn(
+            "rounded-md p-2 hover:bg-secondary hover:text-secondary-foreground",
+            {
+              "bg-primary/80 text-primary-foreground hover:bg-primary hover:text-primary-foreground/80":
+                isPathActive(navItem.path),
+              hidden: !isPathActive(navItem.path) && navItem.path.includes(":"),
+            },
+          )}>
+          <Link
+            className="flex items-center gap-2"
+            href={!navItem.path.includes(":") ? navItem.path : ""}>
+            {navItem.icon ? (
+              <navItem.icon className="h-4 w-4" />
+            ) : (
+              <Circle className="h-2 w-2" />
+            )}
+            <span className="text-sm">{navItem.title}</span>
+          </Link>
+        </li>
+      );
+    }
+
+    if (!navItem.isChef && !user.chefId) {
+      return (
+        <li
+          key={index}
+          className={cn(
+            "rounded-md p-2 hover:bg-secondary hover:text-secondary-foreground",
+            {
+              "bg-primary/80 text-primary-foreground hover:bg-primary hover:text-primary-foreground/80":
+                isPathActive(navItem.path),
+              hidden: !isPathActive(navItem.path) && navItem.path.includes(":"),
+            },
+          )}>
+          <Link
+            className="flex items-center gap-2"
+            href={!navItem.path.includes(":") ? navItem.path : ""}>
+            {navItem.icon ? (
+              <navItem.icon className="h-4 w-4" />
+            ) : (
+              <Circle className="h-2 w-2" />
+            )}
+            <span className="text-sm">{navItem.title}</span>
+          </Link>
+        </li>
+      );
+    }
+  }
+
+  return null;
 };
 
 export default NavItem;

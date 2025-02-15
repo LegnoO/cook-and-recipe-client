@@ -52,7 +52,7 @@ const ProfilePage = () => {
         <CardContent className="p-6">
           <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
             <div className="mb-4 flex items-center md:mb-0">
-              <Avatar className="mr-4 h-24 w-24">
+              <Avatar className="mr-4 h-24 w-24 outline outline-1 outline-muted-foreground">
                 <AvatarImage
                   src={userProfile.avatar}
                   alt={userProfile.fullName}

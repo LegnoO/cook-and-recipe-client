@@ -183,7 +183,13 @@ const Navbar = () => {
           {user ? (
             <div className="hidden items-center gap-4 lg:flex">
               <Notification />
-              <UserMenu user={user} />
+              <UserMenu
+                isAnimatedNavbar={
+                  (isAnimatedNavbar && isScrolled) ||
+                  (!isAnimatedNavbar && !isScrolled)
+                }
+                user={user}
+              />
             </div>
           ) : (
             <div className="hidden items-center gap-4 lg:flex">

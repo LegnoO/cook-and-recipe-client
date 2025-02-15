@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
+  console.log({ cookie: request.cookies.getAll() });
   const accessToken = request.cookies.get("accessToken");
-  if (request.nextUrl.pathname === '/login') {
-    if (request.nextUrl.searchParams.get('session') === 'expired') {
+  if (request.nextUrl.pathname === "/login") {
+    if (request.nextUrl.searchParams.get("session") === "expired") {
       return NextResponse.next();
     }
   }

@@ -219,7 +219,7 @@ const Notification = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0">
-        <div className="min-w-[240px]">
+        <div className="min-w-[240px] max-w-[320px]">
           <div className="border-b p-3">
             <h3 className="text-sm font-medium lg:text-base">Notifications</h3>
           </div>

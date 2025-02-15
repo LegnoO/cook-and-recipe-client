@@ -13,6 +13,7 @@ export interface NavItemType {
   icon?: LucideIcon;
   path: string;
   title: string;
+  isChef?: boolean;
   children?: NavItemType[];
 }
 
@@ -36,6 +37,7 @@ export const navItems: NavItemType[] = [
     icon: BookOpen,
     title: "Recipes",
     path: "/recipes",
+
     children: [
       {
         path: "/recipes",
@@ -44,18 +46,22 @@ export const navItems: NavItemType[] = [
       {
         path: "/recipes/manage",
         title: "Manage",
+        isChef: true,
       },
       {
         path: "/recipes/create",
         title: "Create",
+        isChef: true,
       },
       {
         path: "/recipes/manage/:id",
         title: "Detail",
+        isChef: true,
       },
       {
         path: "/recipes/manage/:id/edit",
         title: "Edit",
+        isChef: true,
       },
     ],
   },

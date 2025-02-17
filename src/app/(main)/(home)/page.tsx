@@ -26,6 +26,37 @@ export default async function Home() {
     sortOrder: "desc",
   });
 
+  const RecipeBlock = ({
+    recipes,
+    title,
+    href,
+  }: {
+    recipes: Recipe[];
+    href: string;
+    title: string;
+  }) => {
+    return (
+      <Fragment>
+        <div className="mb-8 flex items-center justify-between">
+          <h2 className="text-4xl font-bold tracking-wider lg:text-3xl">
+            {title}
+          </h2>
+          <Link href={href}>
+            <Button>
+              View more
+              <MoveUpRight />
+            </Button>
+          </Link>
+        </div>
+        <div className="grid-cols-3-res gap-8">
+          {recipes.map((recipe, index) => (
+            <RecipeCard recipe={recipe} key={index} />
+          ))}
+        </div>
+      </Fragment>
+    );
+  };
+
   return (
     <Fragment>
       <section className="relative max-w-full bg-home-banner bg-fixed bg-center bg-no-repeat">
@@ -93,22 +124,11 @@ export default async function Home() {
       </section>
       <section className="section-spacing bg-background">
         <div className="container">
-          <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-4xl font-bold tracking-wider lg:text-3xl">
-              Popular Recipes
-            </h2>
-            <Link href="/chefs">
-              <Button>
-                View more
-                <MoveUpRight />
-              </Button>
-            </Link>
-          </div>
-          <div className="grid-cols-3-res gap-8">
-            {recipes.map((recipe, index) => (
-              <RecipeCard recipe={recipe} key={index} />
-            ))}
-          </div>
+          <RecipeBlock
+            recipes={recipes}
+            title="Popular Recipes"
+            href="/chefs"
+          />
         </div>
       </section>
     </Fragment>

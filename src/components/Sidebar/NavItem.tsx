@@ -83,11 +83,57 @@ const NavItem = ({
 
   useEffect(() => {
     navItems.map((navItem) => containsNavLinkPath(navItem));
-
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+  
+  if (!user) return null;
 
   if (navItem.children) {
+    if (navItem.isChef) {
+      if (user.chefId) {
+        return (
+          <Collapsible
+            open={state.includes(navItem.title)}
+            onOpenChange={() => {
+              toggleNavItem(navItem.title);
+            }}
+            className="space-y-2">
+            <CollapsibleTrigger asChild>
+              <li
+                key={`${navItem.title}-${index}`}
+                className={cn(
+                  "cursor-pointer rounded-md p-2 hover:bg-secondary hover:text-secondary-foreground",
+                  {
+                    "bg-secondary text-secondary-foreground hover:bg-secondary hover:text-secondary-foreground/80":
+                      state.includes(navItem.title),
+                  },
+                )}>
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-1 items-center gap-2">
+                    {navItem.icon && <navItem.icon className="h-4 w-4" />}
+                    <span className="text-sm">{navItem.title}</span>
+                  </div>
+                  <ChevronDown className="h-4 w-4" />
+                </div>
+              </li>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="CollapsibleContent ml-4 space-y-2">
+              {navItem.children.map((navItem, index) => (
+                <NavItem
+                  key={`${navItem.title}-${index}`}
+                  navParent={navParent}
+                  navItem={navItem}
+                  index={index}
+                />
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
+        );
+      } else {
+        return null;
+      }
+    }
+
     return (
       <Collapsible
         open={state.includes(navItem.title)}
@@ -128,8 +174,8 @@ const NavItem = ({
     );
   }
 
-  if (user) {
-    if (navItem.isChef && user.chefId) {
+  if (navItem.isChef) {
+    if (user.chefId) {
       return (
         <li
           key={index}
@@ -154,35 +200,31 @@ const NavItem = ({
         </li>
       );
     }
-
-    if (!navItem.isChef && !user.chefId) {
-      return (
-        <li
-          key={index}
-          className={cn(
-            "rounded-md p-2 hover:bg-secondary hover:text-secondary-foreground",
-            {
-              "bg-primary/80 text-primary-foreground hover:bg-primary hover:text-primary-foreground/80":
-                isPathActive(navItem.path),
-              hidden: !isPathActive(navItem.path) && navItem.path.includes(":"),
-            },
-          )}>
-          <Link
-            className="flex items-center gap-2"
-            href={!navItem.path.includes(":") ? navItem.path : ""}>
-            {navItem.icon ? (
-              <navItem.icon className="h-4 w-4" />
-            ) : (
-              <Circle className="h-2 w-2" />
-            )}
-            <span className="text-sm">{navItem.title}</span>
-          </Link>
-        </li>
-      );
-    }
+  } else {
+    return (
+      <li
+        key={index}
+        className={cn(
+          "rounded-md p-2 hover:bg-secondary hover:text-secondary-foreground",
+          {
+            "bg-primary/80 text-primary-foreground hover:bg-primary hover:text-primary-foreground/80":
+              isPathActive(navItem.path),
+            hidden: !isPathActive(navItem.path) && navItem.path.includes(":"),
+          },
+        )}>
+        <Link
+          className="flex items-center gap-2"
+          href={!navItem.path.includes(":") ? navItem.path : ""}>
+          {navItem.icon ? (
+            <navItem.icon className="h-4 w-4" />
+          ) : (
+            <Circle className="h-2 w-2" />
+          )}
+          <span className="text-sm">{navItem.title}</span>
+        </Link>
+      </li>
+    );
   }
-
-  return null;
 };
 
 export default NavItem;

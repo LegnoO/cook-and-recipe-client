@@ -1,61 +1,58 @@
 "use client";
 
 // ** React Imports
-import { useState, startTransition, useRef } from "react";
-
-// ** Next Imports
-import Link from "next/link";
-// import { useSearchParams } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 
 // ** Components
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 // ** Components
-import { getCharInitials } from "@/utils";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
 import Rating from "@/components/Rating";
+import Repeat from "@/components/Repeat";
 
-// // ** Library Imports
-// import { useQuery } from "@tanstack/react-query";
+// ** Library Imports
+import { useQuery } from "@tanstack/react-query";
 
-// // ** Config
-// import { queryOptionsConfig } from "@/config/useQueryOptions";
+// ** Config
+import { queryOptionsConfig } from "@/config/useQueryOptions";
 
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
 
-// ** Actions
-import { postReviewAction } from "@/app/actions";
+// ** Services
+import { postReview } from "@/services/client/recipeService";
+import { getFeedback } from "@/services/client/feedbackService";
+
+// ** Utils
+import { timeAgo } from "@/utils";
 
 // ** Types
 type Props = {
   recipeDetail: RecipeDetail;
-  commentIndex: number;
 };
 
-const Comment = ({ recipeDetail, commentIndex }: Props) => {
-  // const searchParams = useSearchParams();
-  // const { data: notificationResponse, isLoading } = useQuery({
-  //   queryKey: ["notifications", index],
-  //   queryFn: () => getFeedback(queryParams()),
-  //   ...queryOptionsConfig,
-  // });
-  console.log("🚀 ~ recipeDetail:", recipeDetail);
+const Comment = ({ recipeDetail }: Props) => {
+  const [commentLength, setCommentLength] = useState(5);
+  const [commentList, setCommentList] = useState<Feedback[]>([]);
+
+  const {
+    data: feedbackResponse,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["feedback", recipeDetail],
+    queryFn: () => getFeedback(recipeDetail.id),
+    ...queryOptionsConfig,
+  });
+
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const [rating, setRating] = useState<number | null>(null);
   const { toast } = useToast();
-
-  // function queryParams() {
-  //   const params = new URLSearchParams(searchParams.toString());
-  //   params.set("index", "1");
-  //   params.set("size", (5 * index).toString());
-  //   params.set("sortOrder", sortOrder);
-  //   params.set("sortBy", sortBy);
-  //   return params.toString();
-  // }
 
   async function handlePostReview() {
     if (!rating || !commentRef.current!.value) {
@@ -63,45 +60,52 @@ const Comment = ({ recipeDetail, commentIndex }: Props) => {
         variant: "destructive",
         title: "Incomplete Information!",
         description:
-          "Please select a rating and write a review before submitting.",
+          "Please select a rating and write a comment before submitting.",
       });
       return;
     }
 
-    startTransition(async () => {
-      const result = await postReviewAction(
-        {
-          recipeId: recipeDetail.id,
-          content: commentRef.current!.value,
-          rating,
-        },
-        "/",
-      );
-      if (result.success) {
-        toast({
-          variant: "successful",
-          title: "Review submitted successfully!",
-          description: "Thank you for your feedback.",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: result.message || "An error has occurred",
-        });
-      }
-    });
+    try {
+      await postReview({
+        recipeId: recipeDetail.id,
+        content: commentRef.current!.value,
+        rating,
+      });
+      refetch();
+      toast({
+        variant: "successful",
+        title: "Review submitted successfully!",
+        description: "Thank you for your feedback.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
+    }
+  }
+
+  function loadMoreComment() {
+    const expand = 5;
+    if (commentLength < commentList.length)
+      setCommentLength((prev) => prev + expand);
   }
 
   const CommentForm = () => {
     return (
       <Card className="bg-secondary p-4">
         <div className="space-y-4">
-          <Rating defaultValue={rating} onChange={setRating} />
-
+          <Rating
+            readOnly={isLoading}
+            defaultValue={rating}
+            onChange={setRating}
+          />
           <div className="space-y-2">
             <Label htmlFor="comment">Your Comment</Label>
             <Textarea
+              disabled={isLoading}
               id="comment"
               defaultValue={commentRef.current ? commentRef.current.value : ""}
               ref={commentRef}
@@ -112,6 +116,7 @@ const Comment = ({ recipeDetail, commentIndex }: Props) => {
             />
           </div>
           <Button
+            disabled={isLoading}
             type="button"
             onClick={handlePostReview}
             className="w-full sm:w-auto">
@@ -123,65 +128,82 @@ const Comment = ({ recipeDetail, commentIndex }: Props) => {
   };
 
   const CommentList = () => {
-    return (
-      <div className="mt-6 flex gap-4 rounded-lg border p-4">
+    if (isLoading) {
+      return (
+        <Repeat times={2}>
+          <div className="mt-6 flex gap-4 rounded-lg border p-4">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-4 w-[180px]" />
+              <Skeleton className="h-4 w-[320px]" />
+            </div>
+          </div>
+        </Repeat>
+      );
+    }
+
+    return commentList.slice(0, commentLength).map((comment, index) => (
+      <div key={index} className="mt-6 flex gap-4 rounded-lg border p-4">
         <Avatar className="h-10 w-10">
           <AvatarImage
             className="object-cover"
-            src={""}
-            alt="Profile picture"
+            src={comment.user.avatar || "/images/avatar-default.png"}
+            alt={comment.user.fullName}
           />
-          <AvatarFallback>{getCharInitials("fullName")}</AvatarFallback>
         </Avatar>
         <div className="flex-1 space-y-2">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-medium">author</h4>
+              <h4 className="font-medium">{comment.user.fullName}</h4>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <div className="flex">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <svg
-                      key={i}
-                      className="h-4 w-4 fill-primary"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24">
-                      <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
-                    </svg>
-                  ))}
+                  <Rating
+                    defaultValue={comment.rating}
+                    disableSelect
+                    readOnly
+                  />
                 </div>
                 <span>•</span>
-                <span>2 days ago</span>
+                <span>{timeAgo(comment.feedbackDate)}</span>
               </div>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">
-            This recipe is amazing! The broth was so flavorful and the
-            instructions were easy to follow. My family loved it!
-          </p>
+          <p className="text-sm text-muted-foreground">{comment.comment}</p>
         </div>
       </div>
-    );
+    ));
   };
+
+  useEffect(() => {
+    if (feedbackResponse) {
+      setCommentList(feedbackResponse);
+    }
+  }, [feedbackResponse]);
 
   return (
     <Card className="border-none p-0 shadow-none">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl font-semibold">Comments</h2>
         <div className="flex items-center gap-2">
-          <Rating defaultValue={recipeDetail.rating} disableSelect readOnly />
+          <Rating
+            defaultValue={recipeDetail.rating}
+            disableSelect
+            readOnly
+            half
+          />
           <span className="text-lg font-medium">
-            {`(${recipeDetail.rating || 0})`}
+            {`(${recipeDetail.rating ? recipeDetail.rating.toFixed(1) : 0})`}
           </span>
         </div>
       </div>
 
       <CommentForm />
       <CommentList />
-      <Link href={`?comment=${commentIndex + 1}`} scroll={false}>
-        <Button className="mt-4" variant="secondary">
+      {commentList.length > 5 && (
+        <Button onClick={loadMoreComment} className="mt-4" variant="secondary">
           Load More Comments...
         </Button>
-      </Link>
+      )}
     </Card>
   );
 };

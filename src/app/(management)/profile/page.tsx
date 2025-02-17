@@ -1,30 +1,37 @@
 "use client";
 
 // ** Components
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import ButtonEditProfile from "@/components/Sidebar/_components/ButtonEditProfile";
 import ButtonRequestChef from "@/components/Sidebar/_components/ButtonRequestChef";
+import Breadcrumb from "@/components/Breadcrumb";
+import Loading from "../_components/Loading";
 
 // ** Icons
-import { CalendarDays, MapPin, Phone, Mail, Cake, User2 } from "lucide-react";
-
-// ** Library Imports
-import { useQuery } from "@tanstack/react-query";
+import {
+  CalendarDays,
+  MapPin,
+  Phone,
+  Mail,
+  Cake,
+  User2,
+  CalendarRange,
+} from "lucide-react";
 
 // ** Config
 import { queryOptionsConfig } from "@/config/useQueryOptions";
 
 // ** Library Imports
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 
 // ** Lib
-import { cn, formatAddress, getCharInitials } from "@/utils";
+import { cn, formatAddress } from "@/utils";
 
 // ** Services
 import { getUserProfile } from "@/services/client/authService";
-import Breadcrumb from "@/components/Breadcrumb";
 
 const ProfilePage = () => {
   const { data: userProfile, isLoading } = useQuery({
@@ -38,7 +45,17 @@ const ProfilePage = () => {
     { title: "Profile" },
   ];
 
+  function formatDateTime(dateInput: Date) {
+    const date = new Date(dateInput);
+    const formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
+    return formattedDate;
+  }
+
   if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!userProfile) {
     return null;
   }
 
@@ -48,18 +65,15 @@ const ProfilePage = () => {
         <Breadcrumb items={breadcrumbLinks} />
       </div>
       <h1 className="mb-4 text-2xl font-semibold tracking-tight">Profile</h1>
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden shadow-md">
         <CardContent className="p-6">
           <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
             <div className="mb-4 flex items-center md:mb-0">
-              <Avatar className="mr-4 h-24 w-24 outline outline-1 outline-muted-foreground">
+              <Avatar className="mr-4 h-24 w-24">
                 <AvatarImage
-                  src={userProfile.avatar}
+                  src={userProfile.avatar || "/images/avatar-default.png"}
                   alt={userProfile.fullName}
                 />
-                <AvatarFallback>
-                  {getCharInitials(userProfile.fullName)}
-                </AvatarFallback>
               </Avatar>
               <div>
                 <h2 className="text-3xl font-bold">{userProfile.fullName}</h2>
@@ -74,12 +88,25 @@ const ProfilePage = () => {
               <h2 className="text-xl font-semibold">Personal Information</h2>
               <div className="grid gap-3">
                 <div className="flex items-center gap-2">
+                  <Mail size={18} />
+                  <span>{userProfile.email}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone size={18} />
+                  <span
+                    className={cn({
+                      "italic text-muted-foreground": !userProfile.phone,
+                    })}>
+                    {userProfile.phone || "No phone added"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
                   <User2 size={18} />
                   <span
                     className={cn({
                       "italic text-muted-foreground": !userProfile.gender,
                     })}>
-                    {userProfile.gender}
+                    {userProfile.gender || "No gender added"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -93,14 +120,14 @@ const ProfilePage = () => {
                       : "No birthday added"}
                   </span>
                 </div>
+
                 <div className="flex items-center gap-2">
-                  <Phone size={18} />
-                  <span>{userProfile.phone}</span>
+                  <CalendarRange size={18} />
+                  <span>
+                    Joined on: {formatDateTime(userProfile.createdDate)}
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Mail size={18} />
-                  <span>{userProfile.email}</span>
-                </div>
+
                 {userProfile.address && (
                   <div className="flex items-center gap-2">
                     <MapPin size={18} />

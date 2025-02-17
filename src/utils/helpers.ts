@@ -2,10 +2,6 @@ export const regex = {
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 };
 
-export function getCharInitials(name: string) {
-  return name.slice(0, 2).toUpperCase();
-}
-
 export const isSSR = typeof window === "undefined";
 
 export function capitalizeFirstLetter(string: string) {

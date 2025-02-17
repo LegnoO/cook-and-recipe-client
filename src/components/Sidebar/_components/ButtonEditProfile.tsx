@@ -37,7 +37,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { Scroll } from "@/components/Scroll";
 import CalendarButton from "@/components/CalendarButton";
@@ -59,7 +59,7 @@ import { useToast } from "@/hooks/useToast";
 import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Lib
-import { appendFormData, cn, convertMBToBytes, getCharInitials } from "@/utils";
+import { appendFormData, cn, convertMBToBytes } from "@/utils";
 
 // ** Services
 import { updateInfo } from "@/services/client/chefService";
@@ -264,12 +264,13 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
                 <Avatar className="h-32 w-32">
                   <AvatarImage
                     className="object-cover"
-                    src={avatar.url ? avatar.url : userProfile.avatar}
+                    src={
+                      avatar.url
+                        ? avatar.url
+                        : userProfile.avatar || "/images/avatar-default.png"
+                    }
                     alt="Profile picture"
                   />
-                  <AvatarFallback>
-                    {getCharInitials(userProfile.fullName)}
-                  </AvatarFallback>
                 </Avatar>
                 <Label
                   htmlFor="avatar-upload"

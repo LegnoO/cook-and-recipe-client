@@ -16,6 +16,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 // ** Components
 import LoadingScreen from "@/components/LoadingScreen";
 
+// ** Library Imports
+import { useRouter } from "nextjs-toploader/app";
+
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
 
@@ -23,7 +26,7 @@ import { useToast } from "@/hooks/useToast";
 import { fetchUserInfo, logout } from "@/services/client/authService";
 
 // ** Utils
-import { deleteCookie } from "@/utils/cookies";
+import { deleteCookie, getCookieValue } from "@/utils/cookies";
 
 // ** Types
 interface AuthContext {
@@ -37,6 +40,7 @@ interface AuthContext {
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -55,7 +59,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "You have been logged out of your account.",
         duration: 3000,
       });
-    } catch (error) {
+      router.push("/");
+    } catch {
       toast({
         title: "Logout failed",
         description: "An error occurred while logging out. Please try again.",
@@ -68,7 +73,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function checkUserInfo() {
       setAuthLoading(true);
-      if (pathname !== "/login" && !searchParams.get("session")) {
+      if (
+        pathname !== "/login" &&
+        !searchParams.get("session") &&
+        getCookieValue("accessToken")
+      ) {
         try {
           const userData = await fetchUserInfo();
           setUser(userData);

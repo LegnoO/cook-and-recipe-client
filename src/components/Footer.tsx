@@ -9,7 +9,6 @@ import {
   Logo,
   Reddit,
   Twitter,
-
 } from "@/components/ui/icons";
 
 const Footer = () => {
@@ -24,7 +23,6 @@ const Footer = () => {
     <footer className="bg-black text-white">
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-8">
-
           <div className="lg:col-span-4">
             <div className="mb-4 flex items-center gap-1">
               <Logo size={40} className="text-background" />
@@ -33,8 +31,9 @@ const Footer = () => {
               </h2>
             </div>
             <p className="mb-4 text-gray-400">
-              Discover the flavors of life through every recipe. We are the
-              place where culinary passion meets creativity in your kitchen.
+              Discover the flavors of life through every recipe. We are where
+              culinary passion meets creativity, bringing inspiration to your
+              kitchen and turning every meal into a delightful experience.
             </p>
             <ul className="flex space-x-4 text-gray-400">
               <li className="cursor-pointer transition-colors">
@@ -77,7 +76,6 @@ const Footer = () => {
               <p>Phone: +84 0937525531</p>
             </address>
           </div>
-
         </div>
 
         <div className="mt-8 border-t border-gray-800 pt-8 text-center text-gray-400">

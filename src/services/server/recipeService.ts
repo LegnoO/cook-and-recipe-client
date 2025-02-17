@@ -47,6 +47,7 @@ export async function getRecipeDetail(
   });
 
   if (!res.ok) {
+    console.log({ status: res.status });
     if (res.status === 404) {
       notFound();
     } else {

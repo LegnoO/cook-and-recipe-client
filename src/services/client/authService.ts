@@ -30,7 +30,7 @@ export async function logout() {
     credentials: "include",
   });
 
-  await response.text();
+  return await response.text();
 }
 
 export async function register(newCredentials: {

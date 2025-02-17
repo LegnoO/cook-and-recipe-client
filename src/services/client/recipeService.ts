@@ -108,16 +108,10 @@ export async function toggleRecipeBookmark(recipeId: string) {
 }
 
 export async function postReview({ recipeId, content, rating }: ReviewPayload) {
-  const [ratingResponse, feedbackResponse] = await Promise.all([
-    fetcher(`/recipe/public/find/${recipeId}/rating`, {
-      method: "POST",
-      body: JSON.stringify({ rating }),
-    }),
-    fetcher(`/recipe/public/find/${recipeId}/feedback`, {
-      method: "POST",
-      body: JSON.stringify({ content }),
-    }),
-  ]);
+  const response = await fetcher(`/recipe/public/find/${recipeId}/feedback`, {
+    method: "POST",
+    body: JSON.stringify({ content, rating }),
+  });
 
-  return await Promise.all([ratingResponse.json(), feedbackResponse.json()]);
+  return await response.json();
 }

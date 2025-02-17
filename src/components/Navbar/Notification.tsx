@@ -220,7 +220,7 @@ const Notification = () => {
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0">
         <div className="min-w-[240px] max-w-[320px]">
-          <div className="border-b p-3">
+          <div className="border-b p-3 shadow-sm">
             <h3 className="text-sm font-medium lg:text-base">Notifications</h3>
           </div>
 

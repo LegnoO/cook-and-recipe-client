@@ -45,12 +45,15 @@ import { useAuthContext } from "@/context/AuthProvider";
 import { login, fetchUserInfo } from "@/services/client/authService";
 import { logout } from "@/services/client/authService";
 
-// ** Lib
-import { setCookie } from "@/utils/cookies";
-import { getDecodedParam, getItemLocalStorage } from "@/utils";
-
 // ** Library Imports
 import { z } from "zod";
+
+// ** Lib
+import { getCookieValue, setCookie } from "@/utils/cookies";
+import { getDecodedParam, getItemLocalStorage } from "@/utils";
+
+// ** Utils
+import { deleteCookie } from "@/utils/cookies";
 
 // ** Schema
 const loginFormSchema = z.object({
@@ -77,7 +80,7 @@ type Props = {
 };
 const LoginForm = ({ isModal }: Props) => {
   const pathname = usePathname();
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const router = useRouter();
   const { setUser } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
@@ -133,17 +136,22 @@ const LoginForm = ({ isModal }: Props) => {
 
   useEffect(() => {
     async function logoutSession() {
-      const sessionExpired = searchParams.get("session")
+      const token = getCookieValue("accessToken");
+      const sessionExpired = searchParams.get("session");
 
-      if (sessionExpired) {
-        await logout();
-      };
+      if (token && sessionExpired) {
+        try {
+          await logout();
+        } catch {
+          deleteCookie("accessToken");
+        }
+      }
     }
 
-    logoutSession()
+    logoutSession();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams])
+  }, [searchParams]);
 
   return (
     <Card className="w-full max-w-lg rounded-lg border-none shadow-md">

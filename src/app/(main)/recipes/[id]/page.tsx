@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 // ** Components
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 
 // ** Lib
-import { calculateDaysAgo, getCharInitials } from "@/utils";
+import { calculateDaysAgo } from "@/utils";
 
 // ** Services
 import {
@@ -63,10 +63,7 @@ export async function generateMetadata({ params }: Props) {
   }
 }
 
-export default async function RecipeDetailPage({
-  params,
-  searchParams,
-}: Props) {
+export default async function RecipeDetailPage({ params }: Props) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   const recipeDetail = await getRecipeDetail(params.id, accessToken);
@@ -79,7 +76,6 @@ export default async function RecipeDetailPage({
   });
 
   const recipes = recipesResponse.filter((recipe) => recipe.id !== params.id);
-  const commentIndex = Number(searchParams.comment);
 
   // const _s = {
   //   id: "670ed5fe95ce989ba6a00276",
@@ -190,14 +186,12 @@ export default async function RecipeDetailPage({
                   <Avatar className="h-12 w-12">
                     <AvatarImage
                       className="object-cover"
-                      src={recipeDetail.createdBy.userInfo.avatar}
+                      src={
+                        recipeDetail.createdBy.userInfo.avatar ||
+                        "/images/avatar-default.png"
+                      }
                       alt={`Author ${recipeDetail.createdBy.userInfo.fullName}`}
                     />
-                    <AvatarFallback>
-                      {getCharInitials(
-                        recipeDetail.createdBy.userInfo.fullName,
-                      )}
-                    </AvatarFallback>
                   </Avatar>
                   <div className="flex w-full items-center justify-between">
                     <span className="text-sm font-medium text-primary lg:text-base">
@@ -290,7 +284,7 @@ export default async function RecipeDetailPage({
                 </div>
               ) : (
                 <div className="flex h-full items-center justify-center">
-                  <div className=" text-center">
+                  <div className="text-center">
                     <p className="mb-4 text-muted-foreground">
                       Please login to view the cooking instructions
                     </p>
@@ -386,10 +380,7 @@ export default async function RecipeDetailPage({
 
       <section className="section-spacing bg-background">
         <div className="container">
-          <Comment
-            recipeDetail={recipeDetail}
-            commentIndex={commentIndex || 1}
-          />
+          <Comment recipeDetail={recipeDetail} />
         </div>
       </section>
 

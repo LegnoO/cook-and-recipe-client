@@ -1,8 +1,10 @@
 "use client";
 
+// ** Next Imports
+import Link from "next/link";
+
 // ** Components
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Scroll } from "../Scroll";
 import NavItem from "./NavItem";
 
@@ -11,42 +13,22 @@ import { LogOut } from "lucide-react";
 import { Logo } from "@/components/ui/icons";
 
 // ** Library Imports
-import { useQuery } from "@tanstack/react-query";
-
-// ** Config
-import { queryOptionsConfig } from "@/config/useQueryOptions";
-
-// ** Services
-import { getUserProfile } from "@/services/client/authService";
-
-// ** Library Imports
 import { useRouter } from "nextjs-toploader/app";
 
 // ** Context
 import { useAuthContext } from "@/context/AuthProvider";
 
-// ** Utils
-import { getCharInitials } from "@/utils";
-
 // ** Config
 import { navItems } from "@/config/vertical-navbar";
-import Link from "next/link";
 
 const SidebarComponent = () => {
   const router = useRouter();
   const { logout } = useAuthContext();
-  const { data: userProfile, isLoading } = useQuery({
-    queryKey: ["chef-profile"],
-    queryFn: () => getUserProfile(),
-    ...queryOptionsConfig,
-  });
 
   async function logoutAccess() {
     await logout();
     router.push("/");
   }
-
-  if (isLoading) return null;
 
   return (
     <aside className="relative flex h-svh w-64">
@@ -61,26 +43,6 @@ const SidebarComponent = () => {
                 </span>
               </div>
             </Link>
-          </div>
-
-          <div className="mb-2 flex flex-col items-center border-b p-6">
-            <div className="relative mb-3">
-              <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-                <AvatarImage
-                  src={userProfile.avatar}
-                  alt={userProfile.fullName}
-                />
-                <AvatarFallback className="text-xl">
-                  {getCharInitials(userProfile.fullName)}
-                </AvatarFallback>
-              </Avatar>
-            </div>
-            <div className="space-y-1 text-center">
-              <h2 className="text-xl font-semibold">{userProfile.fullName}</h2>
-              <p className="text-sm text-muted-foreground">
-                {userProfile.email}
-              </p>
-            </div>
           </div>
 
           <Scroll className="flex-1">

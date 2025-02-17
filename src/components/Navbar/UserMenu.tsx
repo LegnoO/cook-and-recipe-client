@@ -4,7 +4,7 @@
 import Link from "next/link";
 
 // ** Components
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -20,29 +20,20 @@ import { LogOut, UserIcon, ChefHat, Bookmark } from "lucide-react";
 // ** Context
 import { useAuthContext } from "@/context/AuthProvider";
 
-// ** Lib
-import { getCharInitials } from "@/utils/helpers";
-
-// ** Utils
-import { cn } from "@/utils";
-
 // ** Types
-type Props = { user: User; isAnimatedNavbar: boolean };
+type Props = { user: User };
 
-const UserMenu = ({ user, isAnimatedNavbar }: Props) => {
+const UserMenu = ({ user }: Props) => {
   const { logout } = useAuthContext();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-10 w-10 cursor-pointer outline outline-1 outline-muted-foreground">
-          <AvatarImage src={user.avatar} alt="User Avatar" />
-          <AvatarFallback
-            className={cn("text-background", {
-              "text-foreground": isAnimatedNavbar,
-            })}>
-            {getCharInitials(user.fullName)}
-          </AvatarFallback>
+        <Avatar className="h-10 w-10 cursor-pointer">
+          <AvatarImage
+            src={user.avatar || "/images/avatar-default.png"}
+            alt="User Avatar"
+          />
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-56" align="end">

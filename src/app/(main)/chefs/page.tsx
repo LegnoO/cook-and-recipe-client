@@ -57,7 +57,7 @@ export default async function ChefsPage({ searchParams }: Props) {
             </div>
             <div className="flex flex-1 items-center justify-center">
               {chefs.length > 0 ? (
-                <div className="grid-cols-4-res gap-20">
+                <div className="w-full grid-cols-4-res gap-20">
                   {chefs.map((chef, index) => (
                     <ChefCard key={index} chef={chef} />
                   ))}

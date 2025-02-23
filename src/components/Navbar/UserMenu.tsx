@@ -61,7 +61,7 @@ const UserMenu = ({ user }: Props) => {
           </Link>
         )}
 
-        <Link href="/recipes/manage/bookmark">
+        <Link href="/recipes/bookmarks">
           <DropdownMenuItem className="cursor-pointer">
             <Bookmark className="h-4 w-4" />
             <span>Bookmarks</span>

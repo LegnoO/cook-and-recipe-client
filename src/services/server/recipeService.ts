@@ -94,6 +94,7 @@ export async function getOwnRecipes(chefId: string) {
   );
 
   if (!res.ok) {
+    
     if (res.status === 404) {
       notFound();
     } else {

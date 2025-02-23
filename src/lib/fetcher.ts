@@ -34,9 +34,17 @@ export default async function fetcher(
     const response = await fetch(fullUrl, options);
 
     if (!response.ok) {
-      const excludedApiUrls = ["/auth/refresh", "/auth/logout"];
+      const excludedApiUrls = [
+        "/auth/refresh",
+        "/auth/logout",
+        "/auth/public/register",
+        "/auth/public/login",
+      ];
 
-      if (response.status === 401 && !excludedApiUrls.some((url) => fullUrl.includes(url))) {
+      if (
+        response.status === 401 &&
+        !excludedApiUrls.some((url) => fullUrl.includes(url))
+      ) {
         try {
           await refreshUser();
           return await performFetch();
@@ -44,8 +52,8 @@ export default async function fetcher(
           const excludedUrls = ["/login", "/register", "/forgot-password"];
           if (
             !excludedUrls.some((url) => window.location.pathname.includes(url))
-          ) window.location.replace("/login?session=expired");
-
+          )
+            window.location.replace("/login?session=expired");
         }
       }
 

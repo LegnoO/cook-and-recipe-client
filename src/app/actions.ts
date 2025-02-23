@@ -14,7 +14,8 @@ export async function toggleRecipeBookmarkAction(
     await toggleRecipeBookmark(recipeId);
 
     revalidatePath(pathUrl);
-
+    revalidatePath('/recipes/bookmarks');
+    
     return { success: true };
   } catch (error) {
     return {

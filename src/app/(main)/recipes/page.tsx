@@ -98,21 +98,17 @@ export default async function RecipesListPage({ searchParams }: Props) {
             <div className="mb-12 py-4 pt-3">
               <QueryRecipe />
             </div>
-            
+            <div className="flex flex-1 items-center">
               {recipes.length > 0 ? (
-                <div className="flex flex-1">
-                  <div className="grid-cols-4-res grid gap-8">
-                    {recipes.map((recipe, index) => (
-                      <RecipeCard recipe={recipe} key={index} />
-                    ))}
-                  </div>
+                <div className="grid-cols-4-res grid gap-8">
+                  {recipes.map((recipe, index) => (
+                    <RecipeCard recipe={recipe} key={index} />
+                  ))}
                 </div>
               ) : (
-                <div className="h-[50dvh] items-center justify-center w-full">
-                  <p className="font-medium">No recipes found</p>
-                </div>
+                <p className="font-medium">No recipes found</p>
               )}
-         
+            </div>
           </div>
           <div className="mt-24">
             <Pagination totalPages={paginate.total} currentPage={pageIndex} />

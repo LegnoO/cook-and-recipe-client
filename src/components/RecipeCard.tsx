@@ -35,7 +35,7 @@ export default function RecipeCard({ recipe }: Props) {
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
-          description: result.message || "An error has occurred",
+          description: 'You cannot bookmark your own recipe.',
         });
       }
     });

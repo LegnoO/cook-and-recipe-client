@@ -62,9 +62,9 @@ const ManageRecipeBookmarks = () => {
           <div className="mb-12 py-4 pt-3">
             <QueryRecipe />
           </div>
-          <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-1">
             {recipes.length > 0 ? (
-              <div className="grid-cols-3-res grid gap-8">
+              <div className="w-full grid-cols-4-res grid gap-8">
                 {recipes.map((recipe, index) => (
                   <RecipeCard recipe={recipe} key={recipe.id || index} />
                 ))}

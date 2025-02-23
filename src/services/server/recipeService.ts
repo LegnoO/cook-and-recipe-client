@@ -17,7 +17,7 @@ export async function getRecipeList(searchParams: SearchParams) {
     `${API_BASE_URL}/recipe/public/find?${params.toString()}`,
     {
       next: { tags: ["home-recipes"] },
-    },
+    }
   );
 
   if (!res.ok) {
@@ -35,7 +35,7 @@ export async function getRecipeList(searchParams: SearchParams) {
 
 export async function getRecipeDetail(
   recipeId: string,
-  accessToken?: string,
+  accessToken?: string
 ): Promise<RecipeDetail> {
   const headers: HeadersInit = {};
   if (accessToken) {
@@ -73,7 +73,7 @@ export async function toggleRecipeBookmark(recipeId: string) {
     {
       method: "PATCH",
       headers,
-    },
+    }
   );
 
   if (!res.ok) {
@@ -90,10 +90,11 @@ export async function toggleRecipeBookmark(recipeId: string) {
 
 export async function getOwnRecipes(chefId: string) {
   const res = await fetch(
-    `${API_BASE_URL}/recipe/public/find?index=1&size=4&sortOrder=desc&chefId=${chefId}`,
+    `${API_BASE_URL}/recipe/public/find?index=1&size=4&sortOrder=desc&chefId=${chefId}`
   );
 
   if (!res.ok) {
+    console.log({ erorrr: res });
     if (res.status === 404) {
       notFound();
     } else {

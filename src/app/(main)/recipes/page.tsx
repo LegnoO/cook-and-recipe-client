@@ -100,7 +100,7 @@ export default async function RecipesListPage({ searchParams }: Props) {
             </div>
             <div className="flex flex-1 items-center">
               {recipes.length > 0 ? (
-                <div className="grid-cols-3-res grid gap-8">
+                <div className="grid-cols-4-res grid gap-8">
                   {recipes.map((recipe, index) => (
                     <RecipeCard recipe={recipe} key={index} />
                   ))}

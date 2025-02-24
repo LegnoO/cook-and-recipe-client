@@ -3,9 +3,6 @@
 // ** React Imports
 import { useState } from "react";
 
-// ** Next Imports
-import Link from "next/link";
-
 // ** Components
 import Stepper from "./Stepper";
 import EmailStep from "./EmailStep";
@@ -25,12 +22,16 @@ import { useRouter } from "nextjs-toploader/app";
 // ** Icons
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 
+// ** Context
+import { useIdContext } from "@/context/IdProvider";
+
 const ForgotPasswordForm = () => {
   const STEP_EMAIL = 1;
   const STEP_OTP = 2;
   const STEP_RESET_PASSWORD = 3;
   const STEP_SUCCESS = 4;
 
+  const { setId } = useIdContext();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [codeId, setCodeId] = useState("");
@@ -83,7 +84,7 @@ const ForgotPasswordForm = () => {
             <div className="mt-2 flex flex-col gap-2">
               <Button
                 onClick={() => {
-                  navigateTo("/login");
+                  setId("/login");
                 }}>
                 Login
               </Button>
@@ -91,6 +92,7 @@ const ForgotPasswordForm = () => {
                 className="text-foreground"
                 variant="link"
                 onClick={() => {
+                  setId("");
                   navigateTo("/");
                 }}>
                 Back to home
@@ -112,13 +114,12 @@ const ForgotPasswordForm = () => {
         <CardContent>{renderStepContent()}</CardContent>
         <CardFooter className="justify-center">
           {currentStep !== STEP_SUCCESS && (
-            <Link
-              replace
-              href="/login"
-              className="mt-4 flex flex-1 items-center justify-center gap-1 text-sm text-primary">
+            <p
+              onClick={() => setId("login-modal")}
+              className="mt-4 flex flex-1 cursor-pointer items-center justify-center gap-1 text-sm text-primary">
               <ArrowLeft />
               Back to login
-            </Link>
+            </p>
           )}
         </CardFooter>
       </Card>

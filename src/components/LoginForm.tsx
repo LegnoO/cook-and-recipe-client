@@ -1,11 +1,7 @@
 "use client";
 
-// ** React Imports
-import { useEffect } from "react";
-
 // ** Next Imports
-import { usePathname, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // ** React Imports
 import { useState } from "react";
@@ -31,6 +27,7 @@ import {
 } from "@/components/ui/form";
 import NoSsr from "@/components/NoSsr";
 import LoadingButton from "@/components/LoadingButton";
+import RegisterModal from "./Navbar/RegisterModal";
 
 // ** Library Imports
 import { useForm } from "react-hook-form";
@@ -43,17 +40,16 @@ import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Services
 import { login, fetchUserInfo } from "@/services/client/authService";
-import { logout } from "@/services/client/authService";
 
 // ** Library Imports
 import { z } from "zod";
 
-// ** Lib
-import { getCookieValue, setCookie } from "@/utils/cookies";
+// ** Utils
+import { setCookie } from "@/utils/cookies";
 import { getDecodedParam, getItemLocalStorage } from "@/utils";
 
-// ** Utils
-import { deleteCookie } from "@/utils/cookies";
+// ** Context
+import { useIdContext } from "@/context/IdProvider";
 
 // ** Schema
 const loginFormSchema = z.object({
@@ -79,10 +75,10 @@ type Props = {
   isModal: boolean;
 };
 const LoginForm = ({ isModal }: Props) => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const { setId } = useIdContext();
   const { setUser } = useAuthContext();
+  const pathname = usePathname();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
@@ -90,8 +86,6 @@ const LoginForm = ({ isModal }: Props) => {
 
   const form = useForm<LoginFormValues>({
     defaultValues: {
-      email: "legno@gmail.com",
-      password: "admin",
       rememberMe: getItemLocalStorage<boolean>("rememberMe") || false,
     },
     resolver: zodResolver(loginFormSchema),
@@ -133,25 +127,6 @@ const LoginForm = ({ isModal }: Props) => {
   function togglePasswordVisibility() {
     setShowPassword((prev) => !prev);
   }
-
-  useEffect(() => {
-    async function logoutSession() {
-      const token = getCookieValue("accessToken");
-      const sessionExpired = searchParams.get("session");
-
-      if (token && sessionExpired) {
-        try {
-          await logout();
-        } catch {
-          deleteCookie("accessToken");
-        }
-      }
-    }
-
-    logoutSession();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
 
   return (
     <Card className="w-full max-w-lg rounded-lg border-none shadow-md">
@@ -242,12 +217,11 @@ const LoginForm = ({ isModal }: Props) => {
                   }}
                 />
 
-                <Link
-                  replace
-                  href="/forgot-password"
-                  className="text-sm font-medium hover:underline">
+                <p
+                  onClick={() => setId("forgot-password-modal")}
+                  className="cursor-pointer text-sm font-medium hover:underline">
                   Forgot Password?
-                </Link>
+                </p>
               </div>
               <div className="space-y-2">
                 <LoadingButton
@@ -261,15 +235,16 @@ const LoginForm = ({ isModal }: Props) => {
                   <p className="text-destructive">{errorMessage}</p>
                 )}
               </div>
-              <p className="text-center">
-                Not registered yet?{" "}
-                <Link
-                  replace
-                  href="/register"
-                  className="text-sm font-medium leading-none hover:underline">
-                  Create an account
-                </Link>
-              </p>
+              <div className="flex items-center justify-center gap-2 text-center">
+                <p>Not registered yet?</p>
+                <RegisterModal
+                  trigger={
+                    <p className="cursor-pointer text-sm font-medium leading-none hover:underline">
+                      Create an account
+                    </p>
+                  }
+                />
+              </div>
             </form>
           </Form>
         </div>

@@ -11,6 +11,9 @@ import { Fragment, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Notification from "./Notification";
 import UserMenu from "./UserMenu";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
+import ForgotPasswordModal from "./ForgotPasswordModal";
 
 // ** Library Imports
 import { useMediaQuery } from "usehooks-ts";
@@ -20,9 +23,6 @@ import { useAuthContext } from "@/context/AuthProvider";
 
 // ** Icons
 import { Logo, Menu, Close } from "@/components/ui/icons";
-
-// ** Store
-import { idStore } from "@/store/idStore";
 
 // ** Lib
 import { cn } from "@/utils";
@@ -46,7 +46,7 @@ const Navbar = () => {
       url: "/contact",
     },
   ];
-
+  const [navOpen, setNavOpen] = useState(false);
   const params = useParams();
   const pathname = usePathname();
   const isMediumScreen = useMediaQuery("(min-width: 768px)");
@@ -73,24 +73,18 @@ const Navbar = () => {
     });
   }
 
-  const idMap = {
-    loginModal: "login-modal",
-    navExpand: "nav-expand",
-  };
-
-  const { ids, toggleId, removeId } = idStore();
   const { user } = useAuthContext();
 
   const [isScrolled, setIsScrolled] = useState(false);
 
   function toggleNavExpand() {
-    toggleId(idMap.navExpand);
+    setNavOpen((prev) => !prev);
   }
 
-  function generateRedirectUrl(url: string) {
-    const isHomePage = pathname === "/";
-    return isHomePage ? url : `${url}?returnTo=${encodeURIComponent(pathname)}`;
-  }
+  // function generateRedirectUrl(url: string) {
+  //   const isHomePage = pathname === "/";
+  //   return isHomePage ? url : `${url}?returnTo=${encodeURIComponent(pathname)}`;
+  // }
 
   function getNavbarClasses() {
     if (!isAnimatedNavbar) {
@@ -119,10 +113,10 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (isMediumScreen) {
-      removeId(idMap.navExpand);
+    if (isMediumScreen && navOpen) {
+      setNavOpen(false);
     }
-  }, [removeId, isMediumScreen, idMap.navExpand]);
+  }, [setNavOpen, isMediumScreen, navOpen]);
 
   return (
     <header className={getNavbarClasses()}>
@@ -187,30 +181,22 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="hidden items-center gap-4 lg:flex">
-              <Button className="uppercase tracking-widest" variant="secondary">
-                {pathname !== "/register" ? (
-                  <Link href={generateRedirectUrl("/register")} scroll={false}>
+              <RegisterModal
+                trigger={
+                  <Button
+                    className="uppercase tracking-widest"
+                    variant="secondary">
                     Sign Up
-                  </Link>
-                ) : (
-                  "Sign Up"
-                )}
-              </Button>
-              <Button className="uppercase tracking-widest">
-                {pathname !== "/login" ? (
-                  <Link href={generateRedirectUrl("/login")} scroll={false}>
-                    Sign In
-                  </Link>
-                ) : (
-                  "Sign In"
-                )}
-              </Button>
+                  </Button>
+                }
+              />
+              <LoginModal />
             </div>
           )}
           <div
             onClick={toggleNavExpand}
             className={"flex items-center lg:hidden"}>
-            {ids.includes(idMap.navExpand) ? (
+            {navOpen ? (
               <Close
                 className={cn("text-background", {
                   "text-foreground":
@@ -235,7 +221,7 @@ const Navbar = () => {
         className={cn(
           "invisible z-[1000] m-0 max-h-0 overflow-hidden rounded-b-lg border border-border bg-background transition-all duration-350 ease-smooth",
           {
-            "visible max-h-96 p-3": ids.includes(idMap.navExpand),
+            "visible max-h-96 p-3": navOpen,
           },
         )}>
         <ul className={"flex flex-col gap-3 rounded-md"}>
@@ -258,26 +244,17 @@ const Navbar = () => {
             <Fragment></Fragment>
           ) : (
             <Fragment>
-              <li
-                className={
-                  "flex justify-center whitespace-nowrap rounded-md bg-primary text-primary-foreground lg:hidden lg:items-center"
-                }>
-                <Link
-                  className="block rounded-md px-3 py-2 font-medium"
-                  href="/login">
-                  Sign In
-                </Link>
-              </li>
-              <li
-                className={
-                  "flex justify-center rounded-md bg-secondary text-secondary-foreground lg:hidden lg:items-center"
-                }>
-                <Link
-                  className="block rounded-md px-3 py-2 font-medium"
-                  href="/register">
-                  Sign Up
-                </Link>
-              </li>
+              <LoginModal />
+              <ForgotPasswordModal />
+              <RegisterModal
+                trigger={
+                  <Button
+                    className="uppercase tracking-widest"
+                    variant="secondary">
+                    Sign Up
+                  </Button>
+                }
+              />
             </Fragment>
           )}
         </ul>

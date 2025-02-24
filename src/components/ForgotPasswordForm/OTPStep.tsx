@@ -20,7 +20,7 @@ import {
 import LoadingButton from "@/components/LoadingButton";
 
 // ** Icons
-import { MailWarning, Loader2 } from "lucide-react";
+import { MailWarning } from "lucide-react";
 
 // ** Library Imports
 import { z } from "zod";
@@ -29,6 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 // ** Services
 import { sendOtp, requestReset } from "@/services/client/authService";
+import { cn } from "@/utils";
 
 // ** Schema
 const schema = z.object({
@@ -134,14 +135,12 @@ const EmailStep = ({ email, setCodeId, handleNextStep }: Props) => {
       </Form>
       <p className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
         {"Didn't receive the email?"}
-        <span className="leading-none text-primary">
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <u className="cursor-pointer" onClick={handleResendRequest}>
-              Click to resend
-            </u>
-          )}
+        <span
+          className={cn("cursor-pointer leading-none text-primary underline", {
+            "pointer-events-none text-disabled no-underline": isLoading,
+          })}
+          onClick={handleResendRequest}>
+          Click to resend
         </span>
       </p>
       {message && (

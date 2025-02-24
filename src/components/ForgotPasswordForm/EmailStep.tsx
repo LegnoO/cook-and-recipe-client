@@ -102,12 +102,15 @@ const EmailStep = ({ handleNextStep, setEmail }: Props) => {
             }}
           />
 
-          <LoadingButton
-            label="Send OTP"
-            type="submit"
-            isLoading={isLoading}
-            disabled={isLoading}
-          />
+          <div className="w-full text-center">
+            <LoadingButton
+              label="Send OTP"
+              type="submit"
+              className="w-full"
+              isLoading={isLoading}
+              disabled={isLoading}
+            />
+          </div>
         </form>
       </Form>
     </div>

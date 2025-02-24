@@ -71,6 +71,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    async function logoutSession() {
+      const token = getCookieValue("accessToken");
+      const sessionExpired = searchParams.get("session");
+
+      if (token && sessionExpired) {
+        try {
+          await logout();
+        } catch {
+          deleteCookie("accessToken");
+        }
+      }
+    }
+
+    logoutSession();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  useEffect(() => {
     async function checkUserInfo() {
       setAuthLoading(true);
       if (

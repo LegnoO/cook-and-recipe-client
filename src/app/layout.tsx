@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 // ** Context
 import { AuthProvider } from "@/context/AuthProvider";
+import { IdProvider } from "@/context/IdProvider";
 import ReactQueryProvider from "@/context/ReactQueryProvider";
 
 // ** Library Imports
@@ -54,11 +55,13 @@ export default function RootLayout({
         />
         <Toaster />
         <ReactQueryProvider>
-          <AuthProvider>
-            <div className="flex flex-col">
-              <div className="flex-1">{children}</div>
-            </div>
-          </AuthProvider>
+          <IdProvider>
+            <AuthProvider>
+              <div className="flex flex-col">
+                <div className="flex-1">{children}</div>
+              </div>
+            </AuthProvider>
+          </IdProvider>
         </ReactQueryProvider>
         <SpeedInsights />
       </body>

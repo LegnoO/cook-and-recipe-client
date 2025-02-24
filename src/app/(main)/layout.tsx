@@ -5,20 +5,11 @@ import { ReactNode } from "react";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 
-export default function MainLayout({
-  children,
-  modal,
-}: {
-  children: ReactNode;
-  modal: ReactNode;
-}) {
+export default function MainLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1">
-        {modal}
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );

@@ -100,13 +100,17 @@ export default async function RecipesListPage({ searchParams }: Props) {
             </div>
             <div className="flex flex-1 items-center">
               {recipes.length > 0 ? (
-                <div className="grid-cols-4-res grid gap-8">
-                  {recipes.map((recipe, index) => (
-                    <RecipeCard recipe={recipe} key={index} />
-                  ))}
+                <div className="flex flex-1 items-center">
+                  <div className="grid-cols-4-res grid gap-8">
+                    {recipes.map((recipe, index) => (
+                      <RecipeCard recipe={recipe} key={index} />
+                    ))}
+                  </div>
                 </div>
               ) : (
-                <p className="font-medium">No recipes found</p>
+                <div className="flex flex-1 items-center justify-center">
+                  <p className="font-medium">No recipes found</p>
+                </div>
               )}
             </div>
           </div>

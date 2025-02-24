@@ -49,11 +49,7 @@ export default async function fetcher(
           await refreshUser();
           return await performFetch();
         } catch {
-          const excludedUrls = ["/login", "/register", "/forgot-password"];
-          if (
-            !excludedUrls.some((url) => window.location.pathname.includes(url))
-          )
-            window.location.replace("/login?session=expired");
+          window.location.replace("/?session=expired");
         }
       }
 

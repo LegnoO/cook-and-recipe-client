@@ -3,9 +3,6 @@
 // ** React Imports
 import { useState } from "react";
 
-// ** Next Imports
-import Link from "next/link";
-
 // ** Components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +35,9 @@ import { Eye, EyeOff } from "lucide-react";
 // ** Services
 import { register } from "@/services/client/authService";
 
+// ** Context
+import { useIdContext } from "@/context/IdProvider";
+
 // ** Schema
 const formSchema = z
   .object({
@@ -69,6 +69,8 @@ const RegisterForm = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
+
+  const { setId } = useIdContext();
 
   async function onSubmit(dataSubmit: FormValues) {
     setLoading(true);
@@ -213,12 +215,11 @@ const RegisterForm = () => {
               )}
               <p className="text-center">
                 Already have an account?{" "}
-                <Link
-                  href="/login"
-                  replace
-                  className="font-medium hover:underline">
+                <span
+                  className="cursor-pointer font-semibold text-primary underline"
+                  onClick={() => setId("login-modal")}>
                   Sign in
-                </Link>
+                </span>
               </p>
             </form>
           </Form>

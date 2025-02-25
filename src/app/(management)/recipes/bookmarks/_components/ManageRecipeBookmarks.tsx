@@ -18,7 +18,6 @@ import { getRecipeBookmarkList } from "@/services/client/recipeService";
 // ** Config
 import { queryOptionsConfig } from "@/config/useQueryOptions";
 
-
 const ManageRecipeBookmarks = () => {
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
@@ -62,21 +61,20 @@ const ManageRecipeBookmarks = () => {
           <div className="mb-12 py-4 pt-3">
             <QueryRecipe />
           </div>
-     
-            {recipes.length > 0 ? (
+
+          {recipes.length > 0 ? (
             <div className="flex flex-1">
-              <div className="w-full grid-cols-4-res grid gap-8">
+              <div className="grid-cols-4-res grid w-full gap-8">
                 {recipes.map((recipe, index) => (
                   <RecipeCard recipe={recipe} key={recipe.id || index} />
                 ))}
               </div>
-             </div>
-            ) : (
-              <div className="h-[50dvh] items-center justify-center w-full">
-                <p className="font-medium">No recipes found</p>
-              </div>
-            )}
-      
+            </div>
+          ) : (
+            <div className="flex h-[50dvh] w-full items-center justify-center">
+              <p className="font-medium">No recipes found</p>
+            </div>
+          )}
         </div>
         <div className="mt-24">
           <Pagination totalPages={totalPages} currentPage={Number(pageIndex)} />

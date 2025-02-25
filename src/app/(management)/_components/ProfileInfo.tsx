@@ -34,7 +34,11 @@ import { cn, formatAddress } from "@/utils";
 import { getUserProfile } from "@/services/client/authService";
 
 const ProfileInfo = () => {
-  const { data: userProfile, isLoading } = useQuery({
+  const {
+    data: userProfile,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ["chef-profile"],
     queryFn: () => getUserProfile(),
     ...queryOptionsConfig,
@@ -45,11 +49,11 @@ const ProfileInfo = () => {
     { title: "Profile" },
   ];
 
-  function formatDateTime(dateInput: Date) {
-    const date = new Date(dateInput);
-    const formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
-    return formattedDate;
-  }
+  // function formatDateTime(dateInput: Date) {
+  //   const date = new Date(dateInput);
+  //   const formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
+  //   return formattedDate;
+  // }
 
   if (isLoading) {
     return <Loading />;
@@ -124,7 +128,8 @@ const ProfileInfo = () => {
                 <div className="flex items-center gap-2">
                   <CalendarRange size={18} />
                   <span>
-                    Joined on: {formatDateTime(userProfile.createdDate)}
+                    Joined on:{" "}
+                    {new Date(userProfile.createdDate).toLocaleDateString()}
                   </span>
                 </div>
 
@@ -165,7 +170,7 @@ const ProfileInfo = () => {
                       <CalendarDays size={14} />
                       <span className="text-sm">
                         {new Date(
-                          userProfile.chefInfo.startedDate,
+                          userProfile.chefInfo.createdDate,
                         ).toLocaleDateString()}
                       </span>
                     </div>
@@ -187,7 +192,7 @@ const ProfileInfo = () => {
                   <p className="max-w-[240px] text-center text-muted-foreground">
                     Share your culinary expertise with our community
                   </p>
-                  <ButtonRequestChef />
+                  <ButtonRequestChef refetch={refetch} />
                 </div>
               )}
             </div>

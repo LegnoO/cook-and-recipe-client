@@ -153,28 +153,24 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
       {
         name: "address.number",
         label: "Number",
-        placeholder: "123",
         column: 6,
       },
       {
         name: "address.street",
         label: "Street",
-        placeholder: "Main St",
         column: 6,
       },
       {
         name: "address.ward",
         label: "Ward",
-        placeholder: "Central Ward",
         column: 6,
       },
       {
         name: "address.district",
         label: "District",
-        placeholder: "Downtown",
         column: 6,
       },
-      { name: "address.city", label: "City", placeholder: "123", column: 12 },
+      { name: "address.city", label: "City", column: 12 },
     ];
 
     return (
@@ -193,7 +189,7 @@ const ButtonEditProfile = ({ userProfile }: Props) => {
                 <FormItem>
                   <FormLabel>{field.label}</FormLabel>
                   <FormControl>
-                    <Input {...fieldProps} placeholder={field.placeholder} />
+                    <Input {...fieldProps} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

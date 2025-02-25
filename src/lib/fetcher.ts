@@ -42,13 +42,14 @@ export default async function fetcher(
       ];
 
       if (
-        response.status === 401 &&
+        (response.status === 401 || response.status === 404) &&
         !excludedApiUrls.some((url) => fullUrl.includes(url))
       ) {
         try {
           await refreshUser();
           return await performFetch();
         } catch {
+          console.log("errror");
           window.location.replace("/?session=expired");
         }
       }

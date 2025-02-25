@@ -36,6 +36,7 @@ import { queryOptionsConfig } from "@/config/useQueryOptions";
 import {
   getNotificationOwned,
   checkNewNotification,
+  getNotificationDetail,
 } from "@/services/client/notificationService";
 
 // ** Utils
@@ -88,13 +89,17 @@ const Notification = () => {
     }
   }
 
-  const { data: notificationResponse, isLoading } = useQuery({
+  const {
+    data: notificationResponse,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ["notifications", index],
     queryFn: () => getNotificationOwned(queryParams()),
     ...queryOptionsConfig,
   });
 
-  function toggleNotificationDetail(
+  async function toggleNotificationDetail(
     isOpen: boolean,
     id: string,
     status: "read" | "sent" | "unread",
@@ -102,10 +107,12 @@ const Notification = () => {
     if (isOpen) {
       setNotificationDetail(id);
       if (status !== "read") {
+        await getNotificationDetail(id);
       }
       return;
     }
     setNotificationDetail("");
+    refetch();
   }
 
   const fetchNotifications = useCallback(async () => {
@@ -180,7 +187,8 @@ const Notification = () => {
                     {timeAgo(notification.createdDate)}
                   </p>
                 </div>
-                {notification.status === "sent" && (
+                {(notification.status === "sent" ||
+                  notification.status === "unread") && (
                   <div className="absolute right-0 top-0 h-2 w-2 rounded-full bg-primary" />
                 )}
               </div>

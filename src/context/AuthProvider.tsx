@@ -124,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAuthLoading,
       }}>
       {authLoading && <LoadingScreen />}
-      {children}
+      {!authLoading && children}
     </AuthContext.Provider>
   );
 }

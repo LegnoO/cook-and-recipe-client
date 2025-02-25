@@ -11,7 +11,7 @@ export async function getNotificationOwned(
 export async function getNotificationDetail(
   id: string,
 ): Promise<NotificationResponse> {
-  const res = await fetcher(`/notification/owned/find?${id}`);
+  const res = await fetcher(`/notification/owned/find/${id}`);
   return await res.json();
 }
 

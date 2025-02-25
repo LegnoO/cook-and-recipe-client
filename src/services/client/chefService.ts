@@ -9,11 +9,15 @@ export async function getRecipeOwned(params: string) {
 export async function requestBecomeChef(requestInfo: {
   level: string;
   description: string;
+  startedDate: Date;
 }) {
+  const { level, description, startedDate } = requestInfo;
   const res = await fetcher("/chefs/owned/register", {
     method: "POST",
     body: JSON.stringify({
-      requestInfo,
+      level,
+      description,
+      startedDate,
     }),
   });
 

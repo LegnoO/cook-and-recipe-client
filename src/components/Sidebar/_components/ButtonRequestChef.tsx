@@ -67,7 +67,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const ButtonRequestChef = () => {
+const ButtonRequestChef = ({ refetch }: { refetch: () => void }) => {
   const { toast } = useToast();
   const id = "select-level-chef";
   const experienceLevels: FormValues["level"][] = [
@@ -99,6 +99,7 @@ const ButtonRequestChef = () => {
         variant: "successful",
         action: <ToastAction altText="Try again">Close</ToastAction>,
       });
+      refetch();
     } catch (error) {
       toast({
         variant: "destructive",

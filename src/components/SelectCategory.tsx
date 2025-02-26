@@ -32,7 +32,6 @@ const SelectCategory = ({
 }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>();
-  console.log("🚀 ~ categories:", { isLoading, categories });
 
   useEffect(() => {
     async function fetchCategories() {

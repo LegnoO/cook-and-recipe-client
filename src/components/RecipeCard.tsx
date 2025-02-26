@@ -12,6 +12,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import BookMarkButton from "./BookMarkButton";
 import Rating from "./Rating";
 
+// ** Context
+import { useAuthContext } from "@/context/AuthProvider";
+
 // ** Actions
 import { toggleRecipeBookmarkAction } from "@/app/actions";
 
@@ -22,6 +25,7 @@ import { useToast } from "@/hooks/useToast";
 type Props = { recipe: Recipe | RecipeDetail };
 
 export default function RecipeCard({ recipe }: Props) {
+  const { user } = useAuthContext();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const [isBookmarked, setIsBookmarked] = useState(recipe.bookmarked);
@@ -35,7 +39,7 @@ export default function RecipeCard({ recipe }: Props) {
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
-          description: 'You cannot bookmark your own recipe.',
+          description: "You cannot bookmark your own recipe.",
         });
       }
     });
@@ -93,12 +97,13 @@ export default function RecipeCard({ recipe }: Props) {
             alt={recipe.name}
           />
         </Link>
-
-        <BookMarkButton
-          isLoading={isPending}
-          onClick={handleToggleBookmark}
-          bookmarked={isBookmarked}
-        />
+        {user && (
+          <BookMarkButton
+            isLoading={isPending}
+            onClick={handleToggleBookmark}
+            bookmarked={isBookmarked}
+          />
+        )}
       </CardHeader>
       <CardContent className="px-0 pb-4 pt-5">
         <Link href={`/recipes/${recipe.id}`}>

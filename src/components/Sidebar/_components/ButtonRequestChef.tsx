@@ -84,7 +84,6 @@ const ButtonRequestChef = ({ refetch }: { refetch: () => void }) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   async function onSubmit(dataSubmit: FormValues) {
-    console.log("🚀 ~ onSubmit ~ dataSubmit:", dataSubmit);
     setLoading(true);
     toast({
       title: "Loading...",

@@ -49,7 +49,6 @@ export default async function fetcher(
           await refreshUser();
           return await performFetch();
         } catch {
-          console.log("errror");
           window.location.replace("/?session=expired");
         }
       }

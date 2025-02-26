@@ -159,8 +159,6 @@ export default function RecipesOwnedDetail({ params }: Props) {
     );
   };
 
-  console.log("RecipeDetailPage ", recipeDetail);
-
   useEffect(() => {
     if (recipeDetail) {
       setRecipe(recipeDetail);

@@ -30,7 +30,6 @@ export default async function serverFetch(
   const response = await fetch(fullUrl, options);
 
   if (!response.ok) {
-    console.log({ accessToken, fullUrl, error: await response.json() });
     if (response.status === 401) {
       redirect("/session");
     }
@@ -41,11 +40,4 @@ export default async function serverFetch(
   }
 
   return response;
-
-  // try {
-  //   console.log("alo alo");
-  //   return await performFetch();
-  // } catch (error) {
-  //   throw error;
-  // }
 }

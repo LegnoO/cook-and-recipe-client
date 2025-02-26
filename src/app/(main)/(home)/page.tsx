@@ -20,7 +20,7 @@ import { getRecipeList } from "@/services/server/recipeService";
 
 export default async function Home() {
   const categories = await getCategories();
-  console.log("🚀 ~ Home ~ categories:", categories);
+
   const { data: recipes } = await getRecipeList({
     index: "1",
     size: "4",

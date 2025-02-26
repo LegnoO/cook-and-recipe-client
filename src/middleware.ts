@@ -10,7 +10,6 @@ export function middleware(request: NextRequest) {
   }
 
   if (accessToken) {
-    console.log("🚀 ~ middleware ~ accessToken:", accessToken);
     return NextResponse.redirect(new URL("/", request.url));
   }
 }

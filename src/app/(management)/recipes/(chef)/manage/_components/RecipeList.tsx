@@ -157,6 +157,7 @@ const RecipeList = () => {
                         className={cn(
                           "rounded-2xl px-2 py-1.5 text-center text-sm font-medium leading-none",
                           {
+                            "bg-grey-500": recipe.verifyStatus === "rejected",
                             "bg-green-500": recipe.verifyStatus === "verified",
                             "bg-red-500": recipe.verifyStatus === "unverified",
                             "bg-yellow-500": recipe.verifyStatus === "pending",
@@ -213,7 +214,9 @@ const RecipeList = () => {
 
                           <DropdownMenuSeparator />
 
-                          {recipe.verifyStatus === "unverified" && (
+                          {["unverified", "rejected"].includes(
+                            recipe.verifyStatus,
+                          ) && (
                             <Fragment>
                               <DropdownMenuItem
                                 onSelect={(event) => event.preventDefault()}

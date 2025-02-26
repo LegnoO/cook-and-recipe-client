@@ -20,6 +20,7 @@ import { Facebook, Instagram, Linkedin } from "@/components/ui/icons";
 type Props = { chef: Chef };
 
 const ChefCard = ({ chef }: Props) => {
+  console.log("🚀 ~ ChefCard ~ chef:", chef);
   const socialIcons = [
     {
       icon: <Facebook className="h-4 w-4" />,
@@ -42,10 +43,7 @@ const ChefCard = ({ chef }: Props) => {
           className="mx-auto aspect-square w-full rounded-full object-cover"
           width={200}
           height={200}
-          src={
-            chef.userInfo.avatar ||
-            "https://res.cloudinary.com/dzl5ur69n/image/upload/v1733600651/yyhtnniclx0ja0n2pjhq.jpg"
-          }
+          src={chef.userInfo.avatar || "/images/avatar-default.png"}
           alt={chef.userInfo.fullName}
         />
       </CardHeader>
@@ -62,7 +60,7 @@ const ChefCard = ({ chef }: Props) => {
           {chef.description}
         </p>
       </CardContent>
-      <CardFooter className="justify-center p-0">
+      <CardFooter className="mt-4 justify-center p-0">
         <div className="flex gap-2">
           {socialIcons.map((item, index) => (
             <Button

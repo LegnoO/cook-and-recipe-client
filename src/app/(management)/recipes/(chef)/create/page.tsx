@@ -53,7 +53,7 @@ const formSchema = z.object({
   ingredients: z.array(
     z.object({
       name: z.string().min(1, "Ingredient name is required"),
-      quantity: z.number().min(1, "Quantity must be a positive number"),
+      quantity: z.number().gt(0, "Quantity must be greater than 0"),
       measurement: z.string().min(1, "Measurement is required"),
     }),
   ),
@@ -186,6 +186,7 @@ export default function CreateRecipePage() {
                       <FormLabel>Recipe name</FormLabel>
                       <FormControl>
                         <Input
+                          spellCheck={false}
                           placeholder="e.g. Vietnamese Pho, Spaghetti Carbonara, Chicken Tikka Masala"
                           {...field}
                         />
@@ -203,6 +204,7 @@ export default function CreateRecipePage() {
                         <FormLabel>Cook duration (minutes)</FormLabel>
                         <FormControl>
                           <Input
+                            spellCheck={false}
                             {...field}
                             min={0}
                             type="number"
@@ -224,6 +226,7 @@ export default function CreateRecipePage() {
                         <FormLabel>Number of serving (person)</FormLabel>
                         <FormControl>
                           <Input
+                            spellCheck={false}
                             {...field}
                             min={0}
                             type="number"

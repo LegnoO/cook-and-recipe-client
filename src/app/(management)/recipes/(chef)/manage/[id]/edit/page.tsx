@@ -22,6 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToastAction } from "@/components/ui/toast";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Badge } from "@/components/ui/badge";
 import UploadImage from "./_components/UploadImage";
 import SelectCategory from "./_components/SelectCategory";
 import SelectDifficulty from "./_components/SelectDifficulty";
@@ -32,6 +33,9 @@ import Loading from "@/app/(management)/_components/Loading";
 
 // ** Hooks
 import { useToast } from "@/hooks/useToast";
+
+// ** Icons
+import { Globe, Lock } from "lucide-react";
 
 // ** Library Imports
 import { z } from "zod";
@@ -49,6 +53,7 @@ import {
 } from "@/services/client/recipeService";
 
 // ** Library Imports
+import { format } from "date-fns";
 import { useRouter } from "nextjs-toploader/app";
 
 // ** Lib
@@ -68,7 +73,7 @@ const formSchema = z.object({
   ingredients: z.array(
     z.object({
       name: z.string().min(1, "Ingredient name is required"),
-      quantity: z.number().min(1, "Quantity must be a positive number"),
+      quantity: z.number().gt(0, "Quantity must be greater than 0"),
       measurement: z.string().min(1, "Measurement is required"),
     }),
   ),
@@ -272,10 +277,21 @@ export default function UpdateRecipePage({ params }: Props) {
             <h1 className="mb-4 text-2xl font-semibold tracking-tight">
               {recipeDetail.name}
             </h1>
-            <p className="text-muted-foreground">
-              Modify your culinary creation and share the updated version with
-              our community.
-            </p>
+            <div className="mt-2 flex items-center gap-2">
+              <Badge variant="secondary">{recipeDetail.category.name}</Badge>
+              <span className="text-sm text-muted-foreground">
+                Created on{" "}
+                {format(new Date(recipeDetail.createdDate), "MMMM d, yyyy")}
+              </span>
+              <Badge variant={recipeDetail.status ? "default" : "secondary"}>
+                {recipeDetail.status ? (
+                  <Globe className="mr-1 h-3 w-3" />
+                ) : (
+                  <Lock className="mr-1 h-3 w-3" />
+                )}
+                {recipeDetail.status ? "Public" : "Private"}
+              </Badge>
+            </div>
           </div>
           <div className="space-y-8">
             <Card>
@@ -296,6 +312,7 @@ export default function UpdateRecipePage({ params }: Props) {
                       <FormLabel>Recipe name</FormLabel>
                       <FormControl>
                         <Input
+                          spellCheck={false}
                           placeholder="e.g. Vietnamese Pho, Spaghetti Carbonara, Chicken Tikka Masala"
                           {...field}
                         />
@@ -313,6 +330,7 @@ export default function UpdateRecipePage({ params }: Props) {
                         <FormLabel>Cook duration (minutes)</FormLabel>
                         <FormControl>
                           <Input
+                            spellCheck={false}
                             {...field}
                             min={0}
                             type="number"
@@ -334,6 +352,7 @@ export default function UpdateRecipePage({ params }: Props) {
                         <FormLabel>Number of serving (person)</FormLabel>
                         <FormControl>
                           <Input
+                            spellCheck={false}
                             {...field}
                             min={0}
                             type="number"
@@ -387,11 +406,12 @@ export default function UpdateRecipePage({ params }: Props) {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">Set Recipe As</CardTitle>
-              </CardHeader>
-              {recipeDetail.verifyStatus === "verified" && (
+            {recipeDetail.verifyStatus === "verified" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl">Set Recipe As</CardTitle>
+                </CardHeader>
+
                 <CardContent className="space-y-6">
                   <RadioGroup
                     defaultValue={recipeStatus}
@@ -439,8 +459,8 @@ export default function UpdateRecipePage({ params }: Props) {
                     </div>
                   </RadioGroup>
                 </CardContent>
-              )}
-            </Card>
+              </Card>
+            )}
             <div className="flex items-center justify-end gap-4">
               <Button
                 onClick={() => router.push("/profile")}

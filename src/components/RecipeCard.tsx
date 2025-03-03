@@ -25,6 +25,7 @@ import { useToast } from "@/hooks/useToast";
 type Props = { recipe: Recipe | RecipeDetail };
 
 export default function RecipeCard({ recipe }: Props) {
+  console.log("🚀 ~ RecipeCard ~ recipe:", recipe);
   const { user } = useAuthContext();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
@@ -44,41 +45,6 @@ export default function RecipeCard({ recipe }: Props) {
       }
     });
   }
-
-  // const fake_data = [
-  //   {
-  //     name: "Quick Chicken Piccata",
-  //     category: "Main Dishes",
-  //     description:
-  //       "Habitant accumsan suscipit sodales phasellus nulla elit placerat sapien quisque gravida tincidunt",
-  //     image:
-  //       "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg",
-  //   },
-  //   {
-  //     name: "Quick Chicken Piccata",
-  //     category: "Main Dishes",
-  //     description:
-  //       "Habitant accumsan suscipit sodales phasellus nulla elit placerat sapien quisque gravida tincidunt",
-  //     image:
-  //       "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg",
-  //   },
-  //   {
-  //     name: "Quick Chicken Piccata",
-  //     category: "Main Dishes",
-  //     description:
-  //       "Habitant accumsan suscipit sodales phasellus nulla elit placerat sapien quisque gravida tincidunt",
-  //     image:
-  //       "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg",
-  //   },
-  //   {
-  //     name: "Quick Chicken Piccata",
-  //     category: "Main Dishes",
-  //     description:
-  //       "Habitant accumsan suscipit sodales phasellus nulla elit placerat sapien quisque gravida tincidunt",
-  //     image:
-  //       "https://thatix.progressionstudios.com/wp-content/uploads/2020/03/pasta-with-salmon-P784PLF.jpg",
-  //   },
-  // ];
 
   return (
     <Card className="overflow-hidden rounded-none border-none shadow-none">

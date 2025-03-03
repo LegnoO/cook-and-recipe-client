@@ -28,6 +28,7 @@ type RecipeDetail = {
   timeToCook: number;
   difficulty: string;
   serves: number;
+  status: boolean;
   bookmarked: boolean;
   imageUrls: string[];
   createdDate: string;

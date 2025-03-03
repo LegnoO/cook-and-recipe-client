@@ -1,43 +1,60 @@
 "use client";
 
+// ** React Imports
+import { Fragment, useState } from "react";
+
 // ** Components
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  SelectTrigger,
+  Select,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import ButtonEditProfile from "@/components/Sidebar/_components/ButtonEditProfile";
 import ButtonRequestChef from "@/components/Sidebar/_components/ButtonRequestChef";
 import Breadcrumb from "@/components/Breadcrumb";
 import Loading from "../_components/Loading";
 
 // ** Icons
-import {
-  CalendarDays,
-  MapPin,
-  Phone,
-  Mail,
-  Cake,
-  User2,
-  CalendarRange,
-} from "lucide-react";
+import { User2, ChefHat, Edit, Loader2, Check } from "lucide-react";
 
 // ** Config
 import { queryOptionsConfig } from "@/config/useQueryOptions";
 
 // ** Library Imports
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
+
+// ** Hooks
+import { useToast } from "@/hooks/useToast";
 
 // ** Lib
 import { cn, formatAddress } from "@/utils";
 
 // ** Services
 import { getUserProfile } from "@/services/client/authService";
+import { updateChefInfo } from "@/services/client/chefService";
 
 const ProfileInfo = () => {
+  const { toast } = useToast();
+  const experienceLevels = ["Beginner", "Home cook", "Professional", "Master"];
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState({
+    description: false,
+    level: false,
+  });
+  const [level, setLevel] = useState("");
+  const [description, setDescription] = useState("");
   const {
     data: userProfile,
     refetch,
-    isLoading,
+    isLoading: queryLoading,
   } = useQuery({
     queryKey: ["chef-profile"],
     queryFn: () => getUserProfile(),
@@ -49,13 +66,7 @@ const ProfileInfo = () => {
     { title: "Profile" },
   ];
 
-  // function formatDateTime(dateInput: Date) {
-  //   const date = new Date(dateInput);
-  //   const formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
-  //   return formattedDate;
-  // }
-
-  if (isLoading) {
+  if (queryLoading) {
     return <Loading />;
   }
 
@@ -63,8 +74,30 @@ const ProfileInfo = () => {
     return null;
   }
 
+  async function onSubmit() {
+    try {
+      setIsLoading(true);
+      if (
+        userProfile.chefInfo.level !== level ||
+        userProfile.chefInfo.description !== description
+      ) {
+        await updateChefInfo(level, description);
+        refetch();
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
-    <section>
+    <section className="pb-24">
       <div className="mb-8">
         <Breadcrumb items={breadcrumbLinks} />
       </div>
@@ -82,109 +115,292 @@ const ProfileInfo = () => {
               <div>
                 <h2 className="text-3xl font-bold">{userProfile.fullName}</h2>
                 <p className="text-muted-foreground">{userProfile.email}</p>
+
+                <Badge
+                  className="mt-2 flex w-fit items-center gap-1 rounded-2xl font-medium capitalize"
+                  variant="secondary">
+                  {userProfile.chefInfo ? (
+                    <Fragment>
+                      <ChefHat className="h-3.5 w-3.5" />
+                      {`${userProfile.chefInfo.level} Chef`}
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      <User2 className="h-3.5 w-3.5" /> User
+                    </Fragment>
+                  )}
+                </Badge>
               </div>
             </div>
             <ButtonEditProfile userProfile={userProfile} />
           </div>
-          <Separator className="my-6" />
-          <div className="grid gap-8 md:grid-cols-2">
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Personal Information</h2>
-              <div className="grid gap-3">
-                <div className="flex items-center gap-2">
-                  <Mail size={18} />
-                  <span>{userProfile.email}</span>
+
+          {userProfile.chefInfo && (
+            <div className="rounded-lg bg-secondary p-5">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="flex items-center gap-2 text-lg font-medium">
+                  <ChefHat className="h-5 w-5" />
+                  Chef Description
+                </h3>
+                {userProfile.chefInfo.status !== "pending" && (
+                  <Button
+                    disabled={isLoading}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setIsEditing((prev) => ({
+                        ...prev,
+                        description: !prev.description,
+                      }))
+                    }
+                    className="h-8 hover:bg-muted-foreground/20 hover:text-muted">
+                    {isLoading ? (
+                      <Loader2
+                        className={cn("h-4 w-4", {
+                          "animate-spin": !isLoading,
+                        })}
+                      />
+                    ) : (
+                      <Edit className="h-4 w-4" />
+                    )}
+                  </Button>
+                )}
+              </div>
+
+              {isEditing.description ? (
+                <div className="space-y-3">
+                  <Textarea
+                    value={
+                      description
+                        ? description
+                        : userProfile.chefInfo.description
+                    }
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="min-h-[120px] border-gray-300 bg-white focus-visible:ring-gray-400"
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setIsEditing((prev) => ({
+                          ...prev,
+                          description: false,
+                        }))
+                      }
+                      className="border-gray-300 text-gray-600">
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="bg-gray-800 text-white hover:bg-gray-700"
+                      onClick={() => {
+                        setIsEditing((prev) => ({
+                          ...prev,
+                          description: false,
+                        }));
+                        onSubmit();
+                      }}>
+                      Save
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Phone size={18} />
-                  <span
-                    className={cn({
+              ) : (
+                <p
+                  className={cn("leading-relaxed text-muted-foreground", {
+                    italic: !description,
+                  })}>
+                  {description || "No description"}
+                </p>
+              )}
+            </div>
+          )}
+
+          <Tabs defaultValue="personal" className="mt-8 min-h-[176px]">
+            <TabsList className="mb-6 grid w-full grid-cols-2">
+              <TabsTrigger value="personal" className="text-sm">
+                Personal Information
+              </TabsTrigger>
+              <TabsTrigger value="chef" className="text-sm">
+                Chef Information
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="personal">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                    Email
+                  </p>
+                  <p className="font-medium">{userProfile.email}</p>
+                </div>
+
+                <div className="space-y-1">
+                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                    Phone
+                  </p>
+                  <p
+                    className={cn("font-medium", {
                       "italic text-muted-foreground": !userProfile.phone,
                     })}>
                     {userProfile.phone || "No phone added"}
-                  </span>
+                  </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <User2 size={18} />
-                  <span
-                    className={cn({
+
+                <div className="space-y-1">
+                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                    Gender
+                  </p>
+                  <p
+                    className={cn("font-medium", {
                       "italic text-muted-foreground": !userProfile.gender,
                     })}>
                     {userProfile.gender || "No gender added"}
-                  </span>
+                  </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Cake size={18} />
-                  <span
-                    className={cn({
+
+                <div className="space-y-1">
+                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                    Birthday
+                  </p>
+                  <p
+                    className={cn("font-medium", {
                       "italic text-muted-foreground": !userProfile.dateOfBirth,
                     })}>
-                    {userProfile.dateOfBirth
-                      ? format(userProfile.dateOfBirth, "PPP")
-                      : "No birthday added"}
-                  </span>
+                    {userProfile.dateOfBirth || "No birthday added"}
+                  </p>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <CalendarRange size={18} />
-                  <span>
+                <div className="space-y-1">
+                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                    Started Date
+                  </p>
+                  <p
+                    className={cn("font-medium", {
+                      "italic text-muted-foreground": !userProfile.createdDate,
+                    })}>
                     Joined on:{" "}
-                    {new Date(userProfile.createdDate).toLocaleDateString()}
-                  </span>
+                    {userProfile.createdDate
+                      ? new Date(userProfile.createdDate).toLocaleDateString()
+                      : "Invalid date"}
+                  </p>
                 </div>
 
-                {userProfile.address && (
-                  <div className="flex items-center gap-2">
-                    <MapPin size={18} />
-                    <span
-                      className={cn({
-                        "italic text-muted-foreground": !userProfile.address,
-                      })}>
-                      {formatAddress(userProfile.address)}
-                    </span>
-                  </div>
-                )}
+                <div className="space-y-1">
+                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                    Address
+                  </p>
+                  <p
+                    className={cn("font-medium", {
+                      "italic text-muted-foreground": !userProfile.dateOfBirth,
+                    })}>
+                    {userProfile.address
+                      ? formatAddress(userProfile.address)
+                      : "No address added"}
+                  </p>
+                </div>
               </div>
-            </div>
+            </TabsContent>
 
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Chef Information</h2>
+            <TabsContent value="chef">
               {userProfile.chefInfo ? (
-                <div className="grid gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium">Level:</span>
-                    <span className="rounded-full border px-2.5 py-1 text-xs font-semibold">
-                      {userProfile.chefInfo.level}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">Status:</span>
+                    <div className="space-y-1">
+                      <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                        Level
+                      </p>
+                      {isEditing.level ? (
+                        <Select
+                          value={level ? level : userProfile.chefInfo.level}
+                          onValueChange={(value) => setLevel(value)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Level" />
+                          </SelectTrigger>
 
-                    <span className="rounded-full border px-2.5 py-1 text-xs font-semibold">
+                          <SelectContent>
+                            {experienceLevels.map((level, index) => (
+                              <SelectItem key={index} value={level}>
+                                {level}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <p className="font-medium">
+                          {userProfile.chefInfo.level}
+                        </p>
+                      )}
+                    </div>
+                    {userProfile.chefInfo.status !== "pending" && (
+                      <Button
+                        disabled={isLoading}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (isEditing.level) {
+                            onSubmit();
+                          }
+                          setIsEditing((prev) => ({
+                            ...prev,
+                            level: !prev.level,
+                          }));
+                        }}
+                        className="h-8 hover:bg-muted-foreground/20 hover:text-muted">
+                        {isLoading ? (
+                          <Loader2
+                            className={cn("h-4 w-4", {
+                              "animate-spin": !isLoading,
+                            })}
+                          />
+                        ) : isEditing.level ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Edit className="h-4 w-4" />
+                        )}
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                      Status
+                    </p>
+                    <p className="font-medium capitalize">
                       {userProfile.chefInfo.status}
-                    </span>
+                    </p>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">Started Date:</span>
-                    <div className="flex items-center gap-1">
-                      <CalendarDays size={14} />
-                      <span className="text-sm">
-                        {new Date(
-                          userProfile.chefInfo.createdDate,
-                        ).toLocaleDateString()}
-                      </span>
-                    </div>
+                  <div className="space-y-1">
+                    <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                      Started Date
+                    </p>
+                    <p
+                      className={cn("font-medium", {
+                        "italic text-muted-foreground":
+                          !userProfile.chefInfo.createdDate,
+                      })}>
+                      {userProfile.chefInfo.createdDate
+                        ? new Date(
+                            userProfile.chefInfo.createdDate,
+                          ).toLocaleDateString()
+                        : "Invalid date"}
+                    </p>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">Approval Date:</span>
-                    <div className="flex items-center gap-1">
-                      <CalendarDays size={14} />
-                      <span className="text-sm">
-                        {new Date(
-                          userProfile.chefInfo.approvalDate,
-                        ).toLocaleDateString()}
-                      </span>
-                    </div>
+                  <div className="space-y-1">
+                    <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                      Approval Date
+                    </p>
+                    <p
+                      className={cn("font-medium", {
+                        "italic text-muted-foreground":
+                          !userProfile.chefInfo.approvalDate,
+                      })}>
+                      {userProfile.chefInfo.approvalDate
+                        ? new Date(
+                            userProfile.chefInfo.approvalDate,
+                          ).toLocaleDateString()
+                        : "Invalid date"}
+                    </p>
                   </div>
                 </div>
               ) : (
@@ -195,8 +411,8 @@ const ProfileInfo = () => {
                   <ButtonRequestChef refetch={refetch} />
                 </div>
               )}
-            </div>
-          </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </section>

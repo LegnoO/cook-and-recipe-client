@@ -185,13 +185,13 @@ export default function RecipesOwnedDetail({ params }: Props) {
             <span className="text-sm text-muted-foreground">
               Created on {format(new Date(recipe.createdDate), "MMMM d, yyyy")}
             </span>
-            <Badge variant={true ? "default" : "secondary"}>
-              {true ? (
+            <Badge variant={recipe.status ? "default" : "secondary"}>
+              {recipe.status ? (
                 <Globe className="mr-1 h-3 w-3" />
               ) : (
                 <Lock className="mr-1 h-3 w-3" />
               )}
-              {true ? "Public" : "Private"}
+              {recipe.status ? "Public" : "Private"}
             </Badge>
           </div>
         </div>
@@ -211,19 +211,16 @@ export default function RecipesOwnedDetail({ params }: Props) {
         </div>
       </div>
 
-      <div className="mb-4">
-        <div className="grid grid-cols-2 gap-4">
+      <div className="mb-4 mt-8">
+        <div className="grid grid-cols-2 gap-8">
           {recipe.imageUrls.slice(0, 4).map((url, index) => (
-            <div
-              key={index}
-              className={`relative aspect-square overflow-hidden rounded-lg border ${
-                index === 0 && recipe.imageUrls.length === 3 ? "col-span-2" : ""
-              }`}>
+            <div key={index} className="overflow-hidden rounded-lg">
               <Image
                 src={url || "/placeholder.svg"}
                 alt={`${recipe.name} ${index + 1}`}
-                fill
-                className="object-cover"
+                width={500}
+                height={240}
+                className="h-80 object-cover"
               />
             </div>
           ))}

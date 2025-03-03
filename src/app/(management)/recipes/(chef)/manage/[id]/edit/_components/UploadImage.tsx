@@ -64,12 +64,13 @@ const UploadImage = ({ form, images, setImages }: Props) => {
 
   const ImagePreview = ({ index, image }: { index: number; image: string }) => {
     return (
-      <div className="relative h-[220px] w-full overflow-hidden rounded-lg border-2 border-dashed">
+      <div className="relative overflow-hidden rounded-lg border-2 border-dashed">
         <Image
           src={image}
           alt={`Recipe image ${index + 1}`}
-          fill
-          className="object-cover"
+          width={500}
+          height={240}
+          className="h-80 object-cover"
         />
         <Button
           type="button"
@@ -93,7 +94,7 @@ const UploadImage = ({ form, images, setImages }: Props) => {
       </label>
       <div className="grid grid-cols-2 gap-4">
         {images.length === 0 && (
-          <div className="relative h-[220px] w-full overflow-hidden rounded-lg border-2 border-dashed bg-gray-50">
+          <div className="relative h-80 w-full overflow-hidden rounded-lg border-2 border-dashed bg-gray-50">
             <label className="flex h-full w-full cursor-pointer flex-col items-center justify-center">
               <Upload className="h-6 w-6 text-muted-foreground" />
               <span className="mt-2 text-sm font-medium">Upload Photo</span>
@@ -117,7 +118,7 @@ const UploadImage = ({ form, images, setImages }: Props) => {
           ))}
 
         {images.length > 0 && images.length < 4 && (
-          <div className="relative h-[220px] w-full overflow-hidden rounded-lg border-2 border-dashed bg-gray-50">
+          <div className="relative h-80 w-full overflow-hidden rounded-lg border-2 border-dashed bg-gray-50">
             <label className="flex h-full w-full cursor-pointer flex-col items-center justify-center">
               <Plus className="h-4 w-4 text-placeholder" />
               <input

@@ -49,8 +49,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function handleLogout() {
     try {
-      setUser(null);
       await logout();
+      setUser(null);
       deleteCookie("accessToken");
 
       toast({

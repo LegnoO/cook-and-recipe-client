@@ -7,32 +7,76 @@ import { parseSearchParams, getTruthyObject } from "@/utils";
 
 // ** Config
 import { API_BASE_URL } from "@/config/endpoint";
+import { getCookieValue } from "@/utils/cookies";
 
-export async function getRecipeList(searchParams: SearchParams) {
-  const params = parseSearchParams(getTruthyObject(searchParams || {}));
-
-  if (params.get("chefName")) params.delete("chefName");
-  console.log({
-    here: `${API_BASE_URL}/recipe/public/find?${params.toString()}`,
-  });
-  const res = await fetch(
-    `${API_BASE_URL}/recipe/public/find?${params.toString()}`,
-    {
-      next: { tags: ["home-recipes"] },
+async function getTokenRefreshed() {
+  const rememberMe = getCookieValue("rememberMe");
+  const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    method: "POST",
+    body: JSON.stringify({
+      rememberMe,
+    }),
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    next: { revalidate: false },
+  });
 
   if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return await res.json();
+}
+
+export async function getRecipeList(
+  searchParams: SearchParams,
+  accessToken?: string,
+): Promise<RecipeListResponse> {
+  const headers: HeadersInit = {};
+
+  if (accessToken) {
+    headers["Authorization"] = `Bearer ${accessToken}`;
+  }
+  const params = parseSearchParams(getTruthyObject(searchParams || {}));
+  const url = `${API_BASE_URL}/recipe/public/find?${params.toString()}`;
+
+  console.log("🚀 ~ request:", { url, headers });
+  if (params.get("chefName")) params.delete("chefName");
+
+  let res = await fetch(url, {
+    headers,
+    next: { revalidate: 1 },
+  });
+
+  if (!res.ok) {
+    console.log("res not ok");
     if (res.status === 404) {
+      console.log({ res });
       notFound();
-    } else {
-      throw new Error(`Failed to fetch: ${res.statusText}`);
+    }
+
+    if (res.status === 401) {
+      console.log({ res });
+      try {
+        accessToken = await getTokenRefreshed();
+        console.log("🚀 ~ new accessToken refreshed", accessToken);
+        if (accessToken) {
+          headers["Authorization"] = `Bearer ${accessToken}`;
+        }
+        console.log("🚀 ~ headers:", headers);
+      } catch {
+        delete headers["Authorization"];
+      } finally {
+        res = await fetch(url, {
+          headers,
+          next: { revalidate: 1 },
+        });
+      }
     }
   }
 
-  const data: RecipeListResponse = await res.json();
-
-  return data;
+  return await res.json();
 }
 
 export async function getRecipeDetail(
@@ -40,19 +84,37 @@ export async function getRecipeDetail(
   accessToken?: string,
 ): Promise<RecipeDetail> {
   const headers: HeadersInit = {};
+
   if (accessToken) {
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  const res = await fetch(`${API_BASE_URL}/recipe/public/find/${recipeId}`, {
+  const url = `${API_BASE_URL}/recipe/public/find/${recipeId}`;
+
+  let res = await fetch(url, {
     headers,
+    next: { revalidate: 300 },
   });
 
   if (!res.ok) {
     if (res.status === 404) {
       notFound();
-    } else {
-      throw new Error(`Failed to fetch: ${res.statusText}`);
+    }
+
+    if (res.status === 401) {
+      try {
+        accessToken = await getTokenRefreshed();
+        if (accessToken) {
+          headers["Authorization"] = `Bearer ${accessToken}`;
+        }
+      } catch {
+        delete headers["Authorization"];
+      } finally {
+        res = await fetch(url, {
+          headers,
+          next: { revalidate: 1 },
+        });
+      }
     }
   }
 
@@ -81,7 +143,7 @@ export async function toggleRecipeBookmark(recipeId: string) {
     if (res.status === 404) {
       notFound();
     } else {
-      throw new Error(`Failed to fetch: ${res.statusText}`);
+      console.error(`Failed to fetch: ${res.statusText}`);
     }
   }
 
@@ -98,7 +160,7 @@ export async function getOwnRecipes(chefId: string) {
     if (res.status === 404) {
       notFound();
     } else {
-      throw new Error(`Failed to fetch: ${res.statusText}`);
+      console.error(`Failed to fetch: ${res.statusText}`);
     }
   }
   const data: RecipeListResponse = await res.json();

@@ -20,7 +20,6 @@ import { Facebook, Instagram, Linkedin } from "@/components/ui/icons";
 type Props = { chef: Chef };
 
 const ChefCard = ({ chef }: Props) => {
-  console.log("🚀 ~ ChefCard ~ chef:", chef);
   const socialIcons = [
     {
       icon: <Facebook className="h-4 w-4" />,

@@ -56,7 +56,7 @@ import { Scroll } from "@/components/Scroll";
 
 // ** Schema
 const formSchema = z.object({
-  level: z.enum(["Beginner", "Home cook", "Professional", "Master chef"]),
+  level: z.enum(["Beginner", "Home cook", "Professional", "Master"]),
   startedDate: z
     .date({
       required_error: "Date of birth is required.",
@@ -74,7 +74,7 @@ const ButtonRequestChef = ({ refetch }: { refetch: () => void }) => {
     "Beginner",
     "Home cook",
     "Professional",
-    "Master chef",
+    "Master",
   ];
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -222,7 +222,12 @@ const ButtonRequestChef = ({ refetch }: { refetch: () => void }) => {
                 />
               </div>
               <DialogFooter>
-                <Button variant="secondary">Cancel</Button>
+                <Button
+                  onClick={() => setDialogOpen(false)}
+                  type="button"
+                  variant="secondary">
+                  Cancel
+                </Button>
                 <LoadingButton
                   label="Continue"
                   type="submit"

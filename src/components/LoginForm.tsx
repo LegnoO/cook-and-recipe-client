@@ -43,6 +43,7 @@ import { login, fetchUserInfo } from "@/services/client/authService";
 
 // ** Library Imports
 import { z } from "zod";
+import { CheckedState } from "@radix-ui/react-checkbox";
 
 // ** Utils
 import { setCookie } from "@/utils/cookies";
@@ -86,6 +87,8 @@ const LoginForm = ({ isModal }: Props) => {
 
   const form = useForm<LoginFormValues>({
     defaultValues: {
+      email: "",
+      password: "",
       rememberMe: getItemLocalStorage<boolean>("rememberMe") || false,
     },
     resolver: zodResolver(loginFormSchema),
@@ -126,6 +129,19 @@ const LoginForm = ({ isModal }: Props) => {
 
   function togglePasswordVisibility() {
     setShowPassword((prev) => !prev);
+  }
+
+  function handleChangeRememberMe(
+    checked: CheckedState,
+    onChange: (value: boolean) => void,
+  ) {
+    const checkedValue = JSON.stringify(checked);
+    setCookie("rememberMe", checkedValue, {
+      path: "/",
+      secure: true,
+      sameSite: "none",
+    });
+    onChange(Boolean(checked));
   }
 
   return (
@@ -204,7 +220,12 @@ const LoginForm = ({ isModal }: Props) => {
                             <NoSsr>
                               <Checkbox
                                 checked={field.value}
-                                onCheckedChange={field.onChange}
+                                onCheckedChange={(checked: CheckedState) =>
+                                  handleChangeRememberMe(
+                                    checked,
+                                    field.onChange,
+                                  )
+                                }
                               />
                             </NoSsr>
                           </FormControl>

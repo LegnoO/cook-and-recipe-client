@@ -28,6 +28,7 @@ import ButtonDeleteRecipe from "@/components/ButtonDeleteRecipe";
 import Pagination from "@/components/Pagination";
 import ButtonToggleStatus from "./ButtonToggleStatus";
 import ButtonVerifyRecipe from "./ButtonVerifyRecipe";
+import Loading from "@/app/(management)/_components/Loading";
 
 // ** Icons
 import { Star, Eye, MoreHorizontal, Edit } from "lucide-react";
@@ -69,7 +70,7 @@ const RecipeList = () => {
 
   const {
     data: recipeResponse,
-    // isLoading: queryLoading,
+    isLoading: queryLoading,
     refetch,
   } = useQuery({
     queryKey: ["all-recipe-owned", queryParams()],
@@ -112,7 +113,21 @@ const RecipeList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {recipes && recipes.length > 0 ? (
+            {queryLoading && (
+              <TableRow>
+                <TableCell className="text-center" colSpan={99}>
+                  <Loading />
+                </TableCell>
+              </TableRow>
+            )}
+            {!recipes && !queryLoading && (
+              <TableRow>
+                <TableCell className="text-center" colSpan={99}>
+                  No Data
+                </TableCell>
+              </TableRow>
+            )}
+            {recipes && recipes.length > 0 && (
               <Fragment>
                 {recipes?.map((recipe) => (
                   <TableRow key={recipe.id}>
@@ -259,12 +274,6 @@ const RecipeList = () => {
                   </TableRow>
                 ))}
               </Fragment>
-            ) : (
-              <TableRow>
-                <TableCell className="text-center" colSpan={99}>
-                  No Data
-                </TableCell>
-              </TableRow>
             )}
           </TableBody>
         </Table>

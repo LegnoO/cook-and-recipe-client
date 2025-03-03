@@ -2,6 +2,7 @@
 import { Fragment } from "react";
 
 // ** Next Imports
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -19,13 +20,18 @@ import { getCategories } from "@/services/server/categoryService";
 import { getRecipeList } from "@/services/server/recipeService";
 
 export default async function Home() {
+  const cookiesStore = cookies();
+  const accessToken = cookiesStore.get("accessToken")?.value;
   const categories = await getCategories();
 
-  const { data: recipes } = await getRecipeList({
-    index: "1",
-    size: "4",
-    sortOrder: "desc",
-  });
+  const { data: recipes } = await getRecipeList(
+    {
+      index: "1",
+      size: "4",
+      sortOrder: "desc",
+    },
+    accessToken,
+  );
 
   const RecipeBlock = ({
     recipes,
@@ -50,9 +56,13 @@ export default async function Home() {
           </Link>
         </div>
         <div className="grid-cols-3-res gap-8">
-          {recipes.map((recipe, index) => (
-            <RecipeCard recipe={recipe} key={index} />
-          ))}
+          {recipes ? (
+            recipes.map((recipe, index) => (
+              <RecipeCard recipe={recipe} key={index} />
+            ))
+          ) : (
+            <>No Recipe</>
+          )}
         </div>
       </Fragment>
     );

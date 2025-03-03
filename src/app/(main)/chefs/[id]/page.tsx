@@ -88,10 +88,7 @@ export default async function SingleChefPage({ params }: Props) {
                 className="absolute h-full w-full rounded-lg object-cover"
                 fill
                 priority
-                src={
-                  chef.userInfo.avatar ||
-                  "https://res.cloudinary.com/dzl5ur69n/image/upload/v1733600651/yyhtnniclx0ja0n2pjhq.jpg"
-                }
+                src={chef.userInfo.avatar || "/images/avatar-default.png"}
                 alt={chef.userInfo.fullName}
               />
             </div>
@@ -125,16 +122,7 @@ export default async function SingleChefPage({ params }: Props) {
                     About me
                   </h2>
                   <p className="text-sm leading-relaxed tracking-wider text-muted-foreground lg:text-base">
-                    {`Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum.`}
+                    {chef.description}
                   </p>
                 </div>
               </div>

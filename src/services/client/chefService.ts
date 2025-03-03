@@ -32,3 +32,13 @@ export async function updateInfo(formData: FormData) {
 
   return await res.json();
 }
+
+export async function updateChefInfo(level: string, description: string) {
+  console.log("a");
+  const res = await fetcher("/chefs/owned/edit/info", {
+    method: "PUT",
+    body: JSON.stringify({ level, description }),
+  });
+
+  return await res.json();
+}

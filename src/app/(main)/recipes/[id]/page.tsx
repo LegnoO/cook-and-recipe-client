@@ -77,93 +77,6 @@ export default async function RecipeDetailPage({ params }: Props) {
 
   const recipes = recipesResponse.filter((recipe) => recipe.id !== params.id);
 
-  // const _s = {
-  //   id: "670ed5fe95ce989ba6a00276",
-  //   name: "Lamb soup with spices & rice",
-  //   timeToCook: 4,
-  //   difficulty: "Medium",
-  //   serves: 4,
-  //   imageUrls: [
-  //     "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
-  //     "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
-  //     // "https://braise.qodeinteractive.com/wp-content/uploads/2021/09/recipe-single-featured.jpg",
-  //     "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
-  //     "https://point.moxcreative.com/yumma/wp-content/uploads/sites/2/2022/04/mojito.jpg",
-  //   ],
-  //   createdDate: "2024-10-15T20:50:17.235Z",
-  //   description:
-  //     "Lorem ipsum dolor sit amet, consectetur adipicibe elit, sed do eiusmod tempor inci didunt ut labore e dolore magnna ad aliquam. Ut enim ad minim. quis nostrud exer citation ullamco laboris nisi ut aliquip ex ea commodo co nsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fu giat nulla pariatur. Excepteur sint occaecat cupidatat non proident. sunt in culpa qui officia deser unt a mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipicibe elit sed do eiusmo.",
-  //   ingredients: [
-  //     { name: "All-purpose flour", quantity: 2, measurement: "cups" },
-  //     { name: "Granulated sugar", quantity: 1, measurement: "cup" },
-  //     { name: "Baking powder", quantity: 2, measurement: "teaspoons" },
-  //     { name: "Salt", quantity: 0.5, measurement: "teaspoon" },
-  //     { name: "Unsalted butter", quantity: 0.5, measurement: "cup" },
-  //     { name: "Eggs", quantity: 2, measurement: "large" },
-  //     { name: "Milk", quantity: 0.75, measurement: "cup" },
-  //     { name: "Vanilla extract", quantity: 1, measurement: "teaspoon" },
-  //   ],
-  // instructionSections: [
-  //   {
-  //     title: "Prepare the ingredients",
-  //     instructions: [
-  //       { step: 1, description: "Cut the lamb into bite-sized pieces" },
-  //       { step: 2, description: "Dice the onion and carrots" },
-  //       { step: 3, description: "Mince the garlic" },
-  //     ],
-  //   },
-  //   {
-  //     title: "Cook the soup",
-  //     instructions: [
-  //       { step: 1, description: "Brown the lamb in a large pot" },
-  //       { step: 2, description: "Add vegetables and sauté until soft" },
-  //       { step: 3, description: "Add spices and rice" },
-  //       {
-  //         step: 4,
-  //         description: "Pour in broth and simmer until meat is tender",
-  //       },
-  //     ],
-  //   },
-  // ],
-  //   createdBy: {
-  //     id: "670d73f1beeeb06c352ab012",
-  //     avatar:
-  //       "https://res.cloudinary.com/dzl5ur69n/image/upload/v1730112900/hcanawuro1lszydjponm.png",
-  //     fullName: "Legno",
-  //     email: "legno@gmail.com",
-  //     description:
-  //       "Lorem ipsum dolor sit amet, ad consectetur adi picibe elit, sed do eiusmod tempor inci didunt quo labore e dolore magna aliqua ut.",
-  //   },
-  //   category: "baked",
-  // };
-
-  // const recipeId = params.id;
-  // const servings =
-  //   Number(searchParams.serving) > 1 ? Number(searchParams.serving) : 1;
-
-  // function getServingsUrl(servings: number) {
-  //   if (servings > 1) {
-  //     return `/recipe-detail/${recipeId}/?serving=${servings}`.toString();
-  //   }
-  //   return `/recipe-detail/${recipeId}/?serving=1`;
-  // }
-
-  // const IngredientRow = ({
-  //   ingredient,
-  // }: {
-  //   ingredient: { name: string; quantity: number; measurement: string };
-  // }) => (
-  //   <TableRow className="hover:bg-inherit [&:has(button[data-state=checked])_td:nth-child(2)]:line-through">
-  //     <TableCell className="h-[48px] w-[40px] border-r">
-  //       <Checkbox className="shadow-none" />
-  //     </TableCell>
-  //     <TableCell>
-  //       {ingredient.quantity * servings} {ingredient.measurement}{" "}
-  //       {ingredient.name}
-  //     </TableCell>
-  //   </TableRow>
-  // );
-
   return (
     <Fragment>
       <section className="bg-background pb-20 pt-12">
@@ -341,7 +254,10 @@ export default async function RecipeDetailPage({ params }: Props) {
                   <Image
                     fill
                     className="rounded-lg object-cover"
-                    src={recipeDetail.createdBy.userInfo.avatar}
+                    src={
+                      recipeDetail.createdBy.userInfo.avatar ||
+                      "/images/avatar-default.png"
+                    }
                     alt={`Chef ${recipeDetail.createdBy.userInfo.fullName}`}
                   />
                 </div>
@@ -407,12 +323,5 @@ export default async function RecipeDetailPage({ params }: Props) {
         </div>
       </section>
     </Fragment>
-    // <main className="flex items-center">
-    //   <div className="container">
-    //     <BannerLog title="Recipe Detail" />
-    //     <section className="w-8/12"></section>
-    //     <aside className="w-4/12"></aside>
-    //   </div>
-    // </main>
   );
 }

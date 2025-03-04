@@ -134,10 +134,7 @@ const RecipeList = () => {
                     <TableCell>
                       <div className="relative h-20 w-20">
                         <Image
-                          src={
-                            recipe.imageUrls[0] ||
-                            "https://res.cloudinary.com/dzl5ur69n/image/upload/v1735751069/zevtzglf2vjh5stv4ojc.jpg"
-                          }
+                          src={recipe.imageUrls[0] || "/images/default.png"}
                           alt={recipe.name}
                           width={64}
                           height={64}

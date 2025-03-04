@@ -25,7 +25,6 @@ import { useToast } from "@/hooks/useToast";
 type Props = { recipe: Recipe | RecipeDetail };
 
 export default function RecipeCard({ recipe }: Props) {
-  console.log("🚀 ~ RecipeCard ~ recipe:", recipe);
   const { user } = useAuthContext();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
@@ -56,10 +55,7 @@ export default function RecipeCard({ recipe }: Props) {
             className="h-full w-full rounded-lg object-cover transition-transform duration-300 ease-in-out hover:scale-105"
             width={384}
             height={258}
-            src={
-              recipe.imageUrls[0] ||
-              "https://gourmand.qodeinteractive.com/wp-content/uploads/2018/02/port-f-img-1.jpg"
-            }
+            src={recipe.imageUrls[0] || "/images/default.png"}
             alt={recipe.name}
           />
         </Link>

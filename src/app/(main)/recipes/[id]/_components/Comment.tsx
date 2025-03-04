@@ -66,6 +66,10 @@ const Comment = ({ recipeDetail }: Props) => {
     }
 
     try {
+      toast({
+        title: "Loading...",
+        description: "Please wait while we process your request.",
+      });
       await postReview({
         recipeId: recipeDetail.id,
         content: commentRef.current!.value,
@@ -77,6 +81,8 @@ const Comment = ({ recipeDetail }: Props) => {
         title: "Review submitted successfully!",
         description: "Thank you for your feedback.",
       });
+      setRating(null);
+      commentRef.current!.value = "";
     } catch (error) {
       toast({
         variant: "destructive",

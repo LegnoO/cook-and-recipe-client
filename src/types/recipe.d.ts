@@ -9,6 +9,7 @@ type Recipe = {
   imageUrls: string[];
   createdDate: string;
   createdBy: {
+    id: string;
     level: ChefLevel;
     startedDate: string;
     description: string;

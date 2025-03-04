@@ -44,6 +44,7 @@ export default async function RecipesListPage({ searchParams }: Props) {
     accessToken,
   );
 
+  console.log("🚀 ~ RecipesListPage ~ recipes:", recipes);
   return (
     <Fragment>
       <section className="relative max-w-full bg-recipes-banner bg-cover bg-fixed bg-center bg-no-repeat">

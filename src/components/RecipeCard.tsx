@@ -26,6 +26,7 @@ type Props = { recipe: Recipe | RecipeDetail };
 
 export default function RecipeCard({ recipe }: Props) {
   const { user } = useAuthContext();
+
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const [isBookmarked, setIsBookmarked] = useState(recipe.bookmarked);
@@ -59,7 +60,7 @@ export default function RecipeCard({ recipe }: Props) {
             alt={recipe.name}
           />
         </Link>
-        {user && (
+        {user && user.chefId !== recipe.createdBy.id && (
           <BookMarkButton
             isLoading={isPending}
             onClick={handleToggleBookmark}

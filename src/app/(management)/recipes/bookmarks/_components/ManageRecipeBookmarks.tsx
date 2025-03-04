@@ -8,6 +8,7 @@ import RecipeCard from "@/components/RecipeCard";
 import Pagination from "@/components/Pagination";
 import Breadcrumb from "@/components/Breadcrumb";
 import QueryRecipe from "../../_components/QueryRecipe";
+import Loading from "@/app/(management)/_components/Loading";
 
 // ** Library Imports
 import { useQuery } from "@tanstack/react-query";
@@ -27,7 +28,7 @@ const ManageRecipeBookmarks = () => {
     { title: "Bookmark" },
   ];
 
-  const { data: recipeResponse } = useQuery({
+  const { data: recipeResponse, isLoading } = useQuery({
     queryKey: ["recipeBookmarks", searchParams.toString()],
     queryFn: () => getRecipeBookmarkList(queryParams()),
     ...queryOptionsConfig,
@@ -62,7 +63,9 @@ const ManageRecipeBookmarks = () => {
             <QueryRecipe />
           </div>
 
-          {recipes.length > 0 ? (
+          {isLoading ? (
+            <Loading />
+          ) : recipes.length > 0 ? (
             <div className="flex flex-1">
               <div className="grid-cols-4-res grid w-full gap-8">
                 {recipes.map((recipe, index) => (

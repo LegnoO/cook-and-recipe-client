@@ -76,12 +76,15 @@ const ProfileInfo = () => {
 
   async function onSubmit() {
     try {
-      setIsLoading(true);
       if (
         userProfile.chefInfo.level !== level ||
         userProfile.chefInfo.description !== description
       ) {
-        await updateChefInfo(level, description);
+        setIsLoading(true);
+        await updateChefInfo(
+          level || userProfile.chefInfo.level,
+          description || userProfile.chefInfo.description,
+        );
         refetch();
       }
     } catch (error) {
@@ -157,7 +160,7 @@ const ProfileInfo = () => {
                     {isLoading ? (
                       <Loader2
                         className={cn("h-4 w-4", {
-                          "animate-spin": !isLoading,
+                          "animate-spin": isLoading,
                         })}
                       />
                     ) : (
@@ -208,16 +211,18 @@ const ProfileInfo = () => {
               ) : (
                 <p
                   className={cn("leading-relaxed text-muted-foreground", {
-                    italic: !description,
+                    italic: !userProfile.chefInfo.description,
                   })}>
-                  {description || "No description"}
+                  {description
+                    ? description
+                    : userProfile.chefInfo.description || "No description"}
                 </p>
               )}
             </div>
           )}
 
           <Tabs defaultValue="personal" className="mt-8 min-h-[176px]">
-            <TabsList className="mb-6 grid w-full grid-cols-2">
+            <TabsList className="mb-6 grid w-full grid-cols-2 gap-2">
               <TabsTrigger value="personal" className="text-sm">
                 Personal Information
               </TabsTrigger>
@@ -350,7 +355,7 @@ const ProfileInfo = () => {
                         {isLoading ? (
                           <Loader2
                             className={cn("h-4 w-4", {
-                              "animate-spin": !isLoading,
+                              "animate-spin": isLoading,
                             })}
                           />
                         ) : isEditing.level ? (
@@ -366,9 +371,25 @@ const ProfileInfo = () => {
                     <p className="flex items-center gap-1 text-sm text-muted-foreground">
                       Status
                     </p>
-                    <p className="font-medium capitalize">
+
+                    <Badge
+                      className={cn(
+                        "cursor-pointer rounded-xl bg-destructive/80 capitalize hover:bg-destructive",
+                        {
+                          "bg-muted-foreground/80 hover:bg-muted-foreground": [
+                            "pending",
+                            "rejected",
+                          ].includes(userProfile.chefInfo.status),
+
+                          "bg-primary/80 hover:bg-primary":
+                            userProfile.chefInfo.status === "active",
+
+                          "bg-destructive/80 hover:bg-destructive":
+                            userProfile.chefInfo.status === "banned",
+                        },
+                      )}>
                       {userProfile.chefInfo.status}
-                    </p>
+                    </Badge>
                   </div>
                   <div className="space-y-1">
                     <p className="flex items-center gap-1 text-sm text-muted-foreground">

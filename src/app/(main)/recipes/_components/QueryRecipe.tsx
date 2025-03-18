@@ -48,9 +48,9 @@ const QueryRecipe = () => {
     const params = new URLSearchParams(searchParams);
 
     if (value) {
-      params.set("search", value);
+      params.set("name", value);
     } else {
-      params.delete("search");
+      params.delete("name");
     }
     router.push(`?${params.toString()}`, {
       scroll: false,
